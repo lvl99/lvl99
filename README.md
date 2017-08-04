@@ -30,7 +30,7 @@ Require/import the `lvl99` module in your JavaScript:
 You can also require/import single files if you don't want the whole JS framework:
 
 ```javascript
-  const breakpoints = require('@lvl99/lvl99/src/es6/breakpoints')
+  const breakpoints = require('@lvl99/lvl99/es6/breakpoints')
 ```
 
 
