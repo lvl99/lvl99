@@ -1,7 +1,8 @@
 {
-  "name": "@lvl99dotcom/lvl99",
+  "name": "lvl99",
   "version": "1.0.0",
   "description": "Nothing to see here, just another frontend framework",
+  "private": false,
   "main": "index.js",
   "scripts": {
     "test": "jest"
