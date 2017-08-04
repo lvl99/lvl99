@@ -1,0 +1,22 @@
+/**
+ * Inline SVG Code
+ *
+ * ## Usage
+ *
+ * ```
+ *   .example-class {
+ *     @var-width: 30;
+ *     @var-height: 30;
+ *     .inline-svg-code('<svg width="@{var-width}" height="@{var-height}">...</svg>');
+ *     width: @var-width * 1px;
+ *     height: @var-height * 1px;
+ *     background-image: @-inline-svg-url;
+ *   }
+ * ```
+ */
+
+.inline-svg-code( @code ) {
+  @-svg-code: escape(~'<?xml version="1.0" ?>@{code}');
+  @-inline-svg-code: ~'data:image/svg+xml,@{-svg-code}';
+  @-inline-svg-url: ~"url('@{-inline-svg-code}')";
+}

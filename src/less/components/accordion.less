@@ -1,0 +1,101 @@
+/**
+ * LVL99 Accordion
+ * Controls children (which are {Toggleable} components)
+ *
+ * @uses {Toggleable}
+ * @package lvl99
+ */
+
+.ui-lvl99-accordion(@ns: ~"lvl99-accordion") {
+  .ui-lvl99-accordion-item(@ns);
+
+  // Initialise accordion and accordion-item states
+  .-accordion-init-default(@rules: {}) {
+    .-accordion-item-init-default({
+      @rules();
+    });
+  }
+}
+
+.ui-lvl99-accordion-item(@ns: ~"lvl99-accordion-item") {
+  @-accordion-item: ~".@{ns}";
+  @-accordion-item-toggle: ~"@{-accordion-item}-toggle";
+  @-accordion-item-content: ~"@{-accordion-item}-content";
+  @-accordion-item-active: ~".active";
+
+  .ui-lvl99-toggleable(@ns);
+
+  //@{-accordion-item-toggle} {
+  //  &:after {
+  //    content: '';
+  //  }
+  //}
+
+  @{-accordion-item-toggle} {
+    display: block;
+    cursor: pointer;
+  }
+
+  @{-accordion-item-content} {
+    //transition: max-height 0.2s;
+  }
+
+  .-accordion-item-transitioning() {
+    @{-accordion-item-content} {
+      overflow: hidden;
+      pointer-events: none;
+    }
+  }
+
+  .-accordion-item-opening() {
+    @{-accordion-item-content} {
+      max-height: 9999px;
+    }
+  }
+
+  .-accordion-item-opened() {
+    @{-accordion-item-content} {
+      overflow: visible;
+      max-height: 9999px;
+    }
+  }
+
+  .-accordion-item-closing() {
+    @{-accordion-item-content} {
+      overflow: hidden;
+      max-height: 0;
+    }
+  }
+
+  .-accordion-item-closed() {
+    @{-accordion-item-content} {
+      overflow: hidden;
+      max-height: 0;
+    }
+  }
+
+  // Use toggleable mixins
+  .-accordion-item-init-default(@rules: {}) {
+    .-toggleable-transitioning({
+      .-accordion-item-transitioning();
+    });
+
+    .-toggleable-transitioning-open({
+      .-accordion-item-opening();
+    });
+
+    .-toggleable-opened({
+      .-accordion-item-opened();
+    });
+
+    .-toggleable-transitioning-close({
+      .-accordion-item-closing();
+    });
+
+    .-toggleable-closed({
+      .-accordion-item-closed();
+    });
+
+    @rules();
+  };
+}

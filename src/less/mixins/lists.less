@@ -1,0 +1,90 @@
+/*
+ * LVL99 Lists
+ */
+
+.list-reset {
+  display: block;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  > li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+}
+
+/*
+ * Inline list
+ */
+.list-inline  {
+  .list-reset;
+
+  > li,
+  > .item,
+  > .list-inline-item {
+    display: inline;
+  }
+}
+
+/*
+ * Inline block list
+ */
+.list-inline-block {
+  .list-reset;
+
+  > li,
+  > .item,
+  > .list-inline-item {
+    display: inline-block;
+  }
+}
+
+/*
+ * Block list
+ */
+.list-block {
+  .list-reset;
+
+  > li,
+  > .item,
+  > .list-block-item {
+    display: block;
+  }
+}
+
+/*
+ * 2 Column List
+ */
+.list-2col {
+  .clearfix;
+  display: block;
+
+  > dt {
+    width: 40%;
+    margin: 0;
+    margin-bottom: @spacing;
+    padding: 0;
+    padding-right: @padding;
+    float: left;
+    font-style: normal;
+    font-weight: normal;
+    text-align: right;
+  }
+
+  > dd {
+    width: 60%;
+    margin: 0;
+    margin-bottom: @spacing;
+    padding: 0;
+    padding-left: @padding;
+    float: left;
+
+    &:after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+  }
+}

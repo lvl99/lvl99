@@ -1,0 +1,27 @@
+/**
+ * Gradients
+ */
+
+.bs-gradients() {
+  //
+  // Linear gradient
+  //
+  .linear-gradient(@color-from: #fff; @color-to: #000; @angle: to bottom; @color-from-stop: 0%; @color-to-stop: 100%) {
+    @hex-color-from: fadein(@color-from, 100%);
+    @hex-color-to: fadein(@color-to, 100%);
+    background: @color-to; // Old browsers
+    background: linear-gradient(@angle, @color-from @color-from-stop, @color-to @color-to-stop); // W3C
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=~"'#@{hex-color-from}'", endColorstr=~"'@{hex-color-to}'", GradientType=0); // IE6-8
+  }
+
+  //
+  // Radial gradient
+  //
+  .radial-gradient(@color-from: #fff; @color-to: #000; @type: ellipse; @position: center; @color-from-stop: 0%; @color-to-stop: 100%) {
+    @hex-color-from: fadein(@color-from, 100%);
+    @hex-color-to: fadein(@color-to, 100%);
+    background: @color-to; // Old browsers
+    background: radial-gradient(@type at @position, @color-from @color-from-stop, @color-to @color-to-stop); // W3C
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=~"'@{hex-color-from}'", endColorstr=~"'@{hex-color-to}'", GradientType=0); // IE6-8
+  }
+}

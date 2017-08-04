@@ -1,0 +1,150 @@
+/*
+ * Grid & Columns
+ */
+
+/**
+ * Generates grid styles
+ *
+ * @param {Number} @columns The number of cell columns to size to
+ * @param {Number} @column-spacing The size (in pixels) to have as space on each side of the columns
+ * @param {Number} @cell-padding The size (in pixels) to have as padding on each side in the cell
+ */
+.generate-grid( @columns: 12; @column-spacing: 0; @cell-padding: 0) {
+  // Generate the different column sizes
+  .-cell-looper(@i) when (@i > 0) {
+    > .cell-@{columns}-@{i} {
+      & when (@column-spacing = 0) {
+        width: (@i / @columns) * 100%;
+      }
+
+      & when (@column-spacing > 0) {
+        width: ~"calc("(@i / @columns) * 100%~" - "(@column-spacing * 0.5)~")";
+      }
+    }
+
+    .-cell-looper((@i - 1));
+  }
+
+  // Grid row
+  .grid {
+    .clearfix;
+    position: relative;
+
+    & when (@column-spacing > 0) {
+      &.grid-compact {
+        margin-left: -(@column-spacing * 0.5);
+        margin-right: -(@column-spacing * 0.5);
+      }
+    }
+
+    > [class*="cell-"] {
+      float: left;
+
+      & when (@cell-padding > 0) {
+        padding-left: @cell-padding;
+        padding-right: @cell-padding;
+      }
+
+      & when (@column-spacing > 0) {
+        margin-left: @column-spacing * 0.5;
+        margin-right: @column-spacing * 0.5;
+
+        &:first-child {
+          margin-left: 0;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+
+    &.reverse {
+      > [class*="cell-"] {
+        float: right;
+      }
+    }
+
+    .-cell-looper(@columns);
+  }
+}
+
+/**
+ * Generates columns for various sizes
+ *
+ * @param {Number} @columns The total number of columns
+ * @param {Number} @column-padding The padding between each column
+ */
+.generate-columns(@columns: 12; @column-padding: 0) {
+  .-col-looper(@i) when (@i > 0) {
+    @-column-width: (@i / @columns) * 100%;
+
+    > .col-@{columns}-@{i} {
+      width: @-column-width;
+    }
+
+    > .push-@{columns}-@{i} {
+      margin-left: @-column-width;
+    }
+
+    > .pull-@{columns}-@{i} {
+      margin-left: @-column-width * -1;
+    }
+
+    &.reverse {
+      > .push-@{columns}-@{i} {
+        margin-left: 0;
+        margin-right: @-column-width;
+      }
+
+      > .pull-@{columns}-@{i} {
+        margin-left: 0;
+        margin-right: @-column-width * -1;
+      }
+    }
+
+    .-col-looper((@i - 1));
+  }
+
+  .row,
+  .flex-row {
+    .-col-looper(@columns);
+  }
+
+  .row {
+    .clearfix;
+    position: relative;
+
+    > [class*="col-"] {
+      float: left;
+
+      & when (@column-padding > 0) {
+        padding-left: @column-padding;
+        padding-right: @column-padding;
+      }
+    }
+
+    &.reverse {
+      > [class*="col-"] {
+        float: right !important;
+      }
+    }
+  }
+
+  // Use flexbox for columns
+  .flex-row {
+    .flex-columns(@flex-direction: row);
+
+    > [class*="col-"] {
+      float: none;
+    }
+
+    &.reverse {
+      flex-direction: row-reverse;
+
+      > [class*="col-"] {
+        float: none;
+      }
+    }
+  }
+}

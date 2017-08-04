@@ -1,0 +1,16 @@
+/**
+ * LVL99 Modal
+ *
+ * @extends {Toggleable}
+ * @package lvl99
+ */
+
+.ui-lvl99-modal(@ns: ~"lvl99-modal") {
+  .ui-lvl99-toggleable(@ns);
+
+  // Initialise the default modal states
+  .-modal-init-default(@rules: {}) {
+    // Initialise the default toggleable states
+    .-toggleable-init-default(@rules);
+  }
+}

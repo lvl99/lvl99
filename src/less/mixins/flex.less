@@ -1,0 +1,133 @@
+/**
+ * Flex mixins
+ */
+
+//
+// Use flexbox for doing columns
+//
+.flex-columns (@flex-direction: row) {
+  display: flex;
+  flex-direction: @flex-direction;
+  flex-wrap: wrap;
+
+  // Alignment along main axis
+  justify-content: flex-start;
+  // flex-start | flex-end | center | space-between | space-around
+
+  // Alignment along cross axis
+  align-items: flex-start;
+  // flex-start | flex-end | center | baseline | stretch
+
+  // Alignment of content along cross axis
+  align-content: flex-start;
+  // flex-start | flex-end | center | space-between | space-around | stretch
+}
+
+//
+// Flex grid
+//
+.flex-grid (@flex-direction: row) {
+  display: flex;
+  flex-direction: @flex-direction;
+  flex-wrap: wrap;
+
+  // Alignment along main axis
+  justify-content: center;
+  // flex-start | flex-end | center | space-between | space-around
+
+  // Alignment along cross axis
+  align-items: stretch;
+  // flex-start | flex-end | center | baseline | stretch
+
+  // Alignment of content along cross axis
+  align-content: stretch;
+  // flex-start | flex-end | center | space-between | space-around | stretch
+
+  > .flex-cell {
+    flex: 1 1 auto;
+  }
+
+  > .flex-cell-double {
+    flex: 2 2 auto;
+  }
+
+  > .flex-cell-half {
+    flex: 0.5 0.5 auto;
+  }
+}
+
+//
+// Flex Align
+//
+
+// -- Top left
+.flex-align-top-left () {
+  // flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+// -- Top center
+.flex-align-top-center () {
+  // flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+// -- Top right
+.flex-align-top-right () {
+  //flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+// -- Center left
+.flex-align-center-left () {
+  // flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+}
+
+// -- Center
+.flex-align-center () {
+  // flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+// -- Center Right
+.flex-align-center-right () {
+  // flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+}
+
+// -- Bottom Left
+.flex-align-bottom-left () {
+  // flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+  align-content: flex-end;
+}
+
+// -- Bottom Center
+.flex-align-bottom-center () {
+  // flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  align-content: flex-end;
+}
+
+// -- Bottom Right
+.flex-align-bottom-right () {
+  // flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  align-content: flex-end;
+}

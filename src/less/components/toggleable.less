@@ -1,0 +1,97 @@
+/**
+ * LVL99 Toggleable
+ *
+ * @package lvl99
+ */
+
+.ui-lvl99-toggleable(@ns: ~"lvl99-toggleable") {
+  @-toggleable-transitioning: ~".ui-@{ns}-transitioning";
+  @-toggleable-opening: ~".ui-@{ns}-opening";
+  @-toggleable-closing: ~".ui-@{ns}-closing";
+  @-toggleable-open: ~".ui-@{ns}-open";
+
+  // All the toggleable classes/states
+  .-toggleable-states(@rules) {
+    &@{-toggleable-transitioning},
+    @{-toggleable-transitioning} &,
+    &@{-toggleable-opening},
+    @{-toggleable-opening} &,
+    &@{-toggleable-closing},
+    @{-toggleable-closing} &,
+    &@{-toggleable-open},
+    @{-toggleable-open} & {
+      @rules();
+    }
+  }
+
+  // The toggleable's transitioning classes/states
+  .-toggleable-transitioning(@rules) {
+    &@{-toggleable-transitioning},
+    @{-toggleable-transitioning} &,
+    &@{-toggleable-opening},
+    @{-toggleable-opening} &,
+    &@{-toggleable-closing},
+    @{-toggleable-closing} & {
+      @rules();
+    }
+  }
+
+  // The toggleable's transitioning open classes/states
+  .-toggleable-transitioning-open(@rules) {
+    &@{-toggleable-opening},
+    @{-toggleable-opening} &,
+    &@{-toggleable-open},
+    @{-toggleable-open} & {
+      @rules();
+    }
+  }
+
+  // The toggleable's transitioning close classes/states
+  .-toggleable-transitioning-close(@rules) {
+    &@{-toggleable-closing},
+    @{-toggleable-closing} & {
+      @rules();
+    }
+  }
+
+  // The toggleable's transitioning open classes/states
+  .-toggleable-opened(@rules) {
+    &@{-toggleable-open},
+    @{-toggleable-open} & {
+      @rules();
+    }
+  }
+
+  // Closed is default state
+  // Ensure height, padding and opacity are zero
+  .-toggleable-closed(@rules: {}) {
+    @rules();
+  }
+
+  // Initialise the default toggleable states (must be invoked, unless you config your own)
+  .-toggleable-init-default(@rules: {}) {
+    .-toggleable-closed({
+      height: 0;
+      padding: 0;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transition: opacity 0.5s;
+    });
+
+    .-toggleable-transitioning({
+      display: block;
+      overflow: hidden;
+      pointer-events: none;
+      user-select: none;
+    });
+
+    .-toggleable-opened({
+      display: block;
+      opacity: 1;
+      pointer-events: auto;
+    });
+
+    @rules();
+  }
+}

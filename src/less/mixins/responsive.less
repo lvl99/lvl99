@@ -1,0 +1,142 @@
+/*
+ * Responsive
+ * Define the necessary `@devices` variables in your variables.less
+ */
+
+//
+// Size to width
+// For img, svg and canvas elements, this will resize proportionately
+//
+.size-to-width (@upscale: 0) {
+  width: auto;// !important;
+  & when not (@upscale = 1) {
+    min-width: 0;
+  }
+  & when (@upscale = 1) {
+    min-width: 100%;
+  }
+  max-width: 100%;
+  height: auto;// !important;
+  min-height: 0;
+  max-height: none;
+}
+
+//
+// Size to height
+// For img, svg and canvas elements, this will resize proportionately
+//
+.size-to-height (@upscale: 0) {
+  width: auto;// !important;
+  min-width: 0;
+  max-width: auto;
+  height: auto;// !important;
+  & when not (@upscale = 1) {
+    min-height: 0;
+  }
+  & when (@upscale = 1) {
+    min-height: 100%;
+  }
+  max-height: 100%;
+}
+
+//
+// Show/hide elements based on display property
+//
+.devices-display-types (@devices) {
+  // Set up generic classes
+  .show {
+    display: block;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .visible {
+    visibility: visible;
+  }
+
+  .hidden {
+    visibility: hidden;
+  }
+
+  //
+  // Hide device's "show" display types
+  //
+  .-hide-device-display-types(@device; @i: length(@display-types)) when (@i > 0) {
+    @display-type: extract(@display-types, @i);
+    @hide-selector: ~".show-@{device}, .show-@{device}-@{display-type}";
+    .-hide-device-display-types(@device; @hide-selector; @i - 1);
+  }
+  // -- Append to the hide-selector string
+  .-hide-device-display-types(@device; @hide-selector; @i) when (@i > 0) {
+    @display-type: extract(@display-types, @i);
+    @-hide-selector: ~"@{hide-selector}, .show-@{device}-@{display-type}";
+    .-hide-device-display-types(@device; @-hide-selector; @i - 1);
+  }
+  // -- Output the consolidated hide class declaration
+  .-hide-device-display-types(@device; @hide-selector; @i) when (@i = 0) {
+    @{hide-selector} {
+      display: none;
+    }
+  }
+
+  //
+  // Show/hide a single device's display type
+  //
+  .-show-hide-device-display-types(@device: ~""; @i: length(@display-types)) when (@i > 0) {
+    @display-type: extract(@display-types, @i);
+    @hide-selector: ~".hide-@{device}, .hide-@{device}-@{display-type}";
+
+    // Generic device show class
+    .show-@{device} {
+      display: block;
+    }
+
+    // Specific display type show class
+    .show-@{device}-@{display-type} {
+      display: @display-type;
+    }
+
+    .-show-hide-device-display-types(@device; @hide-selector; @i - 1);
+  }
+  // -- Append to the hide-selector string
+  .-show-hide-device-display-types(@device; @hide-selector; @i) when (@i > 0) {
+    @display-type: extract(@display-types, @i);
+    @-hide-selector: ~"@{hide-selector}, .hide-@{device}-@{display-type}";
+
+    .show-@{device}-@{display-type} {
+      display: @display-type;
+    }
+
+    .-show-hide-device-display-types(@device; @-hide-selector; @i - 1);
+  }
+  // -- Output the consolidated hide class declaration
+  .-show-hide-device-display-types(@device; @hide-selector; @i) when (@i = 0) {
+    @{hide-selector} {
+      display: none;
+    }
+  }
+
+  //
+  // Show by device breakpoint
+  //
+  .-device(@i: length(@devices)) when (@i > 0) {
+    // Setup vars
+    @device: extract(@devices, @i);
+    @device-media: ~"device-@{device}";
+
+    // Hide when device breakpoint not active
+    .-hide-device-display-types(@device);
+
+    // Setup the device's "show" and "hide" classes when device breakpoint is active
+    @media @@device-media {
+      .-show-hide-device-display-types(@device);
+    }
+
+    // Decrement to next
+    .-device(@i - 1);
+  } .-device;
+}
+
+.devices-display-types(@devices);

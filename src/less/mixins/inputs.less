@@ -1,0 +1,290 @@
+/*
+ * Inputs
+ */
+
+@text-inputs: text,
+              number,
+              email,
+              tel,
+              url,
+              password,
+              search,
+              color,
+              date,
+              datetime,
+              datetime-local,
+              time,
+              month,
+              week;
+
+//
+// Apply ruleset to all the text selectors
+//
+.text-inputs(@rules) {
+  // Start the text input selector generation
+  .-text-input(@i: length(@text-inputs)) when (@i > 0) {
+    @text-input: extract(@text-inputs, @i);
+
+    input[type=@{text-input}] {
+      @rules();
+    }
+
+    .-text-input((@i - 1));
+  }
+
+  .-text-input;
+}
+
+//
+// Custom Input
+// Sets up base states and styles
+//
+.custom-input(@input-width: 1em; @input-height: 1em) {
+  &:not(:checked),
+  &:checked {
+    position: absolute;
+    left: -9999px;
+
+    & + label,
+    & + .input-label,
+    & + .input-icon {
+      display: inline-block;
+      padding-left: @input-width * 1.5;
+
+      position: relative;
+
+      color: #777;
+      cursor: pointer;
+      vertical-align: text-bottom;
+
+      transition: color 0.2s, opacity 0.2s;
+
+      // Background Shape
+      &:before {
+        content: '';
+        display: inline-block;
+        width: @input-width;
+        height: @input-height;
+        padding: 0;
+        margin: 0;
+
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        background: #eee;
+        border: 1px solid transparent;
+        border-radius: @input-height * 0.2;
+        box-sizing: border-box;
+        font-size: @input-height;
+        line-height: @input-height;
+        text-align: center;
+        vertical-align: middle;
+
+        transition: all 0.2s;
+      }
+
+      // Foreground Shape (Icon)
+      &:after {
+        content: '';
+        display: inline-block;
+        width: @input-width;
+        height: @input-height;
+        padding: 0;
+        margin: 0;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        background-color: transparent;
+        color: #000;
+        font-size: @input-height;
+        line-height: @input-height;
+        text-align: center;
+        vertical-align: middle;
+
+        transform-origin: center center;
+        transition: all 0.2s;
+      }
+    }
+
+    // Icon has fixed height to vertically align it properly (if only icon is needed to position)
+    & + .input-icon {
+      height: 1em;
+    }
+  }
+
+  &:not(:checked) + label,
+  &:not(:checked) + .input-label,
+  &:not(:checked) + .input-icon {
+    &:after {
+      opacity: 0; /* invisible */
+      transform: scale(0); /* scaled down to 0 */
+    }
+  }
+
+  &:checked + label,
+  &:checked + .input-label,
+  &:checked + .input-icon {
+    color: #000;
+
+    &:before {
+      // background-color: @c-white;
+      // border-color: @c-grey;
+    }
+
+    &:after {
+      opacity: 1; /* visible */
+      transform: scale(0.8); /* scaled up to normal */
+    }
+  }
+
+  &:disabled {
+    & + label,
+    & + .input-label,
+    & + .input-icon {
+      opacity: 0.5;
+    }
+  }
+}
+
+//
+// Custom Input - Checkbox
+//
+.custom-input-checkbox(@input-width: 1em; @input-height: 1em) {
+  .custom-input(@input-width: @input-width; @input-height: @input-height);
+
+  &:not(:checked),
+  &:checked {
+    & + label,
+    & + .input-label,
+    & + .input-icon {
+      &:after {
+        content: '✔' !important;
+      }
+    }
+  }
+
+  &:checked + label,
+  &:checked + .input-label,
+  &:checked + .input-icon {
+    &:after {
+      transform: scale(0.7); /* scaled smaller */
+    }
+  }
+}
+
+//
+// Custom Input - Radio
+//
+.custom-input-radio(@input-width: 1em; @input-height: 1em) {
+  .custom-input(@input-width: @input-width; @input-height: @input-height);
+
+  &:not(:checked),
+  &:checked {
+    & + label,
+    & + .input-label,
+    & + .input-icon {
+      &:before {
+        border-radius: 100%;
+      }
+
+      &:after {
+        content: '' !important;
+        width: @input-width;
+        height: @input-height;
+        background-color: #000;
+        border-radius: 100%;
+      }
+    }
+  }
+
+  &:checked + label,
+  &:checked + .input-label,
+  &:checked + .input-icon {
+    &:after {
+      transform: scale(0.5); /* scaled smaller */
+    }
+  }
+}
+
+//
+// Custom Input - Switch
+//
+.custom-input-switch(@input-width: 1em; @input-height: 1em) {
+  .custom-input(@input-width: @input-width; @input-height: @input-height);
+
+  &:not(:checked),
+  &:checked {
+    & + label,
+    & + .input-label,
+    & + .input-icon {
+      padding-left: @input-width * 2.75;
+
+      &:before {
+        content: '' !important;
+        display: block;
+        width: @input-width * 2;
+        height: @input-height;
+        padding: 0;
+
+        background: #eee;
+        border-radius: @input-height;
+      }
+
+      &:after {
+        content: '' !important;
+        display: block;
+        width: @input-width * 0.5;
+        height: @input-height * 0.5;
+        padding: 0;
+        margin: @input-width * 0.25;
+        background-color: #999;
+        border-radius: @input-height;
+      }
+    }
+  }
+
+  &:checked + label,
+  &:checked + .input-label,
+  &:checked + .input-icon {
+    &:before {
+      background-color: #00cc66;
+      border-color: #fff;
+    }
+
+    &:after {
+      width: @input-width * 0.2;
+      height: @input-height * 0.5;
+      padding: 0;
+      margin: (@input-height * 0.25) (@input-height * 0.1);
+      background-color: #eee;
+      border-color: transparent;
+      border-radius: @input-height * 0.1;
+      opacity: 1;
+      transform: translateX(@input-width * 1.25);
+    }
+  }
+
+  &:not(:checked) + label,
+  &:not(:checked) + .input-label,
+  &:not(:checked) + .input-icon {
+    &:after {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+//
+// Style input placeholder
+//
+.input-placeholder (@rules) {
+  &::-webkit-input-placeholder, /* Chrome/Opera/Safari */
+  &::-moz-placeholder, /* Firefox 19+ */
+  &:-ms-input-placeholder, /* IE 10+ */
+  &:-moz-placeholder {
+    @rules();
+  }
+}
