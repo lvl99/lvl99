@@ -12,7 +12,7 @@ nothing to do with React. I also use it as a self-learning and development exerc
 
 ## Install
 
-Include the `lvl99` npm package in your `npm` project: 
+Include the `@lvl99dotcom/lvl99` npm package in your `npm` project: 
 
 ```bash
   npm install --save-dev @lvl99dotcom/lvl99
@@ -21,7 +21,7 @@ Include the `lvl99` npm package in your `npm` project:
 
 ### Use within JavaScript
 
-Require/import the `lvl99` module in your JavaScript:
+Require/import the `@lvl99dotcom/lvl99` module in your JavaScript:
 
 ```javascript
   const lvl99 = require('@lvl99dotcom/lvl99')
