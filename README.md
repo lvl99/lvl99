@@ -15,7 +15,7 @@ nothing to do with React. I also use it as a self-learning and development exerc
 Include the `lvl99` npm package in your `npm` project: 
 
 ```bash
-  npm i --save-dev lvl99
+  npm i --save-dev @lvl99/lvl99
 ```
 
 
@@ -24,13 +24,13 @@ Include the `lvl99` npm package in your `npm` project:
 Require/import the `lvl99` module in your JavaScript:
 
 ```javascript
-  const lvl99 = require('lvl99')
+  const lvl99 = require('@lvl99/lvl99')
 ```
 
 You can also require/import single files if you don't want the whole JS framework:
 
 ```javascript
-  const breakpoints = require('lvl99/src/es6/breakpoints')
+  const breakpoints = require('@lvl99/lvl99/src/es6/breakpoints')
 ```
 
 
@@ -39,13 +39,13 @@ You can also require/import single files if you don't want the whole JS framewor
 Import the `lvl99.less` file in your LESS:
 
 ```less
-  @import 'path/to/node_modules/lvl99/less/lvl99.less';
+  @import 'path/to/node_modules/@lvl99/lvl99/less/lvl99.less';
 ```
 
 You can also require/import single files if you don't want the whole LESS framework:
 
 ```less
-  @import 'path/to/node_modules/lvl99/less/mixins.less';
+  @import 'path/to/node_modules/@lvl99/lvl99/less/mixins.less';
 ```
 
 
