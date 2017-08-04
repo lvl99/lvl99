@@ -15,7 +15,7 @@ nothing to do with React. I also use it as a self-learning and development exerc
 Include the `lvl99` npm package in your `npm` project: 
 
 ```bash
-  npm i --save-dev @lvl99/lvl99
+  npm install --save-dev @lvl99/lvl99
 ```
 
 
