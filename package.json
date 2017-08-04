@@ -15,12 +15,12 @@
   ],
   "homepage": "https://github.com/lvl99/lvl99",
   "repository": {
-    "type" : "git",
+    "type": "git",
     "url": "https://github.com/lvl99/lvl99.git"
   },
   "bugs": {
-    "url" : "https://github.com/lvl99/lvl99/issues",
-    "email" : "matt@lvl99.com"
+    "url": "https://github.com/lvl99/lvl99/issues",
+    "email": "matt@lvl99.com"
   },
   "author": "Matt Scheurich <matt@lvl99.com>",
   "license": "MIT",
