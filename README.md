@@ -56,7 +56,7 @@ You can also require/import single files if you don't want the whole LESS framew
 
 ## Folder structure
 
-```javascript
+```bash
   # Javascript (ES6 flavoured)
   es6/
     components/
