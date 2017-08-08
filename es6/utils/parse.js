@@ -1,5 +1,7 @@
 /**
- * LVL99 Util - Parse Target
+ * LVL99 Parse
+ *
+ * Parse strings or transform from one format to another
  *
  * @package lvl99
  */

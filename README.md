@@ -1,6 +1,6 @@
 # LVL99
 
-v1.0.0
+v1.1.0
 
 My own personal frontend framework. Primarily uses jQuery, mildly inspired by Bootstrap and Ember.js and also has
 nothing to do with React. I also use it as a self-learning and development exercise experiment.
@@ -30,7 +30,13 @@ Require/import the `lvl99` module in your JavaScript:
 You can also require/import single files if you don't want the whole JS framework:
 
 ```javascript
-  const breakpoints = require('lvl99/es6/breakpoints')
+  // Require whatever part of the framework you desire
+  // Breakpoints needs to be initialised with defined sizes
+  const breakpoints = require('lvl99/es6/tools/breakpoints')({
+    'desktop': [1024, 99999],
+    'tablet':  [600, 1024],
+    'mobile':  [0, 600]
+  })
 ```
 
 
@@ -59,21 +65,28 @@ You can also require/import single files if you don't want the whole LESS framew
 ```bash
   # Javascript (ES6 flavoured)
   es6/
+    core/
+      app.js                  # The app class 
+      component.js            # The component class that all other components inherit
+      entity.js               # The base entity class that all other classes inherit from
+      index.js                # All core modules in one
     components/
       accordion.js
-      component.js            # The base component class that all other components inherit
+      index.js                # All component modules in one
       modal.js
       spinner.js 
       toggleable.js 
+    tools/
+      breakpoints.js          # Test for breakpoints in JS
+      index.js                # All tools modules in one
+      queue.js                # Basic debounce queue for actions
+      trackevent.js           # Cache GA event tracking until GA object loaded
     utils/
       index.js                # All utils modules in one
       parse.js                # Some parsing functions like type coercion, etc.
       super.js                # Ember implementation of super behaviour
-    breakpoints.js            # Test for breakpoints in JS 
     common.js                 # Basic common used dependencies and variables
     index.js                  # All modules in one
-    queue.js                  # Basic debounce queue for actions
-    trackevent.js             # Cache GA event tracking until GA object loaded
     
   # LESS
   less/
@@ -106,7 +119,8 @@ You can also require/import single files if you don't want the whole LESS framew
 
 * **jQuery**: browser events, cross-browser implementations, etc.
 * **object-path**: good for testing on deep-nested objects
-* **lodash.merge**: deep extend
+* **lodash.merge**: deep object extend
+* **uuid**: unique ID generation
 
 
 ## Dev Dependencies
@@ -114,10 +128,33 @@ You can also require/import single files if you don't want the whole LESS framew
 * **Jest**: unit testing
 
 
+## Changelog
+
+### 1.1.0
+
+* Added the core `Entity` class
+* Added the core `App` class
+* Refactored `Component` class to extend `Entity` and be categorised as core
+
+### 1.0.1
+
+* npm publish error (whoops)
+
+### 1.0.0
+
+* First release!
+
+
 ## TODO
 
 * Complete the README
 * Write more unit tests
+* Write more documentation throughout source
+
+
+## Contribute
+
+What? Really? Are you sure? Aren't there other frameworks more worth your time?
 
 
 ## Licence

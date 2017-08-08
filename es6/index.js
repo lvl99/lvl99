@@ -1,19 +1,21 @@
 /**
  * LVL99
+ *
+ * The whole framework in one discrete package
+ *
+ * @package lvl99
  */
 
 const common = require('./common')
 const utils = require('./utils')
-const queue = require('./queue')
-const breakpoints = require('./breakpoints')
-const trackEvent = require('./trackevent')
+const core = require('./core')
+const tools = require('./tools')
 
 const lvl99 = {
   common,
+  core,
   utils,
-  queue,
-  breakpoints,
-  trackEvent
+  tools
 }
 
 module.exports = lvl99

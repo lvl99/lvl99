@@ -1,9 +1,9 @@
 /**
- * Parse
+ * LVL99 Parse
  */
 
-let _loggerPath = 'lvl99/src/utils/parse'
-let Parse = require('../../src/js/utils/parse')
+let _loggerPath = 'lvl99/es6/utils/parse'
+let Parse = require('../../es6/utils/parse')
 
 /**
  * Parse.coerceToPrimitiveType

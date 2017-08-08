@@ -6,7 +6,7 @@
  */
 
 const { $, $body, events } = require('../utils')
-const Component = require('./component')
+const Component = require('../core/component')
 
 /**
  * Toggleable Properties

@@ -1,6 +1,9 @@
 /**
+ * LVL99 Queue
  * Batch actions into a debounced queue
  * Useful to reduce amount of work computer/browser does
+ *
+ * @package lvl99
  */
 
 import merge from 'lodash.merge'

@@ -7,8 +7,9 @@
 const objectPath = require('object-path')
 const merge = require('lodash.merge')
 const uuid = require('uuid')
-const { $, $doc } = require('../utils')
-// import { wrap } from 'LVL99.Utils.Super'
+const Entity = require('./entity')
+const { $, $doc } = require('../common')
+// const { wrap } = require('../utils/super')
 const {
   extractTriggerDetails,
   getTargetBySelector,
@@ -107,8 +108,9 @@ const ComponentProperties = {
  * Component
  *
  * @class
+ * @extends Entity
  */
-class Component {
+class Component extends Entity {
   /**
    * Component constructor
    *
@@ -119,11 +121,7 @@ class Component {
     // @debug
     // console.log('LVL99:Component:constructor')
 
-    this.extend({
-      _attributes: attributes
-    })
-
-    this._uuid = `${this._NS}:${uuid.v4()}`
+    super(attributes)
   }
 
   /**
@@ -142,94 +140,18 @@ class Component {
     let allPublicMethods = ComponentProperties._properties.publicMethods.slice(0)
     args.forEach((arg) => {
       let hasPublicMethods = objectPath.get(arg, '_properties.publicMethods')
-      // console.log('hasPublicMethods', hasPublicMethods, arg)
       if (hasPublicMethods && hasPublicMethods instanceof Array) {
         allPublicMethods = allPublicMethods.concat(hasPublicMethods)
       }
     })
     allPublicMethods = Array.from(new Set(allPublicMethods))
-    // console.log('allPublicMethods', allPublicMethods)
 
-    // Merge the properties with the instantiated attributes and concatenated public methods
-    merge(this, ComponentProperties, ...arguments, {
+    // Extend the component's properties with the instantiated attributes and concatenated public methods
+    super.extend(ComponentProperties, ...arguments, {
       _properties: {
         publicMethods: allPublicMethods
       }
     })
-
-    // @debug
-    // console.log(this)
-  }
-
-  /**
-   * Get a Component's property value.
-   *
-   * @param {String} propName The name of the property
-   */
-  getProp (propName) {
-    if (!propName || typeof propName !== 'string') {
-      throw new Error(`[${this._NS}] get: 'propName' value is invalid`)
-    }
-
-    return objectPath.get(this._properties, propName)
-
-    // if (Object.keys(this._properties).includes(propName)) {
-    //   return this._properties[propName]
-    // } else {
-    //   throw new Error(`[${this._NS}] get: property '${propName}' does not exist`)
-    // }
-  }
-
-  /**
-   * Get a Component's attribute value.
-   *
-   * @param {String} attrName The name of the attribute
-   * @return {Any}
-   */
-  getAttr (attrName) {
-    if (!attrName || typeof attrName !== 'string') {
-      throw new Error(`[${this._NS}] getAttr: 'attrName' value is invalid`)
-    }
-
-    return objectPath.get(this._attributes, attrName)
-
-    // if (Object.keys(this._attributes).includes(attrName)) {
-    //   return this._attributes[attrName]
-    // } else {
-    //   return undefined
-    // }
-  }
-
-  /**
-   * Set a Component's property to a value.
-   *
-   * @param {String} propName
-   * @param {Any} propValue
-   */
-  setProp (propName, propValue) {
-    if (!propName || typeof propName !== 'string') {
-      throw new Error(`[${this._NS}] set: 'propName' value is invalid`)
-    }
-
-    return objectPath.set(this._properties, propName, propValue)
-
-    // this._properties[propName] = propValue
-  }
-
-  /**
-   * Set a Component's property to a value.
-   *
-   * @param {String} propName
-   * @param {Any} propValue
-   */
-  setAttr (attrName, attrValue) {
-    if (!attrName || typeof attrName !== 'string') {
-      throw new Error(`[${this._NS}] setAttr: 'attrName' value is invalid`)
-    }
-
-    return objectPath.set(this._attributes, attrName, attrValue)
-
-    // this._attributes[attrName] = attrValue
   }
 
   /**
@@ -333,6 +255,8 @@ class Component {
    * Initialise Component
    */
   init () {
+    super.init(...arguments)
+
     // @debug
     // console.log(`[${this._NS:init}]`)
 
@@ -441,7 +365,7 @@ class Component {
      */
     this.triggerEvent('destroy:beforeend')
 
-    delete this
+    super.destroy(...arguments)
   }
 
   /**

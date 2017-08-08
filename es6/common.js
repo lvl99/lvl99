@@ -1,5 +1,9 @@
 /**
  * LVL99 Common
+ *
+ * Common dependencies and other useful things
+ *
+ * @package lvl99
  */
 
 const $ = require('jquery')
@@ -7,11 +11,10 @@ const $ = require('jquery')
 /**
  * Basic shorthand props to cache/reference common jQuery objects
  */
-const $ = jQuery
-const $doc = jQuery(document)
-const $win = jQuery(window)
-const $html = jQuery('html')
-const $body = jQuery('body')
+const $doc = $(document)
+const $win = $(window)
+const $html = $('html')
+const $body = $('body')
 
 /**
  * Event name shorthands

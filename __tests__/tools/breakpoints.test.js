@@ -1,9 +1,9 @@
 /**
- * Breakpoints
+ * LVL99 Breakpoints
  */
 
-let _loggerPath = 'lvl99/src/breakpoints'
-let Breakpoints = require('../src/js/breakpoints')({
+let _loggerPath = 'lvl99/es6/breakpoints'
+let Breakpoints = require('../../es6/tools/breakpoints')({
   'desktop': [1024, 99999],
   'tablet-l': [800, 1024],
   'tablet': [768, 1024],
