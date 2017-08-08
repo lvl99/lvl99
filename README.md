@@ -128,23 +128,6 @@ You can also require/import single files if you don't want the whole LESS framew
 * **Jest**: unit testing
 
 
-## Changelog
-
-### 1.1.0
-
-* Added the core `Entity` class
-* Added the core `App` class
-* Refactored `Component` class to extend `Entity` and be categorised as core
-
-### 1.0.1
-
-* npm publish error (whoops)
-
-### 1.0.0
-
-* First release!
-
-
 ## TODO
 
 * Complete the README
@@ -157,6 +140,13 @@ You can also require/import single files if you don't want the whole LESS framew
 What? Really? Are you sure? Aren't there other frameworks more worth your time?
 
 
-## Licence
+## [Changelog](CHANGELOG.md)
+
+### 1.2.0
+
+@TODO before release
+
+
+## [License](LICENSE.md)
 
 MIT
