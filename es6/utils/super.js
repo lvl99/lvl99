@@ -2,13 +2,13 @@
  * Borrowed this funky stuff from Ember
  * I used it before to avoid ES6 `class`, but then something didn't work properly so I ended up using `class`, but I
  * think that I was doing something wrong and that it would have been better. Means the programming would be more
- * functional than object-oriented.
+ * functional than object-oriented (well, I guess kinda both like it is already?).
  */
 
 const HAS_SUPER_PATTERN = /\.(_super|call\(this|apply\(this)/
 const fnToString = Function.prototype.toString
 
-export const checkHasSuper = ((() => {
+const checkHasSuper = ((() => {
   let sourceAvailable = fnToString.call(function() {
       return this
     }).indexOf('return this') > -1
@@ -24,7 +24,7 @@ export const checkHasSuper = ((() => {
   }
 })())
 
-export function ROOT() {}
+function ROOT () {}
 ROOT.__hasSuper = false
 
 function hasSuper(func) {
@@ -45,7 +45,7 @@ function hasSuper(func) {
  @param {Function} superFunc The super function.
  @return {Function} wrapped function.
  */
-export function wrap(func, superFunc, superObj) {
+function wrap (func, superFunc, superObj) {
   if (!hasSuper(func)) {
     return func
   }
@@ -71,4 +71,10 @@ function _wrap(func, superFunc, superObj) {
   }
   superWrapper.wrappedFunction = func
   return superWrapper
+}
+
+module.exports = {
+  checkHasSuper,
+  ROOT,
+  wrap
 }

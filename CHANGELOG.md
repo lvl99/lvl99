@@ -3,6 +3,7 @@
 * Refactored the [`Queue`](es6/tools/queue.js) tool (changed behaviour of `add` and `sync`) and added some extra
   functionality (`queue`, `play`, `pause`, `getActionByLabel`, `getTimerDelay`, `setTimerDelay`, `getQueueLength` and
   `checkStatus`)
+* Fixed imports/exports on [`super`](es6/utils/super.js)
 
 ### 1.1.0
 
