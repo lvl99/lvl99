@@ -1,6 +1,6 @@
 # LVL99
 
-v1.2.0
+v1.2.1
 
 My own personal frontend framework. Primarily uses jQuery, mildly inspired by Bootstrap and Ember.js and also has
 nothing to do with React. I also use it as a self-learning and development exercise experiment.
@@ -142,7 +142,7 @@ What? Really? Are you sure? Aren't there other frameworks more worth your time?
 
 ## [Changelog](CHANGELOG.md)
 
-### 1.2.0
+### 1.2.1
 
 * Refactored the [`Queue`](es6/tools/queue.js) tool (changed behaviour of `add` and `sync`) and added some extra
   functionality (`queue`, `play`, `pause`, `getActionByLabel`, `getTimerDelay`, `setTimerDelay`, `getQueueLength` and
