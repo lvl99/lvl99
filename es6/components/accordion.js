@@ -72,11 +72,11 @@ class Accordion extends Component {
 
   init () {
     // @debug
-    // console.log('LVL99:Accordion:init', this._NS, this)
+    // console.log('LVL99:Accordion:init', this.NS, this)
 
     // No element found? Error
     if (!this.getElem() || !this.getElem().length) {
-      throw new Error(`${this._NS}:init: elem is missing`)
+      throw new Error(`${this.NS}:init: elem is missing`)
     }
 
     // Turn children into {ToggleableComponent}s (if not already {ToggleableComponent}s)
@@ -85,14 +85,14 @@ class Accordion extends Component {
       this.setAttr('$items', $items)
 
       // @debug
-      // console.log(`${this._NS}:init`, {
+      // console.log(`${this.NS}:init`, {
       //   component: this,
       //   $items: this.getAttr('$items')
       // })
 
       // No items!
       if (!this.getAttr('$items').length) {
-        console.warn(`[${this._NS}:init] Warning: no $items were found to assign to this Accordion`)
+        console.warn(`[${this.NS}:init] Warning: no $items were found to assign to this Accordion`)
 
       } else {
         // Turn child into {ToggleableComponent} using the app's `createComponentInstance` method

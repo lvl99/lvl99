@@ -7,10 +7,12 @@
  */
 
 const parse = require('./parse')
+const inheritance = require('./inheritance')
 // const super = require('./super')
 
 const utils = {
-  parse
+  parse,
+  inheritance
 }
 
 module.exports = utils

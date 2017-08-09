@@ -9,6 +9,28 @@ const uuid = require('uuid')
 const Entity = require('./entity')
 
 /**
+ * Get a component's namespace
+ *
+ * @private
+ * @param {Component} component
+ * @returns {undefined|String|Component}
+ */
+function getComponentNamespace (component) {
+  let componentNS = component
+
+  // Function/class given
+  if (typeof component === 'function') {
+    if (component.NS) {
+      componentNS = component.NS
+    } else {
+      componentNS = component.prototype.constructor.name
+    }
+  }
+
+  return componentNS
+}
+
+/**
  * The App's base properties
  *
  * @type {Object}
@@ -95,6 +117,73 @@ class App extends Entity {
   }
 
   /**
+   * Register a component class in the app. You can also specify a separate namespace to register it under.
+   *
+   * @param {Component} componentClass
+   * @param {String} componentClassNamespace
+   */
+  registerComponentClass (componentClass, componentClassNamespace) {
+    let componentClassNS
+
+    // No valid componentClass given
+    if (!componentClass) {
+      throw new Error('No component class was given')
+    }
+
+    // Get the namespace from the component class (or otherwise specified)
+    componentClassNS = getComponentNamespace(componentClassNamespace || componentClass)
+
+    // Register the component class
+    if (componentClassNS) {
+      this._components[componentClassNS] = componentClass
+    }
+  }
+
+  /**
+   * Deregister a component class by namespace
+   *
+   * @param {String|Component} componentClassNamespace
+   */
+  deregisterComponentClass (componentClassNamespace) {
+    let componentClassNS
+
+    // No valid componentClass given
+    if (!componentClassNamespace) {
+      throw new Error('No component class namespace was given')
+    }
+
+    // Get the namespace
+    componentClassNS = getComponentNamespace(componentClassNamespace)
+
+    // Remove the component class
+    if (componentClassNS && this._components.hasOwnProperty(componentClassNS)) {
+      this._components[componentClassNS] = undefined
+      delete this._components[componentClassNS]
+    }
+  }
+
+  /**
+   * Get a component class by namespace
+   *
+   * @param {String} componentClassNamespace
+   * @return {undefined|Component}
+   */
+  getComponentClass (componentClassNamespace) {
+    let componentClassNS = componentClassNamespace
+
+    if (!componentClassNamespace) {
+      throw new Error('No component class namespace was given')
+    }
+
+    // Get the component class
+    if (componentClassNS && this._components.hasOwnProperty(componentClassNS)) {
+      return this._components[componentClassNS]
+    }
+
+    return undefined
+  }
+
+  /**
    * Add component instance to app and initialise the component instance
    *
    * @param {Component} componentInstance
@@ -103,7 +192,7 @@ class App extends Entity {
     componentInstance._app = this
 
     // Add component instance to collection
-    this._componentInstances[componentInstance._uuid] = componentInstance
+    this._componentInstances[componentInstance.uuid] = componentInstance
 
     // Initialise the component
     componentInstance.init()
@@ -112,20 +201,21 @@ class App extends Entity {
   /**
    * Create component instance
    *
-   * @param {String} componentType
+   * @param {String} componentClassNamespace
    * @param {Object} attributes
    * @returns {Component}
    */
-  createComponentInstance (componentType, attributes) {
+  createComponentInstance (componentClassNamespace, attributes) {
     // @debug
-    // console.log(`${this._NS}.getComponentInstance: ${componentUUID}`)
+    // console.log(`${this.NS}.createComponentInstance: ${componentClassNamespace}`)
 
     // Create and initialise the component
-    if (this._components.hasOwnProperty(componentType)) {
-      let newComponent = new this._components[componentType](attributes)
+    if (this._components.hasOwnProperty(componentClassNamespace)) {
+      let newComponent = new this._components[componentClassNamespace](attributes)
 
       // @debug
-      // console.log(`${this._NS}.createComponentInstance`, {
+      // console.log(`${this.NS}.createComponentInstance`, {
+      //   componentClassNamespace,
       //   newComponent,
       //   attributes
       // })
@@ -145,7 +235,7 @@ class App extends Entity {
    */
   getComponentInstance (componentUUID) {
     // @debug
-    // console.log(`${this._NS}.getComponentInstance: ${componentUUID}`)
+    // console.log(`${this.NS}.getComponentInstance: ${componentUUID}`)
 
     if (this._componentInstances.hasOwnProperty(componentUUID)) {
       return this._componentInstances[componentUUID]
@@ -161,12 +251,12 @@ class App extends Entity {
    */
   removeComponentInstance (componentUUID) {
     // @debug
-    // console.log(`${this._NS}.removeComponentInstance: ${componentUUID}`)
+    // console.log(`${this.NS}.removeComponentInstance: ${componentUUID}`)
 
     let removeComponentInstance = this.getComponentInstance(componentUUID)
     if (typeof removeComponentInstance !== 'undefined') {
       // @debug
-      // console.log(`${this._NS}.removeComponentInstance: found component instance to remove`, removeComponentInstance)
+      // console.log(`${this.NS}.removeComponentInstance: found component instance to remove`, removeComponentInstance)
 
       removeComponentInstance.destroy()
 

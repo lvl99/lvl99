@@ -24,6 +24,9 @@ test(`${_loggerPath} instantiates correctly`, () => {
 })
 
 test(`${_loggerPath} can be extended`, () => {
+  expect(testEntity.NS).toBe('LVL99:Entity')
+  expect(testEntity.ns).toBe('lvl99-entity')
+
   testEntity.extend({
     _NS: 'Test:Entity',
     _ns: 'test-entity',
@@ -32,7 +35,9 @@ test(`${_loggerPath} can be extended`, () => {
       testPropB: 123
     }
   })
-  expect(testEntity._NS).toBe('Test:Entity')
+
+  expect(testEntity.NS).toBe('Test:Entity')
+  expect(testEntity.ns).toBe('test-entity')
 })
 
 test(`${_loggerPath} setProp works`, () => {

@@ -108,7 +108,7 @@ class Spinner extends Toggleable {
     super.buildCSSClasses(...arguments)
 
     if (!this.getAttr('_spinnerClassSpinning')) {
-      this.setAttr('_spinnerClassSpinning', `ui-${this._ns}-spinning`)
+      this.setAttr('_spinnerClassSpinning', `ui-${this.ns}-spinning`)
     }
   }
 
@@ -119,11 +119,11 @@ class Spinner extends Toggleable {
    */
   init () {
     // @debug
-    // console.log('LVL99:Spinner:init', this._NS, this)
+    // console.log('LVL99:Spinner:init', this.NS, this)
 
     // No element found? Error
     if (!this.getElem() || !this.getElem().length) {
-      throw new Error(`${this._NS}:init: elem is missing`)
+      throw new Error(`${this.NS}:init: elem is missing`)
     }
 
     // Set up watching target events for start/stop
@@ -149,7 +149,7 @@ class Spinner extends Toggleable {
    */
   startSpinning () {
     // @debug
-    // console.log(`${this._NS}:startSpinning`)
+    // console.log(`${this.NS}:startSpinning`)
 
     if (!this.getAttr('isSpinning')) {
       if (!this.getAttr('isOpen')) {
@@ -166,7 +166,7 @@ class Spinner extends Toggleable {
    */
   stopSpinning () {
     // @debug
-    // console.log(`${this._NS}:stopSpinning`)
+    // console.log(`${this.NS}:stopSpinning`)
 
     if (this.getAttr('isSpinning')) {
       this.setAttr('isSpinning', false)

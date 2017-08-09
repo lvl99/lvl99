@@ -111,11 +111,11 @@ class Toggleable extends Component {
    */
   init () {
     // @debug
-    // console.log('LVL99:Toggleable:init', this._NS, this)
+    // console.log('LVL99:Toggleable:init', this.NS, this)
 
     // No element found? Error
     if (!this.getElem() || !this.getElem().length) {
-      throw new Error(`${this._NS}:init: elem is missing`)
+      throw new Error(`${this.NS}:init: elem is missing`)
     }
 
     // Add tabindex to elem for blur stuff
@@ -139,9 +139,9 @@ class Toggleable extends Component {
     // Only if using transitioning
     if (this.getAttr('_toggleableUseTransitioning')) {
       // Remove transition classes after transitionend
-      this.getElem().on(events.transitionend, /* `[data-component-id="${this._uuid}"]`, */ (jQueryEvent) => {
+      this.getElem().on(events.transitionend, /* `[data-component-id="${this.uuid}"]`, */ (jQueryEvent) => {
         // @debug
-        // console.log(`[${this._NS}] transitionend`, {
+        // console.log(`[${this.NS}] transitionend`, {
         //   jQueryEvent,
         //   target: jQueryEvent.target
         // })
@@ -164,21 +164,21 @@ class Toggleable extends Component {
     }
 
     if (!this.getAttr('_toggleableClassOpen')) {
-      this.setAttr('_toggleableClassOpen', `ui-${this._ns}-open`)
+      this.setAttr('_toggleableClassOpen', `ui-${this.ns}-open`)
     }
 
     // Only if using transitioning
     if (this.getAttr('_toggleableUseTransitioning')) {
       if (!this.getAttr('_toggleableClassTransitioning')) {
-        this.setAttr('_toggleableClassTransitioning', `ui-${this._ns}-transitioning ui-${this._ns}-opening ui-${this._ns}-closing`)
+        this.setAttr('_toggleableClassTransitioning', `ui-${this.ns}-transitioning ui-${this.ns}-opening ui-${this.ns}-closing`)
       }
 
       if (!this.getAttr('_toggleableClassTransitioningOpen')) {
-        this.setAttr('_toggleableClassTransitioningOpen', `ui-${this._ns}-transitioning ui-${this._ns}-opening ${this.getAttr('_toggleableClassOpen')}`)
+        this.setAttr('_toggleableClassTransitioningOpen', `ui-${this.ns}-transitioning ui-${this.ns}-opening ${this.getAttr('_toggleableClassOpen')}`)
       }
 
       if (!this.getAttr('_toggleableClassTransitioningClose')) {
-        this.setAttr('_toggleableClassTransitioningClose', `ui-${this._ns}-transitioning ui-${this._ns}-closing`)
+        this.setAttr('_toggleableClassTransitioningClose', `ui-${this.ns}-transitioning ui-${this.ns}-closing`)
       }
 
     // If not, unset these values
@@ -194,7 +194,7 @@ class Toggleable extends Component {
    */
   open () {
     // @debug
-    // console.log(`${this._NS}:open`)
+    // console.log(`${this.NS}:open`)
 
     if (!this.getAttr('isOpen')) {
       this.setAttr('isOpen', true)
@@ -221,7 +221,7 @@ class Toggleable extends Component {
    */
   close () {
     // @debug
-    // console.log(`${this._NS}:close`)
+    // console.log(`${this.NS}:close`)
 
     if (this.getAttr('isOpen')) {
       this.setAttr('isOpen', false)
@@ -244,7 +244,7 @@ class Toggleable extends Component {
    */
   toggle (jQueryEvent) {
     // @debug
-    // console.log(`${this._NS}:toggle`)
+    // console.log(`${this.NS}:toggle`)
 
     // If the event was keyup/keydown
     let acceptedKeys = [13, 32] // enter and space
@@ -265,5 +265,18 @@ class Toggleable extends Component {
     }
   }
 }
+
+/**
+ * Class properties
+ */
+Object.defineProperty(Toggleable, 'NS', {
+  value: ToggleableProperties._NS,
+  writable: true
+})
+
+Object.defineProperty(Toggleable, 'ns', {
+  value: ToggleableProperties._ns,
+  writable: true
+})
 
 module.exports = Toggleable

@@ -312,8 +312,8 @@ function getTargetSelector (target, context) {
     return 'document'
 
   // Self
-  } else if (target.hasOwnProperty('_uuid')) {
-    return `[data-component-id="${target._uuid}"]`
+  } else if (target.hasOwnProperty('uuid')) {
+    return `[data-component-id="${target.uuid}"]`
 
   // HTML Elem
   } else if ($(target).length) {
