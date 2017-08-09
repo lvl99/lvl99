@@ -119,7 +119,9 @@ class Component extends Entity {
    */
   constructor (attributes) {
     // @debug
-    // console.log('LVL99:Component:constructor')
+    // console.log('LVL99:Component:constructor', {
+    //   arguments
+    // })
 
     super(attributes)
   }
@@ -162,7 +164,7 @@ class Component extends Entity {
   getElem () {
     // Soft return
     if (!this.getAttr('elem') && (!this.getAttr('$elem') || !this.getAttr('$elem').length)) {
-      console.warn(`${this._NS}.getElem: no elem was found for this component. This may cause problems with components which rely on the elem attribute.`)
+      console.warn(`${this.NS}.getElem: no elem was found for this component. This may cause problems with components which rely on the elem attribute.`)
       return undefined
     }
 
@@ -190,11 +192,11 @@ class Component extends Entity {
     // Mark the element
     if (this.getElem() && this.getElem().length) {
       if (!this.getElem().attr('data-component')) {
-        this.getElem().attr('data-component', this._NS)
+        this.getElem().attr('data-component', this.NS)
       }
 
       if (!this.getElem().attr('data-component-id')) {
-        this.getElem().attr('data-component-id', this._uuid)
+        this.getElem().attr('data-component-id', this.uuid)
       }
 
       this.triggerEvent('markElem:end')
@@ -239,7 +241,7 @@ class Component extends Entity {
       try {
         attrs = JSON.parse(this.getElem().attr('data-component-attributes'))
       } catch (e) {
-        console.error(`[${this._NS}] loadAttrs: Error loading attributes from DOM element`)
+        console.error(`[${this.NS}] loadAttrs: Error loading attributes from DOM element`)
       }
 
       this._attributes = merge(this._attributes, attrs)
@@ -258,7 +260,7 @@ class Component extends Entity {
     super.init(...arguments)
 
     // @debug
-    // console.log(`[${this._NS:init}]`)
+    // console.log(`[${this.NS:init}]`)
 
     // Mark the element
     this.markElem()
@@ -297,11 +299,11 @@ class Component extends Entity {
         try {
           method = triggerDetails.context[triggerDetails.do]
         } catch (e) {
-          throw new Error(`[${this._NS}] init: public method '${triggerDetails.do}' was not found on this component`)
+          throw new Error(`[${this.NS}] init: public method '${triggerDetails.do}' was not found on this component`)
         }
 
         // @debug
-        // console.log(`[${this._NS}] init: attach public method`, {
+        // console.log(`[${this.NS}] init: attach public method`, {
         //   triggerDetails,
         //   method
         // })
@@ -311,7 +313,7 @@ class Component extends Entity {
           // Wrap the method into a closure
           let doComponentMethod = (jQueryEvent) => {
             // @debug
-            // console.log(`Triggered ${this._NS}:${triggerDetails.do}`, {
+            // console.log(`Triggered ${this.NS}:${triggerDetails.do}`, {
             //   _class: this,
             //   _method: method,
             //   jQueryEvent,
@@ -334,7 +336,7 @@ class Component extends Entity {
         } else {
           // @debug
           // console.log(this, trigger, triggerDetails)
-          throw new Error(`[${this._NS}] init: public method '${triggerDetails.do}' is not a valid function`)
+          throw new Error(`[${this.NS}] init: public method '${triggerDetails.do}' is not a valid function`)
         }
       })
     }
@@ -398,14 +400,14 @@ class Component extends Entity {
     }
 
     // @debug
-    // console.log(`[${this._NS}] bindEventToTarget`, {
+    // console.log(`[${this.NS}] bindEventToTarget`, {
     //   eventName,
     //   method,
     //   target,
-    //   triggerName: `${this._NS}:${eventName}`
+    //   triggerName: `${this.NS}:${eventName}`
     // })
 
-    $(target).on(`${this._NS}:${eventName}`, method)
+    $(target).on(`${this.NS}:${eventName}`, method)
   }
 
   /**
@@ -422,15 +424,15 @@ class Component extends Entity {
     selector = getTargetSelector(selector, this)
 
     // @debug
-    // console.log(`[${this._NS}] bindEventToTargetSelector`, {
+    // console.log(`[${this.NS}] bindEventToTargetSelector`, {
     //   eventName,
     //   selector,
     //   method,
     //   target,
-    //   triggerName: `${this._NS}:${eventName}`
+    //   triggerName: `${this.NS}:${eventName}`
     // })
 
-    $(target).on(`${this._NS}:${eventName}`, selector, method)
+    $(target).on(`${this.NS}:${eventName}`, selector, method)
   }
 
   /**
@@ -442,10 +444,10 @@ class Component extends Entity {
    */
   triggerEvent (eventName, ...args) {
     // @debug
-    // console.log(`[${this._NS}] triggerEvent: ${this._NS}:${eventName}`)
+    // console.log(`[${this.NS}] triggerEvent: ${this.NS}:${eventName}`)
 
     // Always pass the component as the first argument parameter
-    $doc.trigger(`${this._NS}:${eventName}`, [this, ...args])
+    $doc.trigger(`${this.NS}:${eventName}`, [this, ...args])
   }
 
   /**
@@ -460,10 +462,10 @@ class Component extends Entity {
     selector = getTargetSelector(selector, this)
 
     // @debug
-    // console.log(`[${this._NS}] triggerEventOnSelector: ${this._NS}:${eventName}`)
+    // console.log(`[${this.NS}] triggerEventOnSelector: ${this.NS}:${eventName}`)
 
     // Always pass the component as the first argument parameter
-    $(selector).trigger(`${this._NS}:${eventName}`, [this, ...args])
+    $(selector).trigger(`${this.NS}:${eventName}`, [this, ...args])
   }
 }
 

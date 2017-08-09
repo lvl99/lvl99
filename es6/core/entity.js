@@ -10,6 +10,9 @@
 const uuid = require('uuid')
 const merge = require('lodash.merge')
 const objectPath = require('object-path')
+const {
+  exposePrivateProperties
+} = require('../utils/inheritance')
 
 /**
  * The Entity's base properties
@@ -57,19 +60,31 @@ class Entity {
    */
   constructor (attributes) {
     // @debug
-    // console.log('LVL99:Entity:constructor')
+    // console.log('LVL99:Entity:constructor', {
+    //   arguments
+    // })
 
     this.extend({
       _attributes: attributes
     })
 
-    this._uuid = `${this._NS}:${uuid.v4()}`
+    // Expose private values
+    exposePrivateProperties(this)
+
+    // Create a unique ID for this Entity
+    Object.defineProperty(this, 'uuid', {
+      value: `${this.NS}:${uuid.v4()}`,
+      writable: false,
+      enumerable: true,
+      configurable: false
+    })
   }
 
   /**
    * Extend the Entity with any given {Object} arguments
    *
    * @param {Object} ...arguments
+   * @returns {Self}
    */
   extend () {
     // @debug
@@ -79,6 +94,8 @@ class Entity {
 
     // Merge the properties with the instantiated attributes and concatenated public methods
     merge(this, EntityProperties, ...arguments)
+
+    return this
   }
 
   /**
@@ -89,10 +106,10 @@ class Entity {
    */
   getProp (propName) {
     if (!propName || typeof propName !== 'string') {
-      throw new Error(`[${this._NS}] get: 'propName' value is invalid`)
+      throw new Error(`[${this.NS}] get: 'propName' value is invalid`)
     }
 
-    return objectPath.get(this._properties, propName)
+    return objectPath.get(this.properties, propName)
   }
 
   /**
@@ -103,10 +120,10 @@ class Entity {
    */
   setProp (propName, propValue) {
     if (!propName || typeof propName !== 'string') {
-      throw new Error(`[${this._NS}] set: 'propName' value is invalid`)
+      throw new Error(`[${this.NS}] set: 'propName' value is invalid`)
     }
 
-    return objectPath.set(this._properties, propName, propValue)
+    return objectPath.set(this.properties, propName, propValue)
   }
 
   /**
@@ -117,10 +134,10 @@ class Entity {
    */
   getAttr (attrName) {
     if (!attrName || typeof attrName !== 'string') {
-      throw new Error(`[${this._NS}] getAttr: 'attrName' value is invalid`)
+      throw new Error(`[${this.NS}] getAttr: 'attrName' value is invalid`)
     }
 
-    return objectPath.get(this._attributes, attrName)
+    return objectPath.get(this.attributes, attrName)
   }
 
   /**
@@ -131,10 +148,10 @@ class Entity {
    */
   setAttr (attrName, attrValue) {
     if (!attrName || typeof attrName !== 'string') {
-      throw new Error(`[${this._NS}] setAttr: 'attrName' value is invalid`)
+      throw new Error(`[${this.NS}] setAttr: 'attrName' value is invalid`)
     }
 
-    return objectPath.set(this._attributes, attrName, attrValue)
+    return objectPath.set(this.attributes, attrName, attrValue)
   }
 
   /**

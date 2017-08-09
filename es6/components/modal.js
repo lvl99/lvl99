@@ -75,7 +75,7 @@ class Modal extends Toggleable {
 
   init () {
     // @debug
-    // console.log('LVL99:Modal:init', this._NS, this)
+    // console.log('LVL99:Modal:init', this.NS, this)
 
     // Close on target event
     if (this.getAttr('_modalCloseOnTarget') && this.getAttr('_modalCloseOnTargetEvent')) {
