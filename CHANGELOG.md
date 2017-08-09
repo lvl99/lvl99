@@ -1,3 +1,9 @@
+### 1.3.1
+
+* Defined `@display-types` list for [`responsive`](less/mixins/responsive.less) `.devices-display-types` mixin to work 
+* Fixed incorrect require reference to [`common`](es6/common.js) in named [components](es6/components)
+
+
 ### 1.3.0
 
 * Experimented with creating some [inheritance](es6/utils/inheritance.js) util methods to automatically process class

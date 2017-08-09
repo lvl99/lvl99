@@ -6,7 +6,7 @@
  */
 
 const merge = require('lodash.merge')
-const { $, $body, events } = require('../../utils')
+const { $, $body, events } = require('../common')
 const Component = require('../core/component')
 
 const AccordionProperties = {

@@ -42,6 +42,14 @@
 //
 // Show/hide elements based on display property
 //
+
+// Display types to generate show/hide classes for
+@display-types:   inline,
+                  inline-block,
+                  block,
+                  table,
+                  flex;
+
 .devices-display-types (@devices) {
   // Set up generic classes
   .show {

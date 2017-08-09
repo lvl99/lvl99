@@ -5,7 +5,7 @@
  * @package lvl99
  */
 
-const { $, $doc, $body, events } = require('../utils')
+const { $, $doc, $body, events } = require('../common')
 const Toggleable = require('./toggleable')
 
 /**

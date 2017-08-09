@@ -5,7 +5,7 @@
  * @package lvl99
  */
 
-const { $, $body, events } = require('../utils')
+const { $, $body, events } = require('../common')
 const Component = require('../core/component')
 
 /**

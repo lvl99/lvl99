@@ -6,7 +6,7 @@
  * @package lvl99
  */
 
-const { $, $body, events } = require('../utils')
+const { $, $body, events } = require('../common')
 const Toggleable = require('./toggleable')
 
 const ModalProperties = {
