@@ -266,17 +266,4 @@ class Toggleable extends Component {
   }
 }
 
-/**
- * Class properties
- */
-Object.defineProperty(Toggleable, 'NS', {
-  value: ToggleableProperties._NS,
-  writable: true
-})
-
-Object.defineProperty(Toggleable, 'ns', {
-  value: ToggleableProperties._ns,
-  writable: true
-})
-
 module.exports = Toggleable
