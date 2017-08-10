@@ -3,10 +3,8 @@
  */
 
 // I'm include the whole shebang here for convenience
+// It's more likely you'll pick and choose the modules you want, to reduce the size of your JS
 const lvl99 = require('lvl99')
-
-// @TODO change reference to package tool
-const Debug = require('../../../../es6/tools/debug')()
 
 // I'm going to do some shorthand aliases for convenience
 const {
@@ -15,7 +13,8 @@ const {
   },
   tools: {
     Queue,
-    Breakpoints
+    Breakpoints,
+    Debug
   },
   core: {
     App
@@ -60,7 +59,7 @@ const DemoAppProperties = {
 }
 
 // Create a new class for our demo app
-class DemoApp extends lvl99.core.App {
+class DemoApp extends App {
   // This function occurs when a `new DemoApp(...)` call is made
   constructor (attributes) {
     // It's required to call the super with the given attributes
@@ -91,20 +90,30 @@ class DemoApp extends lvl99.core.App {
     let debug = this.getProp('debug')
     let queue = this.getProp('queue')
 
-    // Remove `no-js` class
+    // Remove `no-js` class on the HTML DOM element
     $html.removeClass('no-js')
 
     // Scroll window events
+    // This uses Queue to debounce operations
     $win.on('scroll', () => {
-      queue.sync('scrollWindow', this.scrollWindow, ...arguments)
+      queue.add('scrollWindow', this.scrollWindow, ...arguments)
     })
 
     // Resize window
+    // Same as above, just with a different function
     $win.on('resize orientationchange', () => {
-      queue.sync('checkWindow', this.checkWindow, ...arguments)
+      queue.add('checkWindow', this.checkWindow, ...arguments)
     })
 
     // Search the DOM for any components to initialise
+    // Components on DOM elements are specified with the `data-component` attribute, e.g.
+    // ```html
+    //   <div id="my-modal" data-component="Modal">...</div>
+    // ```
+    // Would be instantiated with the Modal component behaviours, and look like this after:
+    // ```html
+    //   <div id="my-modal" data-component-id="LVL99:Modal:123456"
+    // ```
     $('[data-component]').each((i, elem) => {
       let $elem = $(elem)
       let componentType = $elem.attr('data-component')

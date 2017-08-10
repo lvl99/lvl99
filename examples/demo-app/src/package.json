@@ -35,6 +35,7 @@
     "gulp-util": "^3.0.8",
     "lazypipe": "^1.0.1",
     "lodash.escaperegexp": "^4.1.2",
+    "lvl99": "^1.3.2",
     "object-path": "^0.11.4",
     "pkgify": "^1.1.0",
     "remapify": "^2.1.0",
@@ -76,9 +77,13 @@
     "srcDir": "./",
     "destDir": "../",
     "less": {
-      "src": ["./less/app.less"],
+      "src": [
+        "./less/app.less"
+      ],
       "dest": "../app.css",
-      "watchSrc": ["./less/**/*.less"]
+      "watchSrc": [
+        "./less/**/*.less"
+      ]
     },
     "browserify": {
       "bundles": {
