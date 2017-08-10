@@ -89,7 +89,7 @@
       "bundles": {
         "app": {
           "src": "./es6/app.js",
-          "dest": "../app.js"
+          "dest": "../bundled.app.js"
         }
       }
     }

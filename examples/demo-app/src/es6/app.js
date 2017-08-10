@@ -4,12 +4,17 @@
 
 // I'm include the whole shebang here for convenience
 // It's more likely you'll pick and choose the modules you want, to reduce the size of your JS
-const lvl99 = require('lvl99')
+const lvl99 = require('../../../../es6')
 
 // I'm going to do some shorthand aliases for convenience
 const {
+  common: {
+    $, $doc, $win, $html, $body, events
+  },
   utils: {
-    $, $doc, $win, $html, $body
+    parse: {
+      extractTriggerDetails
+    }
   },
   tools: {
     Queue,
@@ -77,6 +82,28 @@ class DemoApp extends App {
     // so you don't forget about it later
     super.init(...arguments)
 
+    // Shorthand aliases for the tools saved as _properties in the DemoAppProperties object
+    let debug = this.getProp('debug')
+    let queue = this.getProp('queue')
+
+    // Let me explain something real quick here...
+    //
+    // You may have seen that the DemoApp has `_attributes` and `_properties`. Ideally you would use the
+    // `getAttr`, `setAttr`, `getProp` and `setProp` methods on the Entity to read/write to those objects.
+    //
+    // If you really want to reference the object itself without the longer `get*/set*` function call, you can
+    // reference each object like `this.attributes` and `this.properties`. These are read-only properties.
+    //
+    // Basically any Entity which is extended with properties that start with an underscore (`_`) are "semi-private"
+    // in that you need to know more about them to affect them. Public getters are generated for any semi-private
+    // property and they share the same name of the variable, just without the underscore.
+    //
+    // TL;DR: if you are creating a class, you can define semi-private variables in the Properties object and when it
+    // is instantiated public getter read-only convenience properties will be generated, e.g. `this._NS` => `this.NS`
+    //
+    // In the next line we'll output the DemoApp's NAMESPACE, just for fun:
+    debug.log(`${this.NS} is initialising...`)
+
     // Apps can have components registered. This means that you can programmatically create new component instances
     // using the constructed DemoApp instance, rather than going through the normal `require` etc. stuff. It saves
     // a reference of the component class to the app
@@ -85,10 +112,6 @@ class DemoApp extends App {
         this.registerComponentClass(components[componentClass])
       }
     }
-
-    // Shorthand aliases for the tools saved as props on the DemoApp
-    let debug = this.getProp('debug')
-    let queue = this.getProp('queue')
 
     // Remove `no-js` class on the HTML DOM element
     $html.removeClass('no-js')
@@ -123,12 +146,11 @@ class DemoApp extends App {
       })
     })
 
-    /**
-     * Trigger component events by other elements
-     * Attributes should be set to be extracted by convertStringToJson or extractClassDetails
-     * Triggers have at least two properties (`on`, `do`) and can also specify a `target` (via query selector, or by
-     * keyword `parent` which will target the first component in parent chain)
-     */
+    // The following allows DOM to trigger component events via other DOM elements
+    // Attributes should be set to be extracted by convertStringToJson or extractClassDetails
+    // Triggers have at least two properties (`on`, `do`) and can also specify a `target` (via query selector, or by
+    // keyword `parent` which will target the first component in parent chain)
+    //
     $('[data-trigger]').each((i, elem) => {
       let $elem = $(elem)
       let elemId = $elem.attr('id') || `trigger-${uuid.v4()}`
@@ -165,7 +187,7 @@ class DemoApp extends App {
           $(trigger.target).trigger(trigger.do, [jQueryEvent])
         })
 
-        // Global
+      // Global
       } else {
         $doc.on(trigger.on, trigger.selector, (jQueryEvent) => {
           jQueryEvent.preventDefault()
@@ -179,14 +201,13 @@ class DemoApp extends App {
     })
 
     // Fire checkWindow on init
-    queue.sync('checkWindow', this.checkWindow)
+    // Queue.add adds an action to the queue. A timer will then count a delay and then the actions within the queue
+    // will be processed
+    queue.add('checkWindow', this.checkWindow)
 
-    /**
-     * @trigger Theme:App:init:end
-     * @target document
-     * @param {ThemeApp}
-     */
-    $doc.trigger(`${this._NS}:init:end`, [this])
+    // I personally like to publish events to the DOM when a specific event has finished, but you don't have to,
+    // of course
+    $doc.trigger(`${this.NS}:init:end`, [this])
   }
 
   /**
