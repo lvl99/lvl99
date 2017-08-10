@@ -114,6 +114,8 @@ You can also require/import single files if you don't want the whole LESS framew
     mixins.less               # All mixins in one
 ```
 
+I'm sure eventually over time these will branch out to separate packages.
+
 
 ## Dependencies
 
@@ -128,11 +130,17 @@ You can also require/import single files if you don't want the whole LESS framew
 * **Jest**: unit testing
 
 
+## [Examples](examples)
+
+* [`demo-app`](examples/demo-app): Shows how the app and its JS and LESS elements all fit together
+
+
 ## TODO
 
 * Complete the README
 * Write more unit tests
 * Write more documentation throughout source
+* Write more examples
 
 
 ## Contribute

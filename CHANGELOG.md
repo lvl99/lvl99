@@ -1,5 +1,10 @@
 ### 1.3.1
 
+* Added demo app to show how the framework fits together (also helps to test and develop new features)
+
+
+### 1.3.1
+
 * Defined `@display-types` list for [`responsive`](less/mixins/responsive.less) `.devices-display-types` mixin to work 
 * Fixed incorrect require reference to [`common`](es6/common.js) in named [components](es6/components)
 

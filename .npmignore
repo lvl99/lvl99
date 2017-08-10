@@ -1,0 +1,3 @@
+# Ignore the tests and examples folder in the NPM package so people down download heaps of unnecessary stuff
+__tests__
+examples

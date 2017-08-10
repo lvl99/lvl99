@@ -1,0 +1,92 @@
+{
+  "name": "lvl99-demo-app",
+  "version": "1.0.0",
+  "description": "Demo app to show examples of how to use the LVL99 frontend framework",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:development": "gulp build:development",
+    "build:production": "gulp build:production",
+    "serve:development": "gulp serve:development",
+    "serve:production": "gulp serve:production"
+  },
+  "author": "Matt Scheurich <matt@lvl99.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browser-sync": "^2.18.11",
+    "browserify": "^14.3.0",
+    "browserify-shim": "^3.8.14",
+    "chalk": "^1.1.3",
+    "del": "^2.2.2",
+    "extend": "^3.0.1",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-changed": "^3.1.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-if": "^2.0.2",
+    "gulp-less": "^3.3.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-streamify": "^1.0.2",
+    "gulp-uglify": "^2.1.2",
+    "gulp-uglifycss": "^1.0.8",
+    "gulp-util": "^3.0.8",
+    "lazypipe": "^1.0.1",
+    "lodash.escaperegexp": "^4.1.2",
+    "object-path": "^0.11.4",
+    "pkgify": "^1.1.0",
+    "remapify": "^2.1.0",
+    "run-sequence": "^1.2.2",
+    "streamify": "^0.2.8",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.9.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "ignore": [
+      "*.min.js"
+    ]
+  },
+  "browser": {},
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {},
+  "transform": [
+    [
+      "babelify",
+      {
+        "comments": false
+      }
+    ]
+  ],
+  "pkgify": {
+    "packages": {
+      "@app": "./es6"
+    }
+  },
+  "gulpConfig": {
+    "srcDir": "./",
+    "destDir": "../",
+    "less": {
+      "src": ["./less/app.less"],
+      "dest": "../app.css",
+      "watchSrc": ["./less/**/*.less"]
+    },
+    "browserify": {
+      "bundles": {
+        "app": {
+          "src": "./es6/app.js",
+          "dest": "../app.js"
+        }
+      }
+    }
+  }
+}
