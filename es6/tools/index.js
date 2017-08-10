@@ -4,14 +4,16 @@
  * Standalone tools that don't require any dependencies within the framework, but work alongside
  */
 
-const breakpoints = require('./breakpoints')
-const queue = require('./queue')
-const trackEvent = require('./trackEvent')
+const Breakpoints = require('./breakpoints')
+const Debug = require('./debug')
+const Queue = require('./queue')
+const TrackEvent = require('./trackEvent')
 
 const utils = {
-  breakpoints,
-  queue,
-  trackEvent
+  Breakpoints,
+  Debug,
+  Queue,
+  TrackEvent
 }
 
 module.exports = tools

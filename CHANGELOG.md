@@ -1,3 +1,9 @@
+### 1.3.2
+
+* Added [Debug](es6/tools/debug.js) tool
+* Refactored tools references to be uppercase
+* Fixed issue with package's main [index.js](es6/index.js) file require path
+
 ### 1.3.1
 
 * Added demo app to show how the framework fits together (also helps to test and develop new features)
