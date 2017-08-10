@@ -3,9 +3,29 @@
  */
 
 let _loggerPath = 'lvl99/es6/core/entity'
+const Debug = require('../../es6/tools/debug')
 const Entity = require('../../es6/core/entity')
 
-let testEntity = new Entity({
+const TestEntityProperties = {
+  _NS: "Test:Entity",
+  _ns: "test-entity",
+  _properties: {
+    debug: Debug()
+  },
+  _attributes: {}
+}
+
+class TestEntity extends Entity {
+  constructor (attributes) {
+    super(attributes)
+  }
+
+  extend () {
+    super.extend(TestEntityProperties, ...arguments)
+  }
+}
+
+let testEntity = new TestEntity({
   _testA: undefined,
   _testB: [2, 3],
   _testC: {
@@ -17,27 +37,11 @@ let testEntity = new Entity({
 
 test(`${_loggerPath} exists`, () => {
   expect(Entity).toBeTruthy()
+  expect(TestEntity).toBeTruthy()
 })
 
 test(`${_loggerPath} instantiates correctly`, () => {
-  expect(testEntity).toBeInstanceOf(Entity)
-})
-
-test(`${_loggerPath} can be extended`, () => {
-  expect(testEntity.NS).toBe('LVL99:Entity')
-  expect(testEntity.ns).toBe('lvl99-entity')
-
-  testEntity.extend({
-    _NS: 'Test:Entity',
-    _ns: 'test-entity',
-    _properties: {
-      testPropA: undefined,
-      testPropB: 123
-    }
-  })
-
-  expect(testEntity.NS).toBe('Test:Entity')
-  expect(testEntity.ns).toBe('test-entity')
+  expect(testEntity).toBeInstanceOf(TestEntity)
 })
 
 test(`${_loggerPath} setProp works`, () => {
@@ -47,7 +51,11 @@ test(`${_loggerPath} setProp works`, () => {
 
 test(`${_loggerPath} getProp works`, () => {
   expect(testEntity.getProp('testPropA')).toBe(true)
-  expect(testEntity.getProp('testPropB')).toBe(123)
+  expect(testEntity.getProp('debug')).toBeTruthy()
+})
+
+test(`${_loggerPath} ensure properties are shared between instances`, () => {
+  expect(testEntity.getProp('debug')).toBe(TestEntityProperties._properties.debug)
 })
 
 test(`${_loggerPath} setAttr works`, () => {
@@ -57,4 +65,8 @@ test(`${_loggerPath} setAttr works`, () => {
 
 test(`${_loggerPath} getAttr works`, () => {
   expect(testEntity.getAttr('_testB')).toBeInstanceOf(Array)
+})
+
+test(`${_loggerPath} ensure attributes aren't shared`, () => {
+  expect(testEntity.attributes).not.toBe(TestEntityProperties._attributes)
 })
