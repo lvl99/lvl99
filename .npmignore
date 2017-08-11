@@ -1,0 +1,10 @@
+.gitignore
+
+# Only for repo
+__tests__
+examples
+
+# Build
+dist
+tasks
+gulpfile.js

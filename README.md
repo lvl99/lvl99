@@ -21,6 +21,8 @@ Include the `lvl99` npm package in your `npm` project:
 
 ### Use within JavaScript
 
+#### ES6
+
 Require/import the `lvl99` module in your JavaScript:
 
 ```javascript
@@ -37,6 +39,47 @@ You can also require/import single files if you don't want the whole JS framewor
     'tablet':  [600, 1024],
     'mobile':  [0, 600]
   })
+```
+
+> ***Note:*** ES6 files have the `.es6` extension to enable you to target these files using a transpiler like Babel
+
+
+#### ES5
+
+If you are using ES5 JavaScript (aka, you're not transpiling, or you don't want to transpile) you can reference the same
+files within the [`es5`](es5) folder:
+
+```javascript
+  // Require the whole LVL99 library
+  var lvl99 = require('lvl99/es5')
+  
+  // Require a single file
+  var Breakpoints = require('lvl99/es5/tools/breakpoints')({
+    'desktop': [1024, 99999],
+    'tablet':  [600, 1024],
+    'mobile':  [0, 600]
+  })
+```
+
+> ***Note:*** These files are pre-transpiled from the ES6 ones for your convenience. ES5 files will have the `.js`
+> extension
+
+
+#### HTML
+
+If you want to include the whole framework outside of your build/bundle, then you can use the prebuilt
+[`dist/lvl99.js`](dist/lvl99.js) version (you'll need to copy it somewhere on your server to reference it). It should
+then be available as the global variable `lvl99`. 
+
+> ***Note:*** The `dist/lvl99.js` version does not come with jQuery bundled, so please ensure it is included in your
+> app somewhere before you load the `lvl99.js` file.
+
+```html
+  <script type="text/javascript" src="jquery.min.js"></script>
+  <script type="text/javascript" src="/js/lvl99.js"></script>
+  <script type="text/javascript">
+    console.log(lvl99)
+  </script>
 ```
 
 
@@ -117,15 +160,18 @@ You can also require/import single files if you don't want the whole LESS framew
 
 ## Dependencies
 
-* **jQuery**: browser events, cross-browser implementations, etc.
-* **object-path**: good for testing on deep-nested objects
-* **lodash.merge**: deep object extend
-* **uuid**: unique ID generation
+* **jQuery**: Browser events, cross-browser implementations, etc.
+* **object-path**: Good for working with deep-nested objects
+* **lodash.merge**: Deep object extend
+* **uuid**: Unique ID generation
 
 
 ## Dev Dependencies
 
-* **Jest**: unit testing
+* **Jest**: Unit testing
+* **Babel**: Transpile ES6 to ES5
+* **Browserify**: Create lvl99.js distribution bundle
+* **Gulp**: Task runner
 
 
 ## TODO
@@ -133,6 +179,7 @@ You can also require/import single files if you don't want the whole LESS framew
 * Complete the README
 * Write more unit tests
 * Write more documentation throughout source
+* Create minified version of [`dist/lvl99.js`](dist/lvl99.js)
 
 
 ## Contribute
