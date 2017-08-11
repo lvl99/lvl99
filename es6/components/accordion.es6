@@ -127,12 +127,14 @@ class Accordion extends Component {
           }
 
           // Set special _controllers reference since this item was dynamically instantiated within another component
-          accordionToggleableItem._controllers = merge({
-            accordion: {
-              $elem: this.getElem(),
-              controller: this
+          accordionToggleableItem.extend({
+            _controllers: {
+              accordion: {
+                $elem: this.getElem(),
+                controller: this
+              }
             }
-          }, accordionToggleableItem._controllers || {})
+          })
         })
       }
     }
