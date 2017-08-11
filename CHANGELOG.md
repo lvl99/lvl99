@@ -1,8 +1,15 @@
+### 1.3.3
+
+* Renamed [es6](es6) files to have extension `.es6`
+* Added [es5](es5) and [dist](dist) versions of the framework
+
+
 ### 1.3.2
 
 * Added [Debug](es6/tools/debug.js) tool
 * Refactored tools references to be uppercase
 * Fixed issue with package's main [index.js](es6/index.js) file require path
+
 
 ### 1.3.1
 
