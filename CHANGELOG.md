@@ -1,6 +1,12 @@
-### 1.3.3
+### 1.3.4
 
 * Added [SmoothScroll](es6/tools/smooth-scroll.js) tool to enable smooth scrolling when clicking anchor links
+
+
+### 1.3.3
+
+* Renamed [es6](es6) files to have extension `.es6`
+* Added [es5](es5) and [dist](dist) versions of the framework
 
 
 ### 1.3.2

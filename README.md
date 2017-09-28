@@ -190,7 +190,6 @@ What? Really? Are you sure? Aren't there other frameworks more worth your time?
 
 ## [Changelog](CHANGELOG.md)
 
-
 ## [License](LICENSE.md)
 
 MIT
