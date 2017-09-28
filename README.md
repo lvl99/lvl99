@@ -124,6 +124,7 @@ You can also require/import single files if you don't want the whole LESS framew
       index.js                # All tools modules in one
       queue.js                # Basic debounce queue for actions
       trackevent.js           # Cache GA event tracking until GA object loaded
+      smooth-scroll.js        # Enable smooth scrolling when clicking anchor links
     utils/
       index.js                # All utils modules in one
       parse.js                # Some parsing functions like type coercion, etc.

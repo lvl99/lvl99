@@ -74,14 +74,13 @@
   "jest": {
     "browser": true,
     "moduleFileExtensions": [
-      "js",
       "es6",
+      "js",
+      "json",
       "jsx"
     ],
     "testMatch": [
-      "**/__tests__/**/*.(jsx?|es6)",
-      "**/?(*.)(spec|test).(jsx?|es6)",
-      "<rootDir>/tests/**/*.(jsx?|es6)"
+      "(/__tests__/.*|\\.(test|spec))\\.(jsx?|es6)$"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
