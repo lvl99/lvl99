@@ -7,13 +7,15 @@
 const Breakpoints = require('./breakpoints')
 const Debug = require('./debug')
 const Queue = require('./queue')
-const TrackEvent = require('./trackEvent')
+const TrackEvent = require('./trackevent')
+const SmoothScroll = require('./smooth-scroll')
 
 const utils = {
   Breakpoints,
   Debug,
   Queue,
-  TrackEvent
+  TrackEvent,
+  SmoothScroll
 }
 
 module.exports = tools

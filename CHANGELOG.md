@@ -1,3 +1,8 @@
+### 1.3.4
+
+* Added [SmoothScroll](es6/tools/smooth-scroll.js) tool to enable smooth scrolling when clicking anchor links
+
+
 ### 1.3.3
 
 * Renamed [es6](es6) files to have extension `.es6`
@@ -24,12 +29,14 @@
   I really hate class inheritance in JavaScript though and I think I will try to go back to functional/prototype with
   [super](es6/utils/super.js) inheritance à la Ember JS.
 
+
 ### 1.2.1
 
 * Refactored the [`Queue`](es6/tools/queue.js) tool (changed behaviour of `add` and `sync`) and added some extra
   functionality (`queue`, `play`, `pause`, `getActionByLabel`, `getTimerDelay`, `setTimerDelay`, `getQueueLength` and
   `checkStatus`)
 * Fixed imports/exports on [`super`](es6/utils/super.js)
+
 
 ### 1.1.0
 
@@ -38,9 +45,11 @@
 * Refactored [`Component`](es6/core/component.js) class to extend [`Entity`](es6/core/entity.js) and be categorised as
   core
 
+
 ### 1.0.1
 
 * npm publish error (whoops)
+
 
 ### 1.0.0
 
