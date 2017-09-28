@@ -8,7 +8,7 @@ const Breakpoints = require('./breakpoints')
 const Debug = require('./debug')
 const Queue = require('./queue')
 const TrackEvent = require('./trackevent')
-const TrackEvent = require('./smooth-scroll')
+const SmoothScroll = require('./smooth-scroll')
 
 const utils = {
   Breakpoints,

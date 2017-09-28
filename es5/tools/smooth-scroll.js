@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * LVL99 Smooth Scroll
  * Ensures smooth motion when navigating to an internal anchor point on the page
@@ -5,9 +7,9 @@
  * @package lvl99
  */
 
-const $ = require('jquery')
+var $ = require('jquery');
 
-function SmoothScroll () {
+function SmoothScroll() {
   return {
     /**
      * Scroll to a point in the window
@@ -16,34 +18,34 @@ function SmoothScroll () {
      * @param {Function} cb
      * @param {Number} time
      */
-    scrollTo (point, cb, time) {
+    scrollTo: function scrollTo(point, cb, time) {
       // Get element to scroll too
-      let $elem = $(point)
-      let winScrollTop = $win.scrollTop()
-      let toScrollTop = 0
-      let diff
+      var $elem = $(point);
+      var winScrollTop = $win.scrollTop();
+      var toScrollTop = 0;
+      var diff = void 0;
 
       // Try numeric value
       if ($elem.length === 0) {
-        toScrollTop = parseInt( point, 10 )
+        toScrollTop = parseInt(point, 10);
       } else {
-        toScrollTop = $elem.eq(0).offset().top
+        toScrollTop = $elem.eq(0).offset().top;
       }
 
       if (toScrollTop !== winScrollTop) {
-        diff = Math.max(toScrollTop, winScrollTop) - Math.min(toScrollTop, winScrollTop)
+        diff = Math.max(toScrollTop, winScrollTop) - Math.min(toScrollTop, winScrollTop);
 
         if (typeof time === 'undefined') {
-          time = diff * 0.1
+          time = diff * 0.1;
         }
 
         $('html, body').animate({
           scrollTop: toScrollTop + 'px',
           skipGSAP: true
-        }, time, 'swing', cb)
+        }, time, 'swing', cb);
       }
     }
-  }
+  };
 }
 
-module.exports = SmoothScroll
+module.exports = SmoothScroll;
