@@ -141,6 +141,8 @@ function convertStringToFloat(input) {
 /**
  * Extract key-values from a string which is like a CSS class declaration, e.g. `key: value; key: value`
  *
+ * This is slightly more interesting as it can take a name with dots
+ *
  * @param {String} input
  * @return {Object}
  */
@@ -157,8 +159,54 @@ function extractClassDetails(input) {
   inputParts.forEach(function (part) {
     part = part.trim();
     if (part) {
-      var partParts = part.match(/([a-z0-9_-]+):([^;]+);?/i);
-      output[partParts[1].trim()] = coerceToPrimitiveType(partParts[2].trim());
+      var partParts = part.match(/([a-z0-9_.-]+):([^;]+);?/i);
+      var partName = partParts[1].trim();
+      var partValue = coerceToPrimitiveType(partParts[2].trim());
+
+      // @debug
+      console.log('parsed part', {
+        part: part,
+        partName: partName,
+        partValue: partValue
+      });
+
+      // Ensure output object exists if using dot notation
+      if (/\./.test(partName)) {
+        var objParts = partName.split('.');
+        var objPartPath = '';
+
+        // @debug
+        console.log('part has dot notation', {
+          output: output,
+          partName: partName,
+          partValue: partValue,
+          objParts: objParts,
+          objPartPath: objPartPath
+        });
+
+        for (var objPartIndex = 0; objPartIndex < objParts.length - 1; objPartIndex++) {
+          objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex];
+
+          // @debug
+          console.log(objPartPath);
+
+          if (!objectPath.has(output, objPartPath)) {
+            // @debug
+            console.log('setting object part path', {
+              output: output,
+              partName: partName,
+              partValue: partValue,
+              objPartIndex: objPartIndex,
+              objPartPath: objPartPath
+            });
+
+            objectPath.set(output, objPartPath, {});
+          }
+        }
+      }
+
+      // Set via objectPath
+      objectPath.set(output, partName, partValue);
     }
   });
 
