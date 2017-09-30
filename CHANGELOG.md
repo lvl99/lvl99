@@ -1,3 +1,22 @@
+### 1.3.7
+
+* Added support for "dot.notation" (see [`parse.extractClassDetails`](es6/utils/parse.es6))when setting nested
+  properties in a DOM element's component options, e.g.
+```html
+<div data-component="Component" data-component-options="example.nested.prop: value"></div>
+```
+  The element will then initialise with an extracted options object like so:
+```js
+{
+  example: {
+    nested: {
+      prop: "value"
+    }
+  }
+}
+```
+
+
 ### 1.3.6
 
 * Added [`initialiseComponents`](es6/core/app.es6) method to initialise DOM elements marked with `data-component`
