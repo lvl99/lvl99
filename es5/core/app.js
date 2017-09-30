@@ -17,8 +17,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  */
 
 // const Promise = require('bluebird')
+var $ = require('jquery');
 var uuid = require('uuid');
 var Entity = require('./entity');
+
+var _require = require('../utils/parse'),
+    convertStringToJson = _require.convertStringToJson,
+    extractClassDetails = _require.extractClassDetails;
 
 /**
  * Get a component's namespace
@@ -27,6 +32,8 @@ var Entity = require('./entity');
  * @param {Component} component
  * @returns {undefined|String|Component}
  */
+
+
 function getComponentNamespace(component) {
   var componentNS = component;
 
@@ -308,6 +315,72 @@ var App = function (_Entity) {
         this._componentInstances[componentUUID] = undefined;
         delete this._componentInstances[componentUUID];
       }
+    }
+
+    /**
+     * Initialise any component which is marked in the DOM
+     */
+
+  }, {
+    key: 'initialiseComponents',
+    value: function initialiseComponents() {
+      var _this2 = this;
+
+      // Find any element marked with the `[data-component]` attribute
+      $('[data-component]').each(function (index, elem) {
+        var $elem = $(elem);
+        var elemComponentClass = $elem.attr('data-component');
+        var elemComponentOptions = $elem.attr('data-component-options') || {};
+
+        // @debug
+        console.log(_this2._NS + '.initialiseComponents: found element to initialise with component', {
+          index: index,
+          elem: elem,
+          elemComponentClass: elemComponentClass,
+          elemComponentOptions: elemComponentOptions
+        });
+
+        // Ensure component class is registered
+        if (!_this2.getComponentClass(elemComponentClass)) {
+          // @debug
+          console.error(_this2._NS + '.initialiseComponents: element\'s component class not registered', {
+            app: _this2,
+            index: index,
+            elem: elem,
+            elemComponentClass: elemComponentClass,
+            elemComponentOptions: elemComponentOptions
+          });
+          return;
+        }
+
+        // Extract/convert the options
+        if (typeof elemComponentOptions === 'string') {
+          // Set as JSON, e.g. '{"name":"value"}`
+          if (/^\{/.test(elemComponentOptions)) {
+            elemComponentOptions = convertStringToJson(elemComponentOptions);
+
+            // Set as style-like attributes, e.g. `name: value; name: value`
+          } else {
+            elemComponentOptions = extractClassDetails(elemComponentOptions);
+          }
+        }
+
+        // Add the $elem if it is not already set
+        if (!elemComponentOptions.hasOwnProperty('$elem')) {
+          elemComponentOptions.$elem = $elem;
+        }
+
+        // Create the component
+        var elemComponentInstance = _this2.createComponentInstance(elemComponentClass, elemComponentOptions);
+
+        // @debug
+        console.log('Initialised component instance', {
+          index: index,
+          elem: elem,
+          elemComponentOptions: elemComponentOptions,
+          elemComponentInstance: elemComponentInstance
+        });
+      });
     }
   }]);
 

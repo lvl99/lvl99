@@ -1,6 +1,6 @@
 {
   "name": "lvl99",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "description": "Nothing to see here, just another frontend framework",
   "private": false,
   "main": "index.js",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "babel-jest": "^20.0.3",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
     "babelify": "^7.3.0",
     "browserify": "^14.3.0",
     "browserify-shim": "^3.8.14",
@@ -50,7 +50,7 @@
   },
   "babel": {
     "presets": [
-      "es2015"
+      "env"
     ],
     "ignore": [
       "*.js",
