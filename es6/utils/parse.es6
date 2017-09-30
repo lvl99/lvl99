@@ -26,27 +26,27 @@ function coerceToPrimitiveType (input) {
   if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
     return parseFloat(input)
 
-  // Boolean: true
+    // Boolean: true
   } else if (/^(true|1)$/.test(input)) {
     return true
 
-  // NaN
+    // NaN
   } else if (/^NaN$/.test(input)) {
     return NaN
 
-  // undefined
+    // undefined
   } else if (/^undefined$/.test(input)) {
     return undefined
 
-  // null
+    // null
   } else if (/^null$/.test(input)) {
     return null
 
-  // Boolean: false
+    // Boolean: false
   } else if (/^(false|0)$/.test(input) || input === '') {
     return false
 
-  // JSON: starts with [ or { and ends with ] or }
+    // JSON: starts with [ or { and ends with ] or }
   } else if (/^[\[\{]/.test(input) && /[\]\}]$/.test(input)) {
     return convertStringToJson(input)
   }
@@ -137,6 +137,8 @@ function convertStringToFloat (input) {
 /**
  * Extract key-values from a string which is like a CSS class declaration, e.g. `key: value; key: value`
  *
+ * This is slightly more interesting as it can take a name with dots
+ *
  * @param {String} input
  * @return {Object}
  */
@@ -153,8 +155,54 @@ function extractClassDetails (input) {
   inputParts.forEach((part) => {
     part = part.trim()
     if (part) {
-      let partParts = part.match(/([a-z0-9_-]+):([^;]+);?/i)
-      output[partParts[1].trim()] = coerceToPrimitiveType(partParts[2].trim())
+      let partParts = part.match(/([a-z0-9_.-]+):([^;]+);?/i)
+      let partName = partParts[1].trim()
+      let partValue = coerceToPrimitiveType(partParts[2].trim())
+
+      // @debug
+      console.log('parsed part', {
+        part,
+        partName,
+        partValue,
+      })
+
+      // Ensure output object exists if using dot notation
+      if (/\./.test(partName)) {
+        let objParts = partName.split('.')
+        let objPartPath = ''
+
+        // @debug
+        console.log('part has dot notation', {
+          output,
+          partName,
+          partValue,
+          objParts,
+          objPartPath
+        })
+
+        for (let objPartIndex = 0; objPartIndex < (objParts.length - 1); objPartIndex++) {
+          objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex]
+
+          // @debug
+          console.log(objPartPath)
+
+          if (!objectPath.has(output, objPartPath)) {
+            // @debug
+            console.log('setting object part path', {
+              output,
+              partName,
+              partValue,
+              objPartIndex,
+              objPartPath
+            })
+
+            objectPath.set(output, objPartPath, {})
+          }
+        }
+      }
+
+      // Set via objectPath
+      objectPath.set(output, partName, partValue)
     }
   })
 
@@ -184,11 +232,11 @@ function extractTriggerDetails(input, context) {
     if (/^{/.test(input)) {
       trigger = convertStringToJson(input)
 
-    // Try class details
+      // Try class details
     } else if (/^[a-z0-9_-]+:/.test(input)) {
       trigger = extractClassDetails(input)
 
-    // String with no spaces
+      // String with no spaces
     } else if (!/ /.test(input)) {
       trigger = {
         do: input
@@ -307,15 +355,15 @@ function getTargetSelector (target, context) {
   if ($.isWindow(target)) {
     return 'window'
 
-  // Document
+    // Document
   } else if (target === document) {
     return 'document'
 
-  // Self
+    // Self
   } else if (target.hasOwnProperty('uuid')) {
     return `[data-component-id="${target.uuid}"]`
 
-  // HTML Elem
+    // HTML Elem
   } else if ($(target).length) {
     if ($(target).attr('data-component-id')) {
       return `[data-component-id="${$(target).attr('data-component-id')}"]`
