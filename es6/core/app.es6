@@ -5,8 +5,13 @@
  */
 
 // const Promise = require('bluebird')
+const $ = require('jquery')
 const uuid = require('uuid')
 const Entity = require('./entity')
+const {
+  convertStringToJson,
+  extractClassDetails
+} = require('../utils/parse')
 
 /**
  * Get a component's namespace
@@ -265,6 +270,67 @@ class App extends Entity {
       this._componentInstances[componentUUID] = undefined
       delete this._componentInstances[componentUUID]
     }
+  }
+
+  /**
+   * Initialise any component which is marked in the DOM
+   */
+  initialiseComponents () {
+    // Find any element marked with the `[data-component]` attribute
+    $('[data-component]').each((index, elem) => {
+      let $elem = $(elem)
+      let elemComponentClass = $elem.attr('data-component')
+      let elemComponentOptions = $elem.attr('data-component-options') || {}
+
+      // @debug
+      console.log(`${this._NS}.initialiseComponents: found element to initialise with component`, {
+        index,
+        elem,
+        elemComponentClass,
+        elemComponentOptions
+      })
+
+      // Ensure component class is registered
+      if (!this.getComponentClass(elemComponentClass)) {
+        // @debug
+        console.error(`${this._NS}.initialiseComponents: element's component class not registered`, {
+          app: this,
+          index,
+          elem,
+          elemComponentClass,
+          elemComponentOptions
+        })
+        return
+      }
+
+      // Extract/convert the options
+      if (typeof elemComponentOptions === 'string') {
+        // Set as JSON, e.g. '{"name":"value"}`
+        if (/^\{/.test(elemComponentOptions)) {
+          elemComponentOptions = convertStringToJson(elemComponentOptions)
+
+          // Set as style-like attributes, e.g. `name: value; name: value`
+        } else {
+          elemComponentOptions = extractClassDetails(elemComponentOptions)
+        }
+      }
+
+      // Add the $elem if it is not already set
+      if (!elemComponentOptions.hasOwnProperty('$elem')) {
+        elemComponentOptions.$elem = $elem
+      }
+
+      // Create the component
+      let elemComponentInstance = this.createComponentInstance(elemComponentClass, elemComponentOptions)
+
+      // @debug
+      console.log('Initialised component instance', {
+        index,
+        elem,
+        elemComponentOptions,
+        elemComponentInstance
+      })
+    })
   }
 }
 

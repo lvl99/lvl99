@@ -1,6 +1,7 @@
-### 1.3.4
+### 1.3.5
 
 * Added [SmoothScroll](es6/tools/smooth-scroll.js) tool to enable smooth scrolling when clicking anchor links
+* Some version numbering got munched with all my silly little updates
 
 
 ### 1.3.3
