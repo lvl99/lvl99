@@ -160,11 +160,11 @@ function extractClassDetails (input) {
       let partValue = coerceToPrimitiveType(partParts[2].trim())
 
       // @debug
-      console.log('parsed part', {
-        part,
-        partName,
-        partValue,
-      })
+      // console.log('parsed part', {
+      //   part,
+      //   partName,
+      //   partValue,
+      // })
 
       // Ensure output object exists if using dot notation
       if (/\./.test(partName)) {
@@ -172,29 +172,29 @@ function extractClassDetails (input) {
         let objPartPath = ''
 
         // @debug
-        console.log('part has dot notation', {
-          output,
-          partName,
-          partValue,
-          objParts,
-          objPartPath
-        })
+        // console.log('part has dot notation', {
+        //   output,
+        //   partName,
+        //   partValue,
+        //   objParts,
+        //   objPartPath
+        // })
 
         for (let objPartIndex = 0; objPartIndex < (objParts.length - 1); objPartIndex++) {
           objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex]
 
           // @debug
-          console.log(objPartPath)
+          // console.log(objPartPath)
 
           if (!objectPath.has(output, objPartPath)) {
             // @debug
-            console.log('setting object part path', {
-              output,
-              partName,
-              partValue,
-              objPartIndex,
-              objPartPath
-            })
+            // console.log('setting object part path', {
+            //   output,
+            //   partName,
+            //   partValue,
+            //   objPartIndex,
+            //   objPartPath
+            // })
 
             objectPath.set(output, objPartPath, {})
           }
@@ -388,28 +388,32 @@ function extractTargetEventNames (inputEventNames, namespace) {
   let targetEventNames = []
   let eventNames = inputEventNames
 
-  if (typeof inputEventNames) {
+  if (typeof inputEventNames === 'string') {
     // Split eventNames by spaces
     if (/\s/.test(inputEventNames)) {
       eventNames = inputEventNames.split(/\s+/)
     }
   }
 
-  // Process each event name
-  eventNames.forEach(eventName => {
-    // Default to namespaced event name
-    let targetEventName = (typeof namespace === 'string' && namespace !== '' ? `${namespace}:${eventName}` : eventName)
+  if (eventNames instanceof Array) {
+    // Process each event name
+    eventNames.forEach(eventName => {
+      // Default to namespaced event name
+      let targetEventName = (typeof namespace === 'string' && namespace !== '' ? `${namespace}:${eventName}` : eventName)
 
-    // Remove any reference to the native DOM event namespace
-    if (/^dom:/i.test(eventName)) {
-      targetEventName = eventName.replace(/^dom\:/gi, '', eventName)
-    }
+      // Remove any reference to the native DOM event namespace
+      if (/^dom:/i.test(eventName)) {
+        targetEventName = eventName.replace(/^dom\:/gi, '', eventName)
+      }
 
-    // Add to the list
-    targetEventNames.push(targetEventName)
-  })
+      // Add to the list
+      targetEventNames.push(targetEventName)
+    })
 
-  return targetEventNames
+    return targetEventNames
+  }
+
+  return false
 }
 
 const parse = {

@@ -81,7 +81,7 @@ test(`${_loggerPath}.coerceToPrimitiveType: JSON Object properties all match`, (
  * Parse.extractClassDetails
  */
 
-let testClassDetails = 'test: 123; test2: abc; test3: true; test4: [1, 2, 3]; test5: parent:Component'
+let testClassDetails = 'test: 123; test2: abc; test3: true; test4: [1, 2, 3]; test5: parent:Component; test6.abc: 123'
 let testClassObject = Parse.extractClassDetails(testClassDetails)
 
 test(`${_loggerPath}.extractClassDetails works`, () => {
@@ -94,4 +94,23 @@ test(`${_loggerPath}.extractClassDetails: Object property values all match`, () 
   expect(testClassObject).toHaveProperty('test3', true)
   expect(testClassObject).toHaveProperty('test4', [1, 2, 3])
   expect(testClassObject).toHaveProperty('test5', 'parent:Component')
+  expect(testClassObject).toHaveProperty('test6')
+  expect(testClassObject.test6).toHaveProperty('abc', 123)
+})
+
+/**
+ * Parse.extractTargetEventNames
+ */
+
+let testEventNames = 'eventName1 eventName2 dom:eventName3'
+let testExtractedEventNames = Parse.extractTargetEventNames(testEventNames, 'NS')
+
+test(`${_loggerPath}.extractTargetEventNames works`, () => {
+  expect(testExtractedEventNames).toBeInstanceOf(Array)
+})
+
+test(`${_loggerPath}.extractTargetEventNames extracted namespaced DOM and custom event names correctly`, () => {
+  expect(testExtractedEventNames).toContain('NS:eventName1')
+  expect(testExtractedEventNames).toContain('NS:eventName2')
+  expect(testExtractedEventNames).toContain('eventName3')
 })

@@ -1,3 +1,8 @@
+### 1.3.9
+
+* Fixed a minor issue and updated tests accordingly to avoid such minor issues...
+
+
 ### 1.3.8
 
 * Fixed issue with assigning component's public methods and using multiple event names. It will now extract the event

@@ -164,11 +164,11 @@ function extractClassDetails(input) {
       var partValue = coerceToPrimitiveType(partParts[2].trim());
 
       // @debug
-      console.log('parsed part', {
-        part: part,
-        partName: partName,
-        partValue: partValue
-      });
+      // console.log('parsed part', {
+      //   part,
+      //   partName,
+      //   partValue,
+      // })
 
       // Ensure output object exists if using dot notation
       if (/\./.test(partName)) {
@@ -176,29 +176,29 @@ function extractClassDetails(input) {
         var objPartPath = '';
 
         // @debug
-        console.log('part has dot notation', {
-          output: output,
-          partName: partName,
-          partValue: partValue,
-          objParts: objParts,
-          objPartPath: objPartPath
-        });
+        // console.log('part has dot notation', {
+        //   output,
+        //   partName,
+        //   partValue,
+        //   objParts,
+        //   objPartPath
+        // })
 
         for (var objPartIndex = 0; objPartIndex < objParts.length - 1; objPartIndex++) {
           objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex];
 
           // @debug
-          console.log(objPartPath);
+          // console.log(objPartPath)
 
           if (!objectPath.has(output, objPartPath)) {
             // @debug
-            console.log('setting object part path', {
-              output: output,
-              partName: partName,
-              partValue: partValue,
-              objPartIndex: objPartIndex,
-              objPartPath: objPartPath
-            });
+            // console.log('setting object part path', {
+            //   output,
+            //   partName,
+            //   partValue,
+            //   objPartIndex,
+            //   objPartPath
+            // })
 
             objectPath.set(output, objPartPath, {});
           }
@@ -392,28 +392,32 @@ function extractTargetEventNames(inputEventNames, namespace) {
   var targetEventNames = [];
   var eventNames = inputEventNames;
 
-  if (typeof inputEventNames === 'undefined' ? 'undefined' : _typeof(inputEventNames)) {
+  if (typeof inputEventNames === 'string') {
     // Split eventNames by spaces
     if (/\s/.test(inputEventNames)) {
       eventNames = inputEventNames.split(/\s+/);
     }
   }
 
-  // Process each event name
-  eventNames.forEach(function (eventName) {
-    // Default to namespaced event name
-    var targetEventName = typeof namespace === 'string' && namespace !== '' ? namespace + ':' + eventName : eventName;
+  if (eventNames instanceof Array) {
+    // Process each event name
+    eventNames.forEach(function (eventName) {
+      // Default to namespaced event name
+      var targetEventName = typeof namespace === 'string' && namespace !== '' ? namespace + ':' + eventName : eventName;
 
-    // Remove any reference to the native DOM event namespace
-    if (/^dom:/i.test(eventName)) {
-      targetEventName = eventName.replace(/^dom\:/gi, '', eventName);
-    }
+      // Remove any reference to the native DOM event namespace
+      if (/^dom:/i.test(eventName)) {
+        targetEventName = eventName.replace(/^dom\:/gi, '', eventName);
+      }
 
-    // Add to the list
-    targetEventNames.push(targetEventName);
-  });
+      // Add to the list
+      targetEventNames.push(targetEventName);
+    });
 
-  return targetEventNames;
+    return targetEventNames;
+  }
+
+  return false;
 }
 
 var parse = {
