@@ -1,6 +1,6 @@
 # LVL99
 
-v1.3.9
+v1.3.10
 
 My own personal frontend framework. Primarily uses jQuery, mildly inspired by Bootstrap and Ember.js and also has
 nothing to do with React. I also use it as a self-learning and development exercise experiment.

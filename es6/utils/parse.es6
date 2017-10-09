@@ -392,6 +392,8 @@ function extractTargetEventNames (inputEventNames, namespace) {
     // Split eventNames by spaces
     if (/\s/.test(inputEventNames)) {
       eventNames = inputEventNames.split(/\s+/)
+    } else {
+      eventNames = [ inputEventNames ]
     }
   }
 

@@ -1,3 +1,8 @@
+### 1.3.10
+
+* Missed *another* minor issue which could have been spotted with a good test or two.
+
+
 ### 1.3.9
 
 * Fixed a minor issue and updated tests accordingly to avoid such minor issues...
