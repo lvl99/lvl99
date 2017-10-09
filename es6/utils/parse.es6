@@ -377,6 +377,41 @@ function getTargetSelector (target, context) {
   return target
 }
 
+/**
+ * Parse the target event names
+ *
+ * @param {Array|String} eventNames e.g. `Component:customEvent dom:mouseover`
+ * @param {String} namespace Optional namespace to assign each extracted custom (non-DOM) event name
+ * @returns {Array}
+ */
+function extractTargetEventNames (inputEventNames, namespace) {
+  let targetEventNames = []
+  let eventNames = inputEventNames
+
+  if (typeof inputEventNames) {
+    // Split eventNames by spaces
+    if (/\s/.test(inputEventNames)) {
+      eventNames = inputEventNames.split(/\s+/)
+    }
+  }
+
+  // Process each event name
+  eventNames.forEach(eventName => {
+    // Default to namespaced event name
+    let targetEventName = (typeof namespace === 'string' && namespace !== '' ? `${namespace}:${eventName}` : eventName)
+
+    // Remove any reference to the native DOM event namespace
+    if (/^dom:/i.test(eventName)) {
+      targetEventName = eventName.replace(/^dom\:/gi, '', eventName)
+    }
+
+    // Add to the list
+    targetEventNames.push(targetEventName)
+  })
+
+  return targetEventNames
+}
+
 const parse = {
   coerceToPrimitiveType,
   convertToBoolean,
@@ -386,7 +421,8 @@ const parse = {
   extractTriggerDetails,
   fixedEncodeURIComponent,
   getTargetBySelector,
-  getTargetSelector
+  getTargetSelector,
+  extractTargetEventNames
 }
 
 module.exports = parse

@@ -1,3 +1,11 @@
+### 1.3.8
+
+* Fixed issue with assigning component's public methods and using multiple event names. It will now extract the event
+  names (see [`parse.extractTargetEventNames`](es6/utils/parse.es6)) to assign the public method properly. Before all
+  public methods were namespaced with the component's namespace, so now you can also choose to use the built-in DOM
+  event (using `dom:eventName`) otherwise it defaults to the component's namespace.
+
+
 ### 1.3.7
 
 * Added support for "dot.notation" (see [`parse.extractClassDetails`](es6/utils/parse.es6))when setting nested

@@ -28,7 +28,7 @@ gulp.task('generate-bundles', taskBrowserify.tasks.generateBundlers)
 gulp.task('es6-to-es5', () => {
   gulp.src(['es6/**/*.es6'])
     .pipe(babel({
-      presets: ['es2015']
+      presets: ['env']
     }))
     .pipe(gulp.dest('es5'))
 })

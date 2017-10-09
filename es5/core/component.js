@@ -31,6 +31,7 @@ var _require = require('../common'),
 
 var _require2 = require('../utils/parse'),
     extractTriggerDetails = _require2.extractTriggerDetails,
+    extractTargetEventNames = _require2.extractTargetEventNames,
     getTargetBySelector = _require2.getTargetBySelector,
     getTargetSelector = _require2.getTargetSelector;
 
@@ -302,7 +303,8 @@ var Component = function (_Entity) {
   }, {
     key: 'init',
     value: function init() {
-      var _this2 = this;
+      var _this2 = this,
+          _arguments = arguments;
 
       _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'init', this).apply(this, arguments);
 
@@ -359,12 +361,12 @@ var Component = function (_Entity) {
             // Wrap the method into a closure
             var doComponentMethod = function doComponentMethod(jQueryEvent) {
               // @debug
-              // console.log(`Triggered ${this.NS}:${triggerDetails.do}`, {
-              //   _class: this,
-              //   _method: method,
-              //   jQueryEvent,
-              //   arguments
-              // })
+              console.log('Triggered ' + _this2.NS + ':' + triggerDetails.do, {
+                _class: _this2,
+                _method: method,
+                jQueryEvent: jQueryEvent,
+                args: _arguments
+              });
 
               method.call(_this2, jQueryEvent);
             };
@@ -422,6 +424,7 @@ var Component = function (_Entity) {
     /**
      * Bind method to custom event on target
      * Event names are automatically namespaced using the Component's _NS property.
+     * To not use namespaced events, preface with `dom:`
      *
      * @param {String} eventName
      * @param {Function} method
@@ -451,15 +454,21 @@ var Component = function (_Entity) {
         }
       }
 
+      // Extract the target event names from the input given
+      var eventNames = extractTargetEventNames(eventName, this.NS);
+
       // @debug
       // console.log(`[${this.NS}] bindEventToTarget`, {
       //   eventName,
       //   method,
       //   target,
-      //   triggerName: `${this.NS}:${eventName}`
+      //   triggerName: targetEventNames
       // })
 
-      $(target).on(this.NS + ':' + eventName, method);
+      // Assign the trigger
+      if (eventNames) {
+        $(target).on(eventNames.join(' '), method);
+      }
     }
 
     /**
@@ -477,6 +486,7 @@ var Component = function (_Entity) {
     value: function bindEventToTargetSelector(eventName, selector, method, target) {
       target = getTargetBySelector(target, this);
       selector = getTargetSelector(selector, this);
+      var eventNames = extractTargetEventNames(eventName, this.NS);
 
       // @debug
       // console.log(`[${this.NS}] bindEventToTargetSelector`, {
@@ -487,7 +497,9 @@ var Component = function (_Entity) {
       //   triggerName: `${this.NS}:${eventName}`
       // })
 
-      $(target).on(this.NS + ':' + eventName, selector, method);
+      if (eventNames) {
+        $(target).on(eventNames.join(' '), selector, method);
+      }
     }
 
     /**

@@ -327,7 +327,11 @@ var App = function (_Entity) {
       var _this2 = this;
 
       // Find any element marked with the `[data-component]` attribute
-      $('[data-component]').each(function (index, elem) {
+      $('[data-component]')
+      // Ignore components which already have an ID assigned
+      .not('[data-component-id]')
+      // Initialise each component
+      .each(function (index, elem) {
         var $elem = $(elem);
         var elemComponentClass = $elem.attr('data-component');
         var elemComponentOptions = $elem.attr('data-component-options') || {};

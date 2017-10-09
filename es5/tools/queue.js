@@ -119,7 +119,7 @@ function Queue(options) {
       }
 
       // Queue the action
-      this.queue.apply(this, [actionLabel, action].concat(args));
+      this.queue.apply(this, [actionLabel, action].concat(_toConsumableArray(args)));
 
       // Play the timer to get the queue to run after a delay (only when playing)
       if (_status) {
@@ -153,7 +153,7 @@ function Queue(options) {
         args[_key3 - 2] = arguments[_key3];
       }
 
-      this.queue.apply(this, [actionLabel, action].concat(args));
+      this.queue.apply(this, [actionLabel, action].concat(_toConsumableArray(args)));
 
       // ... Then run the queue immediately
       this.run();
