@@ -1,3 +1,8 @@
+### 1.3.11
+
+* Cleaned up some unnecessary debug logging.
+
+
 ### 1.3.10
 
 * Missed *another* minor issue which could have been spotted with a good test or two.

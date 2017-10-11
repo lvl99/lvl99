@@ -303,8 +303,7 @@ var Component = function (_Entity) {
   }, {
     key: 'init',
     value: function init() {
-      var _this2 = this,
-          _arguments = arguments;
+      var _this2 = this;
 
       _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'init', this).apply(this, arguments);
 
@@ -361,12 +360,12 @@ var Component = function (_Entity) {
             // Wrap the method into a closure
             var doComponentMethod = function doComponentMethod(jQueryEvent) {
               // @debug
-              console.log('Triggered ' + _this2.NS + ':' + triggerDetails.do, {
-                _class: _this2,
-                _method: method,
-                jQueryEvent: jQueryEvent,
-                args: _arguments
-              });
+              // console.log(`Triggered ${this.NS}:${triggerDetails.do}`, {
+              //   _class: this,
+              //   _method: method,
+              //   jQueryEvent,
+              //   args: arguments
+              // })
 
               method.call(_this2, jQueryEvent);
             };

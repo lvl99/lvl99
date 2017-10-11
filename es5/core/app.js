@@ -337,23 +337,23 @@ var App = function (_Entity) {
         var elemComponentOptions = $elem.attr('data-component-options') || {};
 
         // @debug
-        console.log(_this2._NS + '.initialiseComponents: found element to initialise with component', {
-          index: index,
-          elem: elem,
-          elemComponentClass: elemComponentClass,
-          elemComponentOptions: elemComponentOptions
-        });
+        // console.log(`${this._NS}.initialiseComponents: found element to initialise with component`, {
+        //   index,
+        //   elem,
+        //   elemComponentClass,
+        //   elemComponentOptions
+        // })
 
         // Ensure component class is registered
         if (!_this2.getComponentClass(elemComponentClass)) {
           // @debug
-          console.error(_this2._NS + '.initialiseComponents: element\'s component class not registered', {
-            app: _this2,
-            index: index,
-            elem: elem,
-            elemComponentClass: elemComponentClass,
-            elemComponentOptions: elemComponentOptions
-          });
+          // console.error(`${this._NS}.initialiseComponents: element's component class not registered`, {
+          //   app: this,
+          //   index,
+          //   elem,
+          //   elemComponentClass,
+          //   elemComponentOptions
+          // })
           return;
         }
 
@@ -378,12 +378,12 @@ var App = function (_Entity) {
         var elemComponentInstance = _this2.createComponentInstance(elemComponentClass, elemComponentOptions);
 
         // @debug
-        console.log('Initialised component instance', {
-          index: index,
-          elem: elem,
-          elemComponentOptions: elemComponentOptions,
-          elemComponentInstance: elemComponentInstance
-        });
+        // console.log('Initialised component instance', {
+        //   index,
+        //   elem,
+        //   elemComponentOptions,
+        //   elemComponentInstance
+        // })
       });
     }
   }]);
