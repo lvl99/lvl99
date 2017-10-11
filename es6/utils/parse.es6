@@ -26,29 +26,33 @@ function coerceToPrimitiveType (input) {
   if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
     return parseFloat(input)
 
-    // Boolean: true
+  // Boolean: true
   } else if (/^(true|1)$/.test(input)) {
     return true
 
-    // NaN
+  // NaN
   } else if (/^NaN$/.test(input)) {
     return NaN
 
-    // undefined
+  // undefined
   } else if (/^undefined$/.test(input)) {
     return undefined
 
-    // null
+  // null
   } else if (/^null$/.test(input)) {
     return null
 
-    // Boolean: false
+  // Boolean: false
   } else if (/^(false|0)$/.test(input) || input === '') {
     return false
 
-    // JSON: starts with [ or { and ends with ] or }
+  // JSON: starts with [ or { and ends with ] or }
   } else if (/^[\[\{]/.test(input) && /[\]\}]$/.test(input)) {
     return convertStringToJson(input)
+
+  // String marked with single/double quotation marks
+  } else if (/^['"]|["']$/) {
+    return input.replace(/^['"]|['"]$/g, '')
   }
 
   // Default to string

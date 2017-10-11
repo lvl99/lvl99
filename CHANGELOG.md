@@ -1,3 +1,8 @@
+### 1.3.13
+
+* Fixed [`parse.extractClassDetails`](es6/utils/parse.es6) to strip start/end single/double quotation marks from strings
+
+
 ### 1.3.12
 
 * Refactored the custom input LESS mixins to enable separating the different states for styling other elements with the

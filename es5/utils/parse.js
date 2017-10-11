@@ -53,6 +53,10 @@ function coerceToPrimitiveType(input) {
     // JSON: starts with [ or { and ends with ] or }
   } else if (/^[\[\{]/.test(input) && /[\]\}]$/.test(input)) {
     return convertStringToJson(input);
+
+    // String marked with single/double quotation marks
+  } else if (/^['"]|["']$/) {
+    return input.replace(/^['"]|['"]$/g, '');
   }
 
   // Default to string

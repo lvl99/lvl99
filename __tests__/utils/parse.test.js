@@ -81,7 +81,7 @@ test(`${_loggerPath}.coerceToPrimitiveType: JSON Object properties all match`, (
  * Parse.extractClassDetails
  */
 
-let testClassDetails = 'test: 123; test2: abc; test3: true; test4: [1, 2, 3]; test5: parent:Component; test6.abc: 123'
+let testClassDetails = 'test: 123; test2: abc; test3: true; test4: [1, 2, 3]; test5: parent:Component; test6.abc: 123; imageUrl: "http://placehold.it/300x300"'
 let testClassObject = Parse.extractClassDetails(testClassDetails)
 
 test(`${_loggerPath}.extractClassDetails works`, () => {
@@ -96,6 +96,7 @@ test(`${_loggerPath}.extractClassDetails: Object property values all match`, () 
   expect(testClassObject).toHaveProperty('test5', 'parent:Component')
   expect(testClassObject).toHaveProperty('test6')
   expect(testClassObject.test6).toHaveProperty('abc', 123)
+  expect(testClassObject).toHaveProperty('imageUrl', 'http://placehold.it/300x300')
 })
 
 /**
