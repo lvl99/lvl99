@@ -314,12 +314,12 @@ class Component extends Entity {
           // Wrap the method into a closure
           let doComponentMethod = (jQueryEvent) => {
             // @debug
-            console.log(`Triggered ${this.NS}:${triggerDetails.do}`, {
-              _class: this,
-              _method: method,
-              jQueryEvent,
-              args: arguments
-            })
+            // console.log(`Triggered ${this.NS}:${triggerDetails.do}`, {
+            //   _class: this,
+            //   _method: method,
+            //   jQueryEvent,
+            //   args: arguments
+            // })
 
             method.call(this, jQueryEvent)
           }

@@ -261,7 +261,7 @@ function extractTriggerDetails(input, context) {
   if (objectPath.has(trigger, 'target')) {
     switch (trigger.target) {
       case 'self':
-        console.log('Targeting self', context)
+        // console.log('Targeting self', context)
         trigger.target = context
         break
 

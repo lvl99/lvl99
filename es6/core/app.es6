@@ -287,23 +287,23 @@ class App extends Entity {
         let elemComponentOptions = $elem.attr('data-component-options') || {}
 
         // @debug
-        console.log(`${this._NS}.initialiseComponents: found element to initialise with component`, {
-          index,
-          elem,
-          elemComponentClass,
-          elemComponentOptions
-        })
+        // console.log(`${this._NS}.initialiseComponents: found element to initialise with component`, {
+        //   index,
+        //   elem,
+        //   elemComponentClass,
+        //   elemComponentOptions
+        // })
 
         // Ensure component class is registered
         if (!this.getComponentClass(elemComponentClass)) {
           // @debug
-          console.error(`${this._NS}.initialiseComponents: element's component class not registered`, {
-            app: this,
-            index,
-            elem,
-            elemComponentClass,
-            elemComponentOptions
-          })
+          // console.error(`${this._NS}.initialiseComponents: element's component class not registered`, {
+          //   app: this,
+          //   index,
+          //   elem,
+          //   elemComponentClass,
+          //   elemComponentOptions
+          // })
           return
         }
 
@@ -328,12 +328,12 @@ class App extends Entity {
         let elemComponentInstance = this.createComponentInstance(elemComponentClass, elemComponentOptions)
 
         // @debug
-        console.log('Initialised component instance', {
-          index,
-          elem,
-          elemComponentOptions,
-          elemComponentInstance
-        })
+        // console.log('Initialised component instance', {
+        //   index,
+        //   elem,
+        //   elemComponentOptions,
+        //   elemComponentInstance
+        // })
       })
   }
 }
