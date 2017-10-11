@@ -1,3 +1,9 @@
+### 1.3.12
+
+* Refactored the custom input LESS mixins to enable separating the different states for styling other elements with the
+  same styles. 
+
+
 ### 1.3.11
 
 * Cleaned up some unnecessary debug logging.

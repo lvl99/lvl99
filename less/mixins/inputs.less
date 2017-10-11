@@ -37,114 +37,149 @@
 
 //
 // Custom Input
-// Sets up base states and styles
+// Sets up base states and styles for custom icon-based inputs like checkbox, radio and switch
 //
-.custom-input(@input-width: 1em; @input-height: 1em) {
+
+.-custom-input-hide-input() {
+  position: absolute;
+  left: -9999px;
+}
+
+.-custom-input-icon(@input-width: 1em; @input-height: 1em) {
+  box-sizing: border-box;
+  display: inline-block;
+  position: relative;
+
+  color: #777;
+  cursor: pointer;
+  vertical-align: text-bottom;
+
+  transition: color 0.2s, opacity 0.2s;
+
+  &:before,
+  &:after {
+    box-sizing: border-box;
+  }
+
+  // Background Shape
+  &:before {
+    content: '';
+    display: inline-block;
+    width: @input-width;
+    height: @input-height;
+    padding: 0;
+    margin: 0;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    background: #eee;
+    border: solid 1px #ddd;
+    border-radius: @input-height * 0.2;
+    box-sizing: border-box;
+    font-size: @input-height;
+    line-height: @input-height;
+    text-align: center;
+    vertical-align: middle;
+
+    transition: all 0.2s;
+  }
+
+  // Foreground Shape (Icon)
+  &:after {
+    content: '';
+    display: inline-block;
+    width: @input-width;
+    height: @input-height;
+    padding: 0;
+    margin: 0;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    background-color: transparent;
+    color: #000;
+    font-size: @input-height;
+    line-height: @input-height;
+    text-align: center;
+    vertical-align: middle;
+
+    transform-origin: center center;
+    transition: all 0.2s;
+  }
+}
+
+// Input off
+.-custom-input-icon-state-off(@input-width: 1em; @input-height: 1em) {
+  &:after {
+    opacity: 0; // invisible
+    transform: scale(0); // scaled down to 0
+  }
+}
+
+// Input on
+.-custom-input-icon-state-on(@input-width: 1em; @input-height: 1em) {
+  color: #000;
+
+  &:before {
+    //
+  }
+
+  &:after {
+    opacity: 1; // visible
+    transform: scale(0.8); // scaled up to normal
+  }
+}
+
+// Input disabled
+.-custom-input-icon-state-disabled(@input-width: 1em; @input-height: 1em) {
+  opacity: 0.5;
+}
+
+//
+// The base custom input class
+//
+.custom-input-icon(@input-width: 1em; @input-height: 1em) {
+  // This will hide the original input...
   &:not(:checked),
   &:checked {
-    position: absolute;
-    left: -9999px;
+    .-custom-input-hide-input;
 
+    // ... and show the custom input icon in the following matched element
     & + label,
     & + .input-label,
     & + .input-icon {
-      display: inline-block;
+      .-custom-input-icon(@input-width: @input-width; @input-height: @input-height);
       padding-left: @input-width * 1.5;
-
-      position: relative;
-
-      color: #777;
-      cursor: pointer;
-      vertical-align: text-bottom;
-
-      transition: color 0.2s, opacity 0.2s;
-
-      // Background Shape
-      &:before {
-        content: '';
-        display: inline-block;
-        width: @input-width;
-        height: @input-height;
-        padding: 0;
-        margin: 0;
-
-        position: absolute;
-        left: 0;
-        top: 0;
-
-        background: #eee;
-        border: 1px solid transparent;
-        border-radius: @input-height * 0.2;
-        box-sizing: border-box;
-        font-size: @input-height;
-        line-height: @input-height;
-        text-align: center;
-        vertical-align: middle;
-
-        transition: all 0.2s;
-      }
-
-      // Foreground Shape (Icon)
-      &:after {
-        content: '';
-        display: inline-block;
-        width: @input-width;
-        height: @input-height;
-        padding: 0;
-        margin: 0;
-
-        position: absolute;
-        top: 0;
-        left: 0;
-
-        background-color: transparent;
-        color: #000;
-        font-size: @input-height;
-        line-height: @input-height;
-        text-align: center;
-        vertical-align: middle;
-
-        transform-origin: center center;
-        transition: all 0.2s;
-      }
     }
 
     // Icon has fixed height to vertically align it properly (if only icon is needed to position)
     & + .input-icon {
-      height: 1em;
+      width: @input-width;
+      height: @input-height;
+      padding-left: 0;
     }
   }
 
   &:not(:checked) + label,
   &:not(:checked) + .input-label,
   &:not(:checked) + .input-icon {
-    &:after {
-      opacity: 0; /* invisible */
-      transform: scale(0); /* scaled down to 0 */
-    }
+    .-custom-input-icon-state-off(@input-width: @input-width; @input-height: @input-height);
   }
 
   &:checked + label,
   &:checked + .input-label,
   &:checked + .input-icon {
-    color: #000;
-
-    &:before {
-      // background-color: @c-white;
-      // border-color: @c-grey;
-    }
-
-    &:after {
-      opacity: 1; /* visible */
-      transform: scale(0.8); /* scaled up to normal */
-    }
+    .-custom-input-icon-state-on(@input-width: @input-width; @input-height: @input-height);
   }
 
   &:disabled {
     & + label,
     & + .input-label,
     & + .input-icon {
-      opacity: 0.5;
+      .-custom-input-icon-state-disabled(@input-width: @input-width; @input-height: @input-height);
     }
   }
 }
@@ -152,25 +187,65 @@
 //
 // Custom Input - Checkbox
 //
+.-custom-input-checkbox-icon(@input-width: 1em; @input-height: 1em) {
+  &:after {
+    content: '✔' !important;
+  }
+}
+
+// Checkbox off
+.-custom-input-checkbox-icon-state-off() {
+  &:after {
+    transform: scale(0); // invisible
+  }
+}
+
+// Checkbox on
+.-custom-input-checkbox-icon-state-on() {
+  &:after {
+    transform: scale(0.7); // scaled smaller
+  }
+}
+
+// Checkbox disabled
+.-custom-input-checkbox-icon-state-disabled() {
+  // Nothing
+}
+
 .custom-input-checkbox(@input-width: 1em; @input-height: 1em) {
-  .custom-input(@input-width: @input-width; @input-height: @input-height);
+  .custom-input-icon(@input-width: @input-width; @input-height: @input-height);
 
   &:not(:checked),
   &:checked {
     & + label,
     & + .input-label,
     & + .input-icon {
-      &:after {
-        content: '✔' !important;
-      }
+      .-custom-input-checkbox-icon(@input-width: @input-width; @input-height: @input-height);
     }
   }
 
+  // Not checked
+  &:not(:checked) {
+    & + label,
+    & + .input-label,
+    & + .input-icon {
+      .-custom-input-checkbox-icon-state-off();
+    }
+  }
+
+  // Checked
   &:checked + label,
   &:checked + .input-label,
   &:checked + .input-icon {
-    &:after {
-      transform: scale(0.7); /* scaled smaller */
+    .-custom-input-checkbox-icon-state-on();
+  }
+
+  // Disabled
+  &:disabled {
+    & + label,
+    & + .input-label,
+    & + .input-icon {
+      .-custom-input-checkbox-icon-state-disabled();
     }
   }
 }
@@ -178,33 +253,74 @@
 //
 // Custom Input - Radio
 //
-.custom-input-radio(@input-width: 1em; @input-height: 1em) {
-  .custom-input(@input-width: @input-width; @input-height: @input-height);
+.-custom-input-radio-icon(@input-width: 1em; @input-height: 1em) {
+  &:before {
+    border-radius: 100%;
+  }
 
+  &:after {
+    content: '' !important;
+    width: @input-width;
+    height: @input-height;
+    background-color: #000;
+    border-radius: 100%;
+  }
+}
+
+// Radio off
+.-custom-input-radio-icon-state-off() {
+  &:after {
+    transform: scale(0); // invisible
+  }
+}
+
+// Radio on
+.-custom-input-radio-icon-state-on() {
+  &:after {
+    transform: scale(0.5); // scaled smaller
+  }
+}
+
+// Radio disabled
+.-custom-input-radio-icon-state-disabled() {
+  // Nothing
+}
+
+.custom-input-radio(@input-width: 1em; @input-height: 1em) {
+  .custom-input-icon(@input-width: @input-width; @input-height: @input-height);
+
+  // The radio UI
   &:not(:checked),
   &:checked {
     & + label,
     & + .input-label,
     & + .input-icon {
-      &:before {
-        border-radius: 100%;
-      }
-
-      &:after {
-        content: '' !important;
-        width: @input-width;
-        height: @input-height;
-        background-color: #000;
-        border-radius: 100%;
-      }
+      .-custom-input-radio-icon(@input-width: @input-width; @input-height: @input-height);
     }
   }
 
+  // Not checked
+  &:not(:checked) {
+    & + label,
+    & + .input-label,
+    & + .input-icon {
+      .-custom-input-radio-icon-state-off();
+    }
+  }
+
+  // Checked
   &:checked + label,
   &:checked + .input-label,
   &:checked + .input-icon {
-    &:after {
-      transform: scale(0.5); /* scaled smaller */
+    .-custom-input-radio-icon-state-on();
+  }
+
+  // Disabled
+  &:disabled {
+    & + label,
+    & + .input-label,
+    & + .input-icon {
+      .-custom-input-radio-icon-state-disabled();
     }
   }
 }
@@ -212,67 +328,118 @@
 //
 // Custom Input - Switch
 //
+.-custom-input-switch-icon(@input-width: 1em; @input-height: 1em) {
+  // Frame
+  &:before {
+    content: '' !important;
+    display: block;
+    width: @input-width * 2;
+    height: @input-height;
+    padding: 0;
+
+    background: #eee;
+    border: solid 1px #ddd;
+    border-radius: @input-height;
+  }
+
+  // Inner circle "switch"
+  &:after {
+    content: '' !important;
+    display: block;
+    width: @input-width * 0.5;
+    height: @input-height * 0.5;
+    padding: 0;
+    margin: @input-width * 0.25;
+    background-color: #999;
+    border: solid 1px transparent;
+    border-radius: @input-height;
+  }
+}
+
+// Switch off
+.-custom-input-switch-icon-state-off(@input-width: 1em; @input-height: 1em) {
+  // Inner circle "switch"
+  &:after {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Switch on
+.-custom-input-switch-icon-state-on(@input-width: 1em; @input-height: 1em) {
+  // Frame
+  &:before {
+    background-color: #00cc66;
+    border-color: #fff;
+  }
+
+  // Inner circle "switch"
+  &:after {
+    width: @input-width * 0.2;
+    height: @input-height * 0.5;
+    padding: 0;
+    margin: (@input-height * 0.25) (@input-height * 0.1);
+    background-color: #eee;
+    border-color: transparent;
+    border-radius: @input-height * 0.1;
+    opacity: 1;
+    transform: translateX(@input-width * 1.25);
+  }
+}
+
+// Switch disabled
+.-custom-input-switch-icon-state-disabled(@input-width: 1em; @input-height: 1em) {
+  opacity: 0.5;
+
+  // Frame
+  &:before {
+    background-color: #eee;
+    border-color: #ccc;
+  }
+
+  // Inner circle "switch"
+  &:after {
+    background-color: #eee;
+    border-color: #ccc;
+  }
+}
+
 .custom-input-switch(@input-width: 1em; @input-height: 1em) {
-  .custom-input(@input-width: @input-width; @input-height: @input-height);
+  .custom-input-icon(@input-width: @input-width; @input-height: @input-height);
 
   &:not(:checked),
   &:checked {
     & + label,
     & + .input-label,
     & + .input-icon {
-      padding-left: @input-width * 2.75;
-
-      &:before {
-        content: '' !important;
-        display: block;
-        width: @input-width * 2;
-        height: @input-height;
-        padding: 0;
-
-        background: #eee;
-        border-radius: @input-height;
-      }
-
-      &:after {
-        content: '' !important;
-        display: block;
-        width: @input-width * 0.5;
-        height: @input-height * 0.5;
-        padding: 0;
-        margin: @input-width * 0.25;
-        background-color: #999;
-        border-radius: @input-height;
-      }
-    }
-  }
-
-  &:checked + label,
-  &:checked + .input-label,
-  &:checked + .input-icon {
-    &:before {
-      background-color: #00cc66;
-      border-color: #fff;
+      .-custom-input-switch-icon(@input-width: @input-width; @input-height: @input-height);
+      padding-left: @input-width * 2.5;
     }
 
-    &:after {
-      width: @input-width * 0.2;
-      height: @input-height * 0.5;
-      padding: 0;
-      margin: (@input-height * 0.25) (@input-height * 0.1);
-      background-color: #eee;
-      border-color: transparent;
-      border-radius: @input-height * 0.1;
-      opacity: 1;
-      transform: translateX(@input-width * 1.25);
+    & + .input-icon {
+      width: @input-width * 2;
+      height: @input-height;
+      padding-left: 0;
     }
   }
 
   &:not(:checked) + label,
   &:not(:checked) + .input-label,
   &:not(:checked) + .input-icon {
-    &:after {
-      opacity: 1;
-      transform: translateX(0);
+    .-custom-input-switch-icon-state-off(@input-width: @input-width; @input-height: @input-height);
+  }
+
+  &:checked + label,
+  &:checked + .input-label,
+  &:checked + .input-icon {
+    .-custom-input-switch-icon-state-on(@input-width: @input-width; @input-height: @input-height);
+  }
+
+  &:disabled {
+    & + label,
+    & + .input-label,
+    & + .input-icon {
+      .-custom-input-switch-icon-state-disabled(@input-width: @input-width; @input-height: @input-height);
     }
   }
 }
