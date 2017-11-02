@@ -58,6 +58,9 @@ function Queue (options) {
 
   /**
    * The play status
+   * 0: paused
+   * 1: play
+   * 2: running
    *
    * @type {Number}
    * @default 1
@@ -105,6 +108,12 @@ function Queue (options) {
      * @chainable
      */
     add (actionLabel, action, ...args) {
+      // @debug
+      // console.log('Queue.add', {
+      //   actionLabel,
+      //   action
+      // })
+
       // Queue the action
       this.queue(actionLabel, action, ...args)
 
@@ -131,6 +140,12 @@ function Queue (options) {
      * @chainable
      */
     sync (actionLabel, action, ...args) {
+      // @debug
+      // console.log('Queue.sync', {
+      //   actionLabel,
+      //   action
+      // })
+
       clearTimeout(_timer)
 
       // Queue action...
@@ -181,6 +196,22 @@ function Queue (options) {
      * @chainable
      */
     play () {
+      // @debug
+      // console.log('Queue.play', {
+      //   _status
+      // })
+
+      // Currently already running
+      if (_status === 2) {
+        // What if I control the queue via the queue?
+        let playQueueAfterRunning = () => {
+          // @debug
+          // console.log('__Queue:playQueueAfterRunning')
+          this.play()
+        }
+        return this.queue('__Queue:playQueueAfterRunning', playQueueAfterRunning)
+      }
+
       // Only play if already paused
       clearTimeout(_timer)
 
@@ -188,7 +219,7 @@ function Queue (options) {
       _status = 1
 
       // Reset timer to run the queue
-      _timer = setTimeout(function runQueueProcessAfterDelay(queueInstance) {
+      _timer = setTimeout(function runQueueProcessAfterDelay (queueInstance) {
         queueInstance.run()
       }(this), _timerDelay)
 
@@ -203,6 +234,22 @@ function Queue (options) {
      * @chainable
      */
     pause () {
+      // @debug
+      // console.log('Queue.pause', {
+      //   _status
+      // })
+
+      // Queue is already running
+      if (_status === 2) {
+        // What if I control the queue via the queue?
+        let pauseQueueAfterRunning = () => {
+          // @debug
+          // console.log('__Queue:pauseQueueAfterRunning')
+          this.pause()
+        }
+        return this.queue('__Queue:pauseQueueAfterRunning', pauseQueueAfterRunning)
+      }
+
       // Only pause if already playing
       clearTimeout(_timer)
 
@@ -220,14 +267,42 @@ function Queue (options) {
      * @chainable
      */
     run () {
+      // @debug
+      // console.log('Queue.run...', {
+      //   _status,
+      //   _queue
+      // })
+
+      // Currently already running
+      if (_status === 2) {
+        // What if I control the queue via the queue?
+        let runQueueAgainAfterRunning = () => {
+          // @debug
+          // console.log('__Queue:runQueueAgainAfterRunning')
+          this.run()
+        }
+        return this.queue('__Queue:runQueueAgainAfterRunning', runQueueAgainAfterRunning)
+      }
+
       clearTimeout(_timer)
 
-      // No items in the queue, so set to pause
+      // No items in the queue, so force queue to pause
       if (!Object.keys(_queue).length) {
-        this.pause()
-
+        _status = 0
         return this
       }
+
+      // Save the queue's current status
+      let _previousStatus = _status
+
+      // Set the status to running
+      _status = 2
+
+      // @debug
+      // console.log('Queue.running...', {
+      //   _previousStatus,
+      //   _status
+      // })
 
       // Process the queue
       for (let actionLabel in _queue) {
@@ -235,19 +310,19 @@ function Queue (options) {
           let queuedItem = _queue[actionLabel]
 
           // @debug
-          // console.log('running queued item', queuedItem)
+          // console.log(` --> ${actionLabel}`, queuedItem)
 
           // Function
           if (queuedItem && typeof queuedItem === 'function') {
             queuedItem()
 
-          // Object
+            // Object
           } else if (queuedItem.hasOwnProperty('action') && typeof queuedItem.action === 'function') {
             // Apply arguments to the action
             if (queuedItem.hasOwnProperty('args') && queuedItem.args instanceof Array) {
               queuedItem.action(...queuedItem.args)
 
-            // Run the action like normal
+              // Run the action like normal
             } else {
               queuedItem.action()
             }
@@ -259,10 +334,8 @@ function Queue (options) {
         }
       }
 
-      // Continue playing if in play mode
-      // if (_status) {
-      //   this.play()
-      // }
+      // Revert to status before run
+      _status = _previousStatus
 
       // @chainable
       return this
@@ -272,6 +345,7 @@ function Queue (options) {
      * Get the status of the queue:
      *   0 = Paused
      *   1 = Playing
+     *   2 = Running
      * @returns {Number}
      */
     checkStatus () {

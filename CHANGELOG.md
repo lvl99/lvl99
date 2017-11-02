@@ -1,3 +1,8 @@
+### 1.3.14
+
+* Fixed the [Queue](es6/tools/queue.es6) to not run while already running
+
+
 ### 1.3.13
 
 * Fixed [`parse.extractClassDetails`](es6/utils/parse.es6) to strip start/end single/double quotation marks from strings
