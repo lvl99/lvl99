@@ -1,3 +1,9 @@
+### 1.3.15
+
+* Prevented public methods with no target from being assigned more than once during [Component](es6/core/component.es6)
+  init phase.
+
+
 ### 1.3.14
 
 * Fixed the [Queue](es6/tools/queue.es6) to not run while already running

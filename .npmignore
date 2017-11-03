@@ -1,4 +1,6 @@
+.idea
 .gitignore
+.npmignore
 
 # Only for repo
 __tests__
