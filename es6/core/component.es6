@@ -17,6 +17,9 @@ const {
   getTargetSelector
 } = require('../utils/parse')
 
+// Track components and whether they have been initialised and public methods added, etc.
+const trackComponents = {}
+
 /**
  * The Component's base properties
  *
@@ -263,6 +266,20 @@ class Component extends Entity {
     // @debug
     // console.log(`[${this.NS:init}]`)
 
+    // Track that the component has been initialised
+    if (!trackComponents.hasOwnProperty(this.NS)) {
+      trackComponents[this.NS] = {
+        instances: {
+          [`${this.uuid}`]: this
+        }
+      }
+    } else {
+      trackComponents[this.NS].instances[`${this.uuid}`] = this
+    }
+
+    // @debug
+    // console.log(trackComponents)
+
     // Mark the element
     this.markElem()
 
@@ -304,10 +321,17 @@ class Component extends Entity {
         }
 
         // @debug
-        // console.log(`[${this.NS}] init: attach public method`, {
+        // console.log(`[${this.NS}] init: public method "${triggerDetails.do}"`, {
         //   triggerDetails,
         //   method
         // })
+
+        // Only attach public method if it hasn't been attached already or has a target
+        if (!triggerDetails.hasOwnProperty('target') && Object.keys(trackComponents[this.NS].instances).length > 1) {
+          // @debug
+          // console.warn(`[${this.NS}] init: public method ${this.NS}:${triggerDetails.do} already assigned. Skipping...`)
+          return
+        }
 
         // Attach the method as a custom event to the target
         if (typeof method === 'function') {
