@@ -1,3 +1,8 @@
+### 1.3.16
+
+* Refactored the [Queue](es6/tools/queue.es6) a little bit to make more sense.
+
+
 ### 1.3.15
 
 * Prevented public methods with no target from being assigned more than once during [Component](es6/core/component.es6)
