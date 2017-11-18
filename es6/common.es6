@@ -6,20 +6,21 @@
  * @package lvl99
  */
 
-const $ = require('jquery')
+import jQuery from 'jquery'
+export const $ = jQuery
 
 /**
  * Basic shorthand props to cache/reference common jQuery objects
  */
-const $doc = $(document)
-const $win = $(window)
-const $html = $('html')
-const $body = $('body')
+export const $doc = $(document)
+export const $win = $(window)
+export const $html = $('html')
+export const $body = $('body')
 
 /**
  * Event name shorthands
  */
-const events = {
+export const events = {
   click: 'click touchend',
   inputstart: 'mousedown touchstart keydown',
   inputend: 'mouseup touchend keyup',
@@ -40,4 +41,4 @@ const utils = {
   events
 }
 
-module.exports = utils
+export default utils

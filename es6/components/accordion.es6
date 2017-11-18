@@ -5,9 +5,9 @@
  * @package lvl99
  */
 
-const merge = require('lodash.merge')
-const { $, $body, events } = require('../common')
-const Component = require('../core/component')
+import merge from 'lodash.merge'
+import { $, $body, events } from '../common'
+import Component from '../core/component'
 
 const AccordionProperties = {
   // Namespaces
@@ -55,7 +55,7 @@ const AccordionProperties = {
  * @constructor
  * @extends {Component}
  */
-class Accordion extends Component {
+export default class Accordion extends Component {
   constructor (attributes) {
     // @debug
     // console.log('LVL99:Accordion:constructor')
@@ -215,5 +215,3 @@ class Accordion extends Component {
     $item.removeClass(this.getAttr('_accordionClassItemActive'))
   }
 }
-
-module.exports = Accordion

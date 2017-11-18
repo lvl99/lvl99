@@ -2,10 +2,10 @@
  * LVL99 Entity
  */
 
-let _loggerPath = 'lvl99/es6/core/app'
-const Entity = require('../../es6/core/entity')
-const App = require('../../es6/core/app')
-const Component = require('../../es6/core/component')
+let _loggerPath = 'lvl99/core/app'
+const Entity = require('../../es5/core/entity')
+const App = require('../../es5/core/app')
+const Component = require('../../es5/core/component')
 
 let testApp = new App({
   config: {

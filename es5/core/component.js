@@ -1,5 +1,3 @@
-'use strict';
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -18,6 +16,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @package lvl99
  */
 
+<<<<<<< Updated upstream
 var objectPath = require('object-path');
 var merge = require('lodash.merge');
 var uuid = require('uuid');
@@ -34,6 +33,19 @@ var _require2 = require('../utils/parse'),
     getTargetBySelector = _require2.getTargetBySelector,
     getTargetSelector = _require2.getTargetSelector;
 
+=======
+import objectPath from 'object-path';
+import merge from 'lodash.merge';
+import uuid from 'uuid';
+import Entity from './entity';
+import { $, $doc } from '../common';
+// import { wrap } from '../utils/super'
+import { extractTriggerDetails, extractTargetEventNames, getTargetBySelector, getTargetSelector } from '../utils/parse';
+
+// Track components and whether they have been initialised and public methods added, etc.
+var trackComponents = {};
+
+>>>>>>> Stashed changes
 /**
  * The Component's base properties
  *
@@ -542,4 +554,4 @@ var Component = function (_Entity) {
   return Component;
 }(Entity);
 
-module.exports = Component;
+export default Component;

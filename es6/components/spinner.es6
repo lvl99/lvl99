@@ -5,12 +5,13 @@
  * @package lvl99
  */
 
-const { $, $doc, $body, events } = require('../common')
-const Toggleable = require('./toggleable')
+import { $, $doc, $body, events } from '../common'
+import Toggleable from './toggleable'
 
 /**
  * Spinner Properties
  *
+ * @private
  * @type {Object}
  */
 const SpinnerProperties = {
@@ -87,7 +88,7 @@ const SpinnerProperties = {
  * @constructor
  * @extends {Toggleable}
  */
-class Spinner extends Toggleable {
+export default class Spinner extends Toggleable {
   constructor (attributes) {
     // @debug
     // console.log('LVL99:Spinner:constructor')
@@ -178,5 +179,3 @@ class Spinner extends Toggleable {
     }
   }
 }
-
-module.exports = Spinner

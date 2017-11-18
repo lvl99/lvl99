@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * LVL99
  *
@@ -8,10 +6,10 @@
  * @package lvl99
  */
 
-var common = require('./common');
-var utils = require('./utils');
-var core = require('./core');
-var tools = require('./tools');
+import common from './common';
+import utils from './utils';
+import core from './core';
+import tools from './tools';
 
 var lvl99 = {
   common: common,
@@ -20,4 +18,4 @@ var lvl99 = {
   tools: tools
 };
 
-module.exports = lvl99;
+export default lvl99;

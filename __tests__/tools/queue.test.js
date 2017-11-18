@@ -4,8 +4,8 @@
 
 // @TODO can't seem to get the mock timers to work properly (see
 
-let _loggerPath = 'lvl99/es6/tools/queue'
-let Queue = require('../../es6/tools/queue')
+let _loggerPath = 'lvl99/tools/queue'
+let Queue = require('../../es5/tools/queue')
 
 // Use fake timers because waiting is boring
 jest.useFakeTimers()

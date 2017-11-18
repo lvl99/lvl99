@@ -1,15 +1,13 @@
-'use strict';
-
 /**
  * LVL99 Components
  *
  * @package lvl99
  */
 
-var Accordion = require('./accordion');
-var Modal = require('./modal');
-var Spinner = require('./spinner');
-var Toggleable = require('./toggleable');
+import Accordion from './accordion';
+import Modal from './modal';
+import Spinner from './spinner';
+import Toggleable from './toggleable';
 
 var components = {
   Accordion: Accordion,
@@ -18,4 +16,4 @@ var components = {
   Toggleable: Toggleable
 };
 
-module.exports = components;
+export default components;

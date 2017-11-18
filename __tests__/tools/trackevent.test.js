@@ -2,8 +2,8 @@
  * LVL99 TrackEvent
  */
 
-const _loggerPath = 'lvl99/es6/tools/trackevent'
-const TrackEvent = require('../../es6/tools/trackevent')
+const _loggerPath = 'lvl99/tools/trackevent'
+const TrackEvent = require('../../es5/tools/trackevent')
 
 // Use fake timers because waiting is boring
 jest.useFakeTimers()

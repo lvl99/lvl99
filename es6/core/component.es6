@@ -4,17 +4,17 @@
  * @package lvl99
  */
 
-const objectPath = require('object-path')
-const merge = require('lodash.merge')
-const uuid = require('uuid')
-const Entity = require('./entity')
-const { $, $doc } = require('../common')
-// const { wrap } = require('../utils/super')
-const {
+import objectPath from 'object-path'
+import merge from 'lodash.merge'
+import uuid from 'uuid'
+import Entity from './entity'
+import { $, $doc } from '../common'
+// import { wrap } from '../utils/super'
+import {
   extractTriggerDetails,
   getTargetBySelector,
   getTargetSelector
-} = require('../utils/parse')
+} from '../utils/parse'
 
 /**
  * The Component's base properties
@@ -110,7 +110,7 @@ const ComponentProperties = {
  * @class
  * @extends Entity
  */
-class Component extends Entity {
+export default class Component extends Entity {
   /**
    * Component constructor
    *
@@ -468,5 +468,3 @@ class Component extends Entity {
     $(selector).trigger(`${this.NS}:${eventName}`, [this, ...args])
   }
 }
-
-module.exports = Component

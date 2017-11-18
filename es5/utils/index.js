@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * LVL99 Utils
  *
@@ -8,13 +6,13 @@
  * @package lvl99
  */
 
-var parse = require('./parse');
-var inheritance = require('./inheritance');
-// const super = require('./super')
+import parse from './parse';
+import inheritance from './inheritance';
+// import super from './super'
 
 var utils = {
   parse: parse,
   inheritance: inheritance
 };
 
-module.exports = utils;
+export default utils;

@@ -2,6 +2,6 @@
  * LVL99
  */
 
-const lvl99 = require('./es6')
+var lvl99 = require('./es5')
 
 module.exports = lvl99

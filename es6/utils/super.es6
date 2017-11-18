@@ -8,7 +8,7 @@
 const HAS_SUPER_PATTERN = /\.(_super|call\(this|apply\(this)/
 const fnToString = Function.prototype.toString
 
-const checkHasSuper = ((() => {
+export const checkHasSuper = ((() => {
   let sourceAvailable = fnToString.call(function() {
       return this
     }).indexOf('return this') > -1
@@ -24,7 +24,7 @@ const checkHasSuper = ((() => {
   }
 })())
 
-function ROOT () {}
+export function ROOT () {}
 ROOT.__hasSuper = false
 
 function hasSuper(func) {
@@ -45,7 +45,7 @@ function hasSuper(func) {
  @param {Function} superFunc The super function.
  @return {Function} wrapped function.
  */
-function wrap (func, superFunc, superObj) {
+export function wrap (func, superFunc, superObj) {
   if (!hasSuper(func)) {
     return func
   }
@@ -73,8 +73,10 @@ function _wrap(func, superFunc, superObj) {
   return superWrapper
 }
 
-module.exports = {
+const Super = {
   checkHasSuper,
   ROOT,
   wrap
 }
+
+export default Super

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * LVL99 Core
  *
@@ -8,9 +6,9 @@
  * @package lvl99
  */
 
-var Entity = require('./entity');
-var App = require('./app');
-var Component = require('./component');
+import Entity from './entity';
+import App from './app';
+import Component from './component';
 
 var core = {
   Entity: Entity,
@@ -18,4 +16,4 @@ var core = {
   Component: Component
 };
 
-module.exports = core;
+export default core;

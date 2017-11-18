@@ -27,7 +27,7 @@
  * @package lvl99
  */
 
-const SmoothScroll = function ($, options) {
+export default function SmoothScroll ($, options) {
   /**
    * Load in the settings
    */
@@ -146,5 +146,3 @@ const SmoothScroll = function ($, options) {
     scrollTo
   }
 }
-
-module.exports = SmoothScroll

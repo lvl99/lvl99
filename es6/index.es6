@@ -6,10 +6,10 @@
  * @package lvl99
  */
 
-const common = require('./common')
-const utils = require('./utils')
-const core = require('./core')
-const tools = require('./tools')
+import common from './common'
+import utils from './utils'
+import core from './core'
+import tools from './tools'
 
 const lvl99 = {
   common,
@@ -18,4 +18,4 @@ const lvl99 = {
   tools
 }
 
-module.exports = lvl99
+export default lvl99

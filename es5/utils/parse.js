@@ -1,5 +1,3 @@
-'use strict';
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /**
@@ -10,8 +8,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * @package lvl99
  */
 
+import objectPath from 'object-path';
 var __loggerPath = 'lvl99/utils/parse';
-var objectPath = require('object-path');
 
 /**
  * Coerce a value to its primitive type
@@ -19,7 +17,7 @@ var objectPath = require('object-path');
  * @param {Mixed} input
  * @returns {Mixed}
  */
-function coerceToPrimitiveType(input) {
+export function coerceToPrimitiveType(input) {
   // Non-string? Just return it straight away
   if (typeof input !== 'string') return input;
 
@@ -65,7 +63,7 @@ function coerceToPrimitiveType(input) {
  * @param {Mixed} input
  * @returns {Boolean}
  */
-function convertToBoolean(input) {
+export function convertToBoolean(input) {
   // Already boolean
   if (input === true || input === false) {
     return input;
@@ -101,7 +99,7 @@ function convertToBoolean(input) {
  * @param {String} input
  * @returns {Object}
  */
-function convertStringToJson(input) {
+export function convertStringToJson(input) {
   var output = input;
 
   // Convert string data to JSON
@@ -123,7 +121,7 @@ function convertStringToJson(input) {
  * @param input
  * @returns {*}
  */
-function convertStringToFloat(input) {
+export function convertStringToFloat(input) {
   if (typeof input === 'number') {
     return input;
   }
@@ -146,7 +144,7 @@ function convertStringToFloat(input) {
  * @param {String} input
  * @return {Object}
  */
-function extractClassDetails(input) {
+export function extractClassDetails(input) {
   var output = {};
   var inputParts = [input];
 
@@ -223,7 +221,7 @@ function extractClassDetails(input) {
  * @param {Object|Function} context Defaults to `window`. Where to find the `do` action
  * @returns {Object} => { eventName: {String}, method: {Function}, selector: {String}, target: {Object} }
  */
-function extractTriggerDetails(input, context) {
+export function extractTriggerDetails(input, context) {
   var trigger = input;
 
   if (!context) {
@@ -304,7 +302,7 @@ function extractTriggerDetails(input, context) {
  * @param {String} input
  * @returns {String}
  */
-function fixedEncodeURIComponent(input) {
+export function fixedEncodeURIComponent(input) {
   return encodeURIComponent(input).replace(/[!'()*]/g, function (c) {
     return '%' + c.charCodeAt(0).toString(16);
   });
@@ -317,7 +315,7 @@ function fixedEncodeURIComponent(input) {
  * @param {Object} context
  * @return {Object}
  */
-function getTargetBySelector(target, context) {
+export function getTargetBySelector(target, context) {
   // Default to document
   if (!target) {
     target = document;
@@ -350,7 +348,7 @@ function getTargetBySelector(target, context) {
  * @param {Object} context
  * @return {undefined|String}
  */
-function getTargetSelector(target, context) {
+export function getTargetSelector(target, context) {
   if (typeof target === 'string') {
     return target;
   }
@@ -381,6 +379,50 @@ function getTargetSelector(target, context) {
   return target;
 }
 
+<<<<<<< Updated upstream
+=======
+/**
+ * Parse the target event names
+ *
+ * @param {Array|String} eventNames e.g. `Component:customEvent dom:mouseover`
+ * @param {String} namespace Optional namespace to assign each extracted custom (non-DOM) event name
+ * @returns {Array}
+ */
+export function extractTargetEventNames(inputEventNames, namespace) {
+  var targetEventNames = [];
+  var eventNames = inputEventNames;
+
+  if (typeof inputEventNames === 'string') {
+    // Split eventNames by spaces
+    if (/\s/.test(inputEventNames)) {
+      eventNames = inputEventNames.split(/\s+/);
+    } else {
+      eventNames = [inputEventNames];
+    }
+  }
+
+  if (eventNames instanceof Array) {
+    // Process each event name
+    eventNames.forEach(function (eventName) {
+      // Default to namespaced event name
+      var targetEventName = typeof namespace === 'string' && namespace !== '' ? namespace + ':' + eventName : eventName;
+
+      // Remove any reference to the native DOM event namespace
+      if (/^dom:/i.test(eventName)) {
+        targetEventName = eventName.replace(/^dom\:/gi, '', eventName);
+      }
+
+      // Add to the list
+      targetEventNames.push(targetEventName);
+    });
+
+    return targetEventNames;
+  }
+
+  return false;
+}
+
+>>>>>>> Stashed changes
 var parse = {
   coerceToPrimitiveType: coerceToPrimitiveType,
   convertToBoolean: convertToBoolean,
@@ -393,4 +435,4 @@ var parse = {
   getTargetSelector: getTargetSelector
 };
 
-module.exports = parse;
+export default parse;

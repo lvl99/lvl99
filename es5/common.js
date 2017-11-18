@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * LVL99 Common
  *
@@ -8,20 +6,21 @@
  * @package lvl99
  */
 
-var $ = require('jquery');
+import jQuery from 'jquery';
+export var $ = jQuery;
 
 /**
  * Basic shorthand props to cache/reference common jQuery objects
  */
-var $doc = $(document);
-var $win = $(window);
-var $html = $('html');
-var $body = $('body');
+export var $doc = $(document);
+export var $win = $(window);
+export var $html = $('html');
+export var $body = $('body');
 
 /**
  * Event name shorthands
  */
-var events = {
+export var events = {
   click: 'click touchend',
   inputstart: 'mousedown touchstart keydown',
   inputend: 'mouseup touchend keyup',
@@ -42,4 +41,4 @@ var utils = {
   events: events
 };
 
-module.exports = utils;
+export default utils;

@@ -6,8 +6,8 @@
  * @package lvl99
  */
 
-const { $, $body, events } = require('../common')
-const Toggleable = require('./toggleable')
+import { $, $body, events } from '../common'
+import Toggleable from './toggleable'
 
 const ModalProperties = {
   // Namespaces
@@ -58,7 +58,7 @@ const ModalProperties = {
  * @constructor
  * @extends {Toggleable}
  */
-class Modal extends Toggleable {
+export default class Modal extends Toggleable {
   constructor (attributes) {
     // @debug
     // console.log('LVL99:Modal:constructor')
@@ -144,5 +144,3 @@ class Modal extends Toggleable {
     super.close(...arguments)
   }
 }
-
-module.exports = Modal

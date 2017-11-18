@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * LVL99 Inheritance utilities
  */
@@ -15,7 +13,7 @@ var RE_PRIVATE = /^_/;
  * @param {Object} defaultPropValues
  * @param {Array} whitelist
  */
-function exposeAllProperties(target, defaultPropValues, whitelist) {
+export function exposeAllProperties(target, defaultPropValues, whitelist) {
   var properties = void 0;
 
   if (!target) {
@@ -85,7 +83,7 @@ function exposeAllProperties(target, defaultPropValues, whitelist) {
  * @param {Object|Function} defaultPropValues
  * @param {Array} whitelist
  */
-function exposePrivateProperties(target, defaultPropValues, whitelist) {
+export function exposePrivateProperties(target, defaultPropValues, whitelist) {
   var properties = void 0;
 
   if (!target) {
@@ -133,7 +131,7 @@ function exposePrivateProperties(target, defaultPropValues, whitelist) {
  * @param {String} newPropName
  * @param {Mixed} defaultPropValue Used if the target's targetPropName is undefined
  */
-function createPublicGetProperty(target, targetPropName, newPropName, defaultPropValue) {
+export function createPublicGetProperty(target, targetPropName, newPropName, defaultPropValue) {
   if (!target.hasOwnProperty(newPropName)) {
     Object.defineProperty(target, newPropName, {
       get: function get() {
@@ -154,7 +152,7 @@ function createPublicGetProperty(target, targetPropName, newPropName, defaultPro
  * @param {String} newPropName
  * @param {Mixed} defaultPropValue Used if the target's targetPropName is undefined
  */
-function createPublicGetSetProperty(target, targetPropName, newPropName, defaultPropValue) {
+export function createPublicGetSetProperty(target, targetPropName, newPropName, defaultPropValue) {
   if (!target.hasOwnProperty(newPropName)) {
     Object.defineProperty(target, newPropName, {
       get: function get() {
@@ -176,4 +174,4 @@ var inheritance = {
   createPublicGetSetProperty: createPublicGetSetProperty
 };
 
-module.exports = inheritance;
+export default inheritance;

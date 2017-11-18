@@ -1,4 +1,6 @@
 .gitignore
+.npmignore
+.babelrc
 
 # Only for repo
 __tests__
@@ -8,3 +10,4 @@ examples
 dist
 tasks
 gulpfile.js
+webpack.config.js

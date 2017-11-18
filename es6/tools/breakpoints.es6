@@ -5,9 +5,9 @@
  * @package lvl99
  */
 
-const merge = require('lodash.merge')
+import merge from 'lodash.merge'
 
-function Breakpoints (sizes) {
+export default function Breakpoints (sizes) {
   return {
     /**
      * The defined breakpoint names with min/max widths (in 72dpi pixels)
@@ -67,5 +67,3 @@ function Breakpoints (sizes) {
     }
   }
 }
-
-module.exports = Breakpoints

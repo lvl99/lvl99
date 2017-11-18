@@ -5,12 +5,13 @@
  * @package lvl99
  */
 
-const { $, $body, events } = require('../common')
-const Component = require('../core/component')
+import { $, $body, events } from '../common'
+import Component from '../core/component'
 
 /**
  * Toggleable Properties
  *
+ * @private
  * @type {Object}
  */
 const ToggleableProperties = {
@@ -87,7 +88,7 @@ const ToggleableProperties = {
  * @constructor
  * @extends {Component}
  */
-class Toggleable extends Component {
+export default class Toggleable extends Component {
   constructor (attributes) {
     // @debug
     // console.log('LVL99:Toggleable:constructor')
@@ -265,5 +266,3 @@ class Toggleable extends Component {
     }
   }
 }
-
-module.exports = Toggleable

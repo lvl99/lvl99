@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * LVL99 Breakpoints
  * Detect via JS what the breakpoint is by keyword
@@ -7,9 +5,9 @@
  * @package lvl99
  */
 
-var merge = require('lodash.merge');
+import merge from 'lodash.merge';
 
-function Breakpoints(sizes) {
+export default function Breakpoints(sizes) {
   return {
     /**
      * The defined breakpoint names with min/max widths (in 72dpi pixels)
@@ -70,5 +68,3 @@ function Breakpoints(sizes) {
     }
   };
 }
-
-module.exports = Breakpoints;

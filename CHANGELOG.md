@@ -1,3 +1,60 @@
+### 1.4.0
+
+* Added webpack for building `dist` version
+* Refactored to have `import`/`export` interface for webpack and tree shaking
+
+
+### 1.3.16
+
+* Refactored the [Queue](es6/tools/queue.es6) a little bit to make more sense.
+
+
+### 1.3.15
+
+* Prevented public methods with no target from being assigned more than once during [Component](es6/core/component.es6)
+  init phase.
+
+
+### 1.3.14
+
+* Fixed the [Queue](es6/tools/queue.es6) to not run while already running
+
+
+### 1.3.13
+
+* Fixed [`parse.extractClassDetails`](es6/utils/parse.es6) to strip start/end single/double quotation marks from strings
+
+
+### 1.3.12
+
+* Refactored the custom input LESS mixins to enable separating the different states for styling other elements with the
+  same styles. 
+
+
+### 1.3.11
+
+* Cleaned up some unnecessary debug logging.
+
+
+### 1.3.10
+
+* Missed *another* minor issue which could have been spotted with a good test or two.
+
+
+### 1.3.9
+
+* Fixed a minor issue and updated tests accordingly to avoid such minor issues...
+
+
+### 1.3.8
+
+* Fixed issue with assigning component's public methods and using multiple event names. It will now extract the event
+  names (see [`parse.extractTargetEventNames`](es6/utils/parse.es6)) to assign the public method properly. Before all
+  public methods were namespaced with the component's namespace, so now you can also choose to use the built-in DOM
+  event (using `dom:eventName`) otherwise it defaults to the component's namespace.
+
+
+>>>>>>> Stashed changes
 ### 1.3.7
 
 * Added support for "dot.notation" (see [`parse.extractClassDetails`](es6/utils/parse.es6))when setting nested

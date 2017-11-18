@@ -1,5 +1,3 @@
-'use strict';
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -13,20 +11,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @package lvl99
  */
 
-var uuid = require('uuid');
-var merge = require('lodash.merge');
-var objectPath = require('object-path');
-
-var _require = require('../utils/inheritance'),
-    exposePrivateProperties = _require.exposePrivateProperties;
+import uuid from 'uuid';
+import merge from 'lodash.merge';
+import objectPath from 'object-path';
+import { exposePrivateProperties } from '../utils/inheritance';
 
 /**
  * The Entity's base properties
  *
  * @type {Object}
  */
-
-
 var EntityProperties = {
   /**
    * NAMESPACE
@@ -200,4 +194,4 @@ var Entity = function () {
   return Entity;
 }();
 
-module.exports = Entity;
+export default Entity;

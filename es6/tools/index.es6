@@ -4,11 +4,11 @@
  * Standalone tools that don't require any dependencies within the framework, but work alongside
  */
 
-const Breakpoints = require('./breakpoints')
-const Debug = require('./debug')
-const Queue = require('./queue')
-const TrackEvent = require('./trackevent')
-const SmoothScroll = require('./smooth-scroll')
+import Breakpoints from './breakpoints'
+import Debug from './debug'
+import Queue from './queue'
+import TrackEvent from './trackevent'
+import SmoothScroll from './smooth-scroll'
 
 const utils = {
   Breakpoints,
@@ -18,4 +18,4 @@ const utils = {
   SmoothScroll
 }
 
-module.exports = tools
+export default tools

@@ -4,10 +4,10 @@
  * @package lvl99
  */
 
-const Accordion = require('./accordion')
-const Modal = require('./modal')
-const Spinner = require('./spinner')
-const Toggleable = require('./toggleable')
+import Accordion from './accordion'
+import Modal from './modal'
+import Spinner from './spinner'
+import Toggleable from './toggleable'
 
 const components = {
   Accordion,
@@ -16,4 +16,4 @@ const components = {
   Toggleable
 }
 
-module.exports = components
+export default components

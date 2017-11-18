@@ -11,7 +11,7 @@ function noop () {}
  * @param {Boolean} silent Set to true to make the console behaviours silent
  * @constructor
  */
-function Debug (silent = false) {
+export default function Debug (silent = false) {
   if (silent) {
     return {
       clear: noop,
@@ -31,5 +31,3 @@ function Debug (silent = false) {
     return console || window.console
   }
 }
-
-module.exports = Debug

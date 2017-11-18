@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * LVL99 Track Event
  * Caches tracked events until Google Analytics is loaded, then uploads to GA
@@ -7,7 +5,7 @@
  * @package lvl99
  */
 
-function TrackEvent(debug) {
+export default function TrackEvent(debug) {
   /**
    * Collect tracked events before GA is loaded
    * @type {Array}
@@ -76,5 +74,3 @@ function TrackEvent(debug) {
     }
   };
 }
-
-module.exports = TrackEvent;

@@ -7,12 +7,12 @@
  * @package lvl99
  */
 
-const uuid = require('uuid')
-const merge = require('lodash.merge')
-const objectPath = require('object-path')
-const {
+import uuid from 'uuid'
+import merge from 'lodash.merge'
+import objectPath from 'object-path'
+import {
   exposePrivateProperties
-} = require('../utils/inheritance')
+} from '../utils/inheritance'
 
 /**
  * The Entity's base properties
@@ -51,7 +51,7 @@ const EntityProperties = {
   _attributes: {}
 }
 
-class Entity {
+export default class Entity {
   /**
    * Entity constructor
    *
@@ -164,5 +164,3 @@ class Entity {
    */
   destroy () {}
 }
-
-module.exports = Entity

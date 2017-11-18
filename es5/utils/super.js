@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Borrowed this funky stuff from Ember
  * I used it before to avoid ES6 `class`, but then something didn't work properly so I ended up using `class`, but I
@@ -10,7 +8,7 @@
 var HAS_SUPER_PATTERN = /\.(_super|call\(this|apply\(this)/;
 var fnToString = Function.prototype.toString;
 
-var checkHasSuper = function () {
+export var checkHasSuper = function () {
   var sourceAvailable = fnToString.call(function () {
     return this;
   }).indexOf('return this') > -1;
@@ -26,7 +24,7 @@ var checkHasSuper = function () {
   };
 }();
 
-function ROOT() {}
+export function ROOT() {}
 ROOT.__hasSuper = false;
 
 function hasSuper(func) {
@@ -47,7 +45,7 @@ function hasSuper(func) {
  @param {Function} superFunc The super function.
  @return {Function} wrapped function.
  */
-function wrap(func, superFunc, superObj) {
+export function wrap(func, superFunc, superObj) {
   if (!hasSuper(func)) {
     return func;
   }
@@ -75,8 +73,10 @@ function _wrap(func, superFunc, superObj) {
   return superWrapper;
 }
 
-module.exports = {
+var Super = {
   checkHasSuper: checkHasSuper,
   ROOT: ROOT,
   wrap: wrap
 };
+
+export default Super;

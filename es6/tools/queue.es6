@@ -7,7 +7,7 @@
  * @package lvl99
  */
 
-const merge = require('lodash.merge')
+import merge from 'lodash.merge'
 
 /**
  * Queue class
@@ -15,7 +15,7 @@ const merge = require('lodash.merge')
  * @returns {Object}
  * @constructor
  */
-function Queue (options) {
+export default function Queue (options) {
   /**
    * Queue options
    *
@@ -314,5 +314,3 @@ function Queue (options) {
     }
   }
 }
-
-module.exports = Queue

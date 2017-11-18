@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * LVL99 Smooth Scroll
  *
@@ -29,7 +27,7 @@
  * @package lvl99
  */
 
-var SmoothScroll = function SmoothScroll($, options) {
+export default function SmoothScroll($, options) {
   /**
    * Load in the settings
    */
@@ -145,6 +143,4 @@ var SmoothScroll = function SmoothScroll($, options) {
     init: init,
     scrollTo: scrollTo
   };
-};
-
-module.exports = SmoothScroll;
+}
