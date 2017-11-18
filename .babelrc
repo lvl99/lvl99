@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": ["last 2 versions"]
+        },
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": [
+    "add-module-exports",
+    "transform-es2015-modules-umd"
+  ]
+}

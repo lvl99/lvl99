@@ -1,3 +1,10 @@
+### 1.4.0
+
+* Added webpack for building `dist` version
+* Jest tests now point to ES5 versions
+* Refactored to have `import`/`export` interface for webpack and tree shaking
+
+
 ### 1.3.16
 
 * Refactored the [Queue](es6/tools/queue.es6) a little bit to make more sense.

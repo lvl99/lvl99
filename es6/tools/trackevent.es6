@@ -5,7 +5,7 @@
  * @package lvl99
  */
 
-function TrackEvent (debug) {
+export default function TrackEvent (debug) {
   /**
    * Collect tracked events before GA is loaded
    * @type {Array}
@@ -32,7 +32,9 @@ function TrackEvent (debug) {
         }
 
         for (i in lvl99TrackEvent.saved) {
-          window.ga('send', lvl99TrackEvent.saved[i])
+          if (lvl99TrackEvent.saved.hasOwnProperty(i)) {
+            window.ga('send', lvl99TrackEvent.saved[i])
+          }
         }
         lvl99TrackEvent.saved = []
       }
@@ -74,5 +76,3 @@ function TrackEvent (debug) {
     }
   }
 }
-
-module.exports = TrackEvent

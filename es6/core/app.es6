@@ -5,13 +5,13 @@
  */
 
 // const Promise = require('bluebird')
-const $ = require('jquery')
-const uuid = require('uuid')
-const Entity = require('./entity')
-const {
+import { $ } from '../common'
+import uuid from 'uuid'
+import Entity from './entity'
+import {
   convertStringToJson,
   extractClassDetails
-} = require('../utils/parse')
+} from '../utils/parse'
 
 /**
  * Get a component's namespace
@@ -38,6 +38,7 @@ function getComponentNamespace (component) {
 /**
  * The App's base properties
  *
+ * @private
  * @type {Object}
  */
 const AppProperties = {
@@ -92,7 +93,7 @@ const AppProperties = {
  * @class
  * @extends Entity
  */
-class App extends Entity {
+export default class App extends Entity {
   /**
    * App constructor
    *
@@ -337,5 +338,3 @@ class App extends Entity {
       })
   }
 }
-
-module.exports = App

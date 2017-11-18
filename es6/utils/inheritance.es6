@@ -13,7 +13,7 @@ const RE_PRIVATE = /^_/
  * @param {Object} defaultPropValues
  * @param {Array} whitelist
  */
-function exposeAllProperties (target, defaultPropValues, whitelist) {
+export function exposeAllProperties (target, defaultPropValues, whitelist) {
   let properties
 
   if (!target) {
@@ -84,7 +84,7 @@ function exposeAllProperties (target, defaultPropValues, whitelist) {
  * @param {Object|Function} defaultPropValues
  * @param {Array} whitelist
  */
-function exposePrivateProperties(target, defaultPropValues, whitelist) {
+export function exposePrivateProperties(target, defaultPropValues, whitelist) {
   let properties
 
   if (!target) {
@@ -132,7 +132,7 @@ function exposePrivateProperties(target, defaultPropValues, whitelist) {
  * @param {String} newPropName
  * @param {Mixed} defaultPropValue Used if the target's targetPropName is undefined
  */
-function createPublicGetProperty (target, targetPropName, newPropName, defaultPropValue) {
+export function createPublicGetProperty (target, targetPropName, newPropName, defaultPropValue) {
   if (!target.hasOwnProperty(newPropName)) {
     Object.defineProperty(target, newPropName, {
       get () {
@@ -152,7 +152,7 @@ function createPublicGetProperty (target, targetPropName, newPropName, defaultPr
  * @param {String} newPropName
  * @param {Mixed} defaultPropValue Used if the target's targetPropName is undefined
  */
-function createPublicGetSetProperty (target, targetPropName, newPropName, defaultPropValue) {
+export function createPublicGetSetProperty (target, targetPropName, newPropName, defaultPropValue) {
   if (!target.hasOwnProperty(newPropName)) {
     Object.defineProperty(target, newPropName, {
       get () {
@@ -173,4 +173,4 @@ const inheritance = {
   createPublicGetSetProperty
 }
 
-module.exports = inheritance
+export default inheritance

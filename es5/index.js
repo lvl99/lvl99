@@ -1,23 +1,51 @@
-'use strict';
+(function (global, factory) {
+  if (typeof define === "function" && define.amd) {
+    define(['module', 'exports', './common', './utils', './core', './tools'], factory);
+  } else if (typeof exports !== "undefined") {
+    factory(module, exports, require('./common'), require('./utils'), require('./core'), require('./tools'));
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod, mod.exports, global.common, global.utils, global.core, global.tools);
+    global.index = mod.exports;
+  }
+})(this, function (module, exports, _common, _utils, _core, _tools) {
+  'use strict';
 
-/**
- * LVL99
- *
- * The whole framework in one discrete package
- *
- * @package lvl99
- */
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-var common = require('./common');
-var utils = require('./utils');
-var core = require('./core');
-var tools = require('./tools');
+  var _common2 = _interopRequireDefault(_common);
 
-var lvl99 = {
-  common: common,
-  core: core,
-  utils: utils,
-  tools: tools
-};
+  var _utils2 = _interopRequireDefault(_utils);
 
-module.exports = lvl99;
+  var _core2 = _interopRequireDefault(_core);
+
+  var _tools2 = _interopRequireDefault(_tools);
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : {
+      default: obj
+    };
+  }
+
+  /**
+   * LVL99
+   *
+   * The whole framework in one discrete package
+   *
+   * @package lvl99
+   */
+
+  var lvl99 = {
+    common: _common2.default,
+    core: _core2.default,
+    utils: _utils2.default,
+    tools: _tools2.default
+  };
+
+  exports.default = lvl99;
+  module.exports = exports['default'];
+});

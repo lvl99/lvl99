@@ -1,6 +1,6 @@
 # LVL99
 
-v1.3.16
+v1.4.0
 
 My own personal frontend framework. Primarily uses jQuery, mildly inspired by Bootstrap and Ember.js and also has
 nothing to do with React. I also use it as a self-learning and development exercise experiment.
@@ -23,26 +23,29 @@ Include the `lvl99` npm package in your `npm` project:
 
 #### ES6
 
-Require/import the `lvl99` module in your JavaScript:
+Import the `lvl99` module in your JavaScript:
 
 ```javascript
   const lvl99 = require('lvl99')
 ```
 
-You can also require/import single files if you don't want the whole JS framework:
+You can also import single files if you don't want the whole JS framework:
 
 ```javascript
   // Require whatever part of the framework you desire
   // Breakpoints needs to be initialised with defined sizes
-  const breakpoints = require('lvl99/es6/tools/breakpoints')({
+  import Breakpoints from 'lvl99/es6/tools/breakpoints'
+  const breakpoints = Breakpoints({
     'desktop': [1024, 99999],
     'tablet':  [600, 1024],
     'mobile':  [0, 600]
   })
 ```
 
-> ***Note:*** ES6 files have the `.es6` extension to enable you to target these files using a transpiler like Babel
+> ***Note:*** ES6 files have the `.es6` extension to enable you to target these files using a transpiler like Babel.
 
+> ***Note:*** The ES6 files use the `import`/`export` method for modules, not `require` (CommonJS). Use the ES5 files
+> if you want to use CommonJS like functionality.
 
 #### ES5
 
@@ -62,7 +65,7 @@ files within the [`es5`](es5) folder:
 ```
 
 > ***Note:*** These files are pre-transpiled from the ES6 ones for your convenience. ES5 files will have the `.js`
-> extension
+> extension.
 
 
 #### HTML

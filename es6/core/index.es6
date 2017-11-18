@@ -6,9 +6,9 @@
  * @package lvl99
  */
 
-const Entity = require('./entity')
-const App = require('./app')
-const Component = require('./component')
+import Entity from './entity'
+import App from './app'
+import Component from './component'
 
 const core = {
   Entity,
@@ -16,4 +16,4 @@ const core = {
   Component
 }
 
-module.exports = core
+export default core

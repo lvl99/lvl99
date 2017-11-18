@@ -17,10 +17,11 @@ let gulpConfig = extend({
 }, _gulpConfig)
 
 // Define the bundles to generate
-const taskBrowserify = require('./tasks/browserify')(gulpConfig)
+// const taskBrowserify = require('./tasks/browserify')(gulpConfig)
+const taskWebpack = require('./tasks/webpack')(gulpConfig)
 
 // Build the dist and es5 versions
-gulp.task('build', ['test', 'es6-to-es5', 'generate-bundles'])
+gulp.task('build', ['es6-to-es5', 'generate-bundles'])
 
 // Test before building
 gulp.task('test', () => {
@@ -37,7 +38,7 @@ gulp.task('test', () => {
 })
 
 // Generate the Bundlers for
-gulp.task('generate-bundles', taskBrowserify.tasks.generateBundlers)
+gulp.task('generate-bundles', taskWebpack.tasks.compileBundles)
 
 // Convert from es6 to es5 js
 gulp.task('es6-to-es5', () => {

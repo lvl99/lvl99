@@ -2,9 +2,9 @@
  * LVL99 Entity
  */
 
-let _loggerPath = 'lvl99/es6/core/entity'
-const Debug = require('../../es6/tools/debug')
-const Entity = require('../../es6/core/entity')
+let _loggerPath = 'lvl99/core/entity'
+const Debug = require('../../es5/tools/debug')
+const Entity = require('../../es5/core/entity')
 
 const TestEntityProperties = {
   _NS: "Test:Entity",
