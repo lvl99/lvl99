@@ -26,29 +26,33 @@ function coerceToPrimitiveType (input) {
   if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
     return parseFloat(input)
 
-    // Boolean: true
+  // Boolean: true
   } else if (/^(true|1)$/.test(input)) {
     return true
 
-    // NaN
+  // NaN
   } else if (/^NaN$/.test(input)) {
     return NaN
 
-    // undefined
+  // undefined
   } else if (/^undefined$/.test(input)) {
     return undefined
 
-    // null
+  // null
   } else if (/^null$/.test(input)) {
     return null
 
-    // Boolean: false
+  // Boolean: false
   } else if (/^(false|0)$/.test(input) || input === '') {
     return false
 
-    // JSON: starts with [ or { and ends with ] or }
+  // JSON: starts with [ or { and ends with ] or }
   } else if (/^[\[\{]/.test(input) && /[\]\}]$/.test(input)) {
     return convertStringToJson(input)
+
+  // String marked with single/double quotation marks
+  } else if (/^['"]|["']$/) {
+    return input.replace(/^['"]|['"]$/g, '')
   }
 
   // Default to string
@@ -160,11 +164,11 @@ function extractClassDetails (input) {
       let partValue = coerceToPrimitiveType(partParts[2].trim())
 
       // @debug
-      console.log('parsed part', {
-        part,
-        partName,
-        partValue,
-      })
+      // console.log('parsed part', {
+      //   part,
+      //   partName,
+      //   partValue,
+      // })
 
       // Ensure output object exists if using dot notation
       if (/\./.test(partName)) {
@@ -172,29 +176,29 @@ function extractClassDetails (input) {
         let objPartPath = ''
 
         // @debug
-        console.log('part has dot notation', {
-          output,
-          partName,
-          partValue,
-          objParts,
-          objPartPath
-        })
+        // console.log('part has dot notation', {
+        //   output,
+        //   partName,
+        //   partValue,
+        //   objParts,
+        //   objPartPath
+        // })
 
         for (let objPartIndex = 0; objPartIndex < (objParts.length - 1); objPartIndex++) {
           objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex]
 
           // @debug
-          console.log(objPartPath)
+          // console.log(objPartPath)
 
           if (!objectPath.has(output, objPartPath)) {
             // @debug
-            console.log('setting object part path', {
-              output,
-              partName,
-              partValue,
-              objPartIndex,
-              objPartPath
-            })
+            // console.log('setting object part path', {
+            //   output,
+            //   partName,
+            //   partValue,
+            //   objPartIndex,
+            //   objPartPath
+            // })
 
             objectPath.set(output, objPartPath, {})
           }
@@ -261,7 +265,7 @@ function extractTriggerDetails(input, context) {
   if (objectPath.has(trigger, 'target')) {
     switch (trigger.target) {
       case 'self':
-        console.log('Targeting self', context)
+        // console.log('Targeting self', context)
         trigger.target = context
         break
 
@@ -377,6 +381,47 @@ function getTargetSelector (target, context) {
   return target
 }
 
+/**
+ * Parse the target event names
+ *
+ * @param {Array|String} eventNames e.g. `Component:customEvent dom:mouseover`
+ * @param {String} namespace Optional namespace to assign each extracted custom (non-DOM) event name
+ * @returns {Array}
+ */
+function extractTargetEventNames (inputEventNames, namespace) {
+  let targetEventNames = []
+  let eventNames = inputEventNames
+
+  if (typeof inputEventNames === 'string') {
+    // Split eventNames by spaces
+    if (/\s/.test(inputEventNames)) {
+      eventNames = inputEventNames.split(/\s+/)
+    } else {
+      eventNames = [ inputEventNames ]
+    }
+  }
+
+  if (eventNames instanceof Array) {
+    // Process each event name
+    eventNames.forEach(eventName => {
+      // Default to namespaced event name
+      let targetEventName = (typeof namespace === 'string' && namespace !== '' ? `${namespace}:${eventName}` : eventName)
+
+      // Remove any reference to the native DOM event namespace
+      if (/^dom:/i.test(eventName)) {
+        targetEventName = eventName.replace(/^dom\:/gi, '', eventName)
+      }
+
+      // Add to the list
+      targetEventNames.push(targetEventName)
+    })
+
+    return targetEventNames
+  }
+
+  return false
+}
+
 const parse = {
   coerceToPrimitiveType,
   convertToBoolean,
@@ -386,7 +431,8 @@ const parse = {
   extractTriggerDetails,
   fixedEncodeURIComponent,
   getTargetBySelector,
-  getTargetSelector
+  getTargetSelector,
+  extractTargetEventNames
 }
 
 module.exports = parse

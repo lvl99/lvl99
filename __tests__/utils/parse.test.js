@@ -81,7 +81,7 @@ test(`${_loggerPath}.coerceToPrimitiveType: JSON Object properties all match`, (
  * Parse.extractClassDetails
  */
 
-let testClassDetails = 'test: 123; test2: abc; test3: true; test4: [1, 2, 3]; test5: parent:Component'
+let testClassDetails = 'test: 123; test2: abc; test3: true; test4: [1, 2, 3]; test5: parent:Component; test6.abc: 123; imageUrl: "http://placehold.it/300x300"'
 let testClassObject = Parse.extractClassDetails(testClassDetails)
 
 test(`${_loggerPath}.extractClassDetails works`, () => {
@@ -94,4 +94,40 @@ test(`${_loggerPath}.extractClassDetails: Object property values all match`, () 
   expect(testClassObject).toHaveProperty('test3', true)
   expect(testClassObject).toHaveProperty('test4', [1, 2, 3])
   expect(testClassObject).toHaveProperty('test5', 'parent:Component')
+  expect(testClassObject).toHaveProperty('test6')
+  expect(testClassObject.test6).toHaveProperty('abc', 123)
+  expect(testClassObject).toHaveProperty('imageUrl', 'http://placehold.it/300x300')
+})
+
+/**
+ * Parse.extractTargetEventNames
+ */
+
+let testExtractedEventNamesSingleNS = Parse.extractTargetEventNames('eventName', 'NS')
+let testExtractedEventNamesSingleDOM = Parse.extractTargetEventNames('dom:eventName')
+let testExtractedEventNamesMultiple = Parse.extractTargetEventNames('eventName1 eventName2 dom:eventName3', 'NS')
+let testExtractedEventNamesError = Parse.extractTargetEventNames(123)
+
+test(`${_loggerPath}.extractTargetEventNames works`, () => {
+  expect(testExtractedEventNamesSingleNS).toBeInstanceOf(Array)
+  expect(testExtractedEventNamesSingleDOM).toBeInstanceOf(Array)
+  expect(testExtractedEventNamesMultiple).toBeInstanceOf(Array)
+})
+
+test(`${_loggerPath}.extractTargetEventNames is false/invalid`, () => {
+  expect(testExtractedEventNamesError).toBeFalsy()
+})
+
+test(`${_loggerPath}.extractTargetEventNames extracted single custom event name`, () => {
+  expect(testExtractedEventNamesSingleNS).toContain('NS:eventName')
+})
+
+test(`${_loggerPath}.extractTargetEventNames extracted single DOM event name`, () => {
+  expect(testExtractedEventNamesSingleDOM).toContain('eventName')
+})
+
+test(`${_loggerPath}.extractTargetEventNames extracted multiple namespaced DOM and custom event names`, () => {
+  expect(testExtractedEventNamesMultiple).toContain('NS:eventName1')
+  expect(testExtractedEventNamesMultiple).toContain('NS:eventName2')
+  expect(testExtractedEventNamesMultiple).toContain('eventName3')
 })

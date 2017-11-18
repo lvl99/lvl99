@@ -20,7 +20,14 @@ let gulpConfig = extend({
 const taskBrowserify = require('./tasks/browserify')(gulpConfig)
 
 // Build the dist and es5 versions
-gulp.task('build', ['es6-to-es5', 'generate-bundles'])
+gulp.task('build', ['test', 'es6-to-es5', 'generate-bundles'])
+
+// Test before building
+gulp.task('test', () => {
+  process.env.NODE_ENV = 'test'
+  gulp.src('__tests__')
+    .pipe(jest())
+})
 
 // Test before building
 gulp.task('test', () => {

@@ -62,6 +62,9 @@ function Queue(options) {
 
   /**
    * The play status
+   * 0: paused
+   * 1: play
+   * 2: running
    *
    * @type {Number}
    * @default 1
@@ -118,8 +121,14 @@ function Queue(options) {
         args[_key2 - 2] = arguments[_key2];
       }
 
+      // @debug
+      // console.log('Queue.add', {
+      //   actionLabel,
+      //   action
+      // })
+
       // Queue the action
-      this.queue.apply(this, [actionLabel, action].concat(args));
+      this.queue.apply(this, [actionLabel, action].concat(_toConsumableArray(args)));
 
       // Play the timer to get the queue to run after a delay (only when playing)
       if (_status) {
@@ -145,6 +154,12 @@ function Queue(options) {
      * @chainable
      */
     sync: function sync(actionLabel, action) {
+      // @debug
+      // console.log('Queue.sync', {
+      //   actionLabel,
+      //   action
+      // })
+
       clearTimeout(_timer);
 
       // Queue action...
@@ -153,7 +168,7 @@ function Queue(options) {
         args[_key3 - 2] = arguments[_key3];
       }
 
-      this.queue.apply(this, [actionLabel, action].concat(args));
+      this.queue.apply(this, [actionLabel, action].concat(_toConsumableArray(args)));
 
       // ... Then run the queue immediately
       this.run();
@@ -203,6 +218,24 @@ function Queue(options) {
      * @chainable
      */
     play: function play() {
+      var _this = this;
+
+      // @debug
+      // console.log('Queue.play', {
+      //   _status
+      // })
+
+      // Currently already running
+      if (_status === 2) {
+        // What if I control the queue via the queue?
+        var playQueueAfterRunning = function playQueueAfterRunning() {
+          // @debug
+          // console.log('__Queue:playQueueAfterRunning')
+          _this.play();
+        };
+        return this.queue('__Queue:playQueueAfterRunning', playQueueAfterRunning);
+      }
+
       // Only play if already paused
       clearTimeout(_timer);
 
@@ -226,6 +259,24 @@ function Queue(options) {
      * @chainable
      */
     pause: function pause() {
+      var _this2 = this;
+
+      // @debug
+      // console.log('Queue.pause', {
+      //   _status
+      // })
+
+      // Queue is already running
+      if (_status === 2) {
+        // What if I control the queue via the queue?
+        var pauseQueueAfterRunning = function pauseQueueAfterRunning() {
+          // @debug
+          // console.log('__Queue:pauseQueueAfterRunning')
+          _this2.pause();
+        };
+        return this.queue('__Queue:pauseQueueAfterRunning', pauseQueueAfterRunning);
+      }
+
       // Only pause if already playing
       clearTimeout(_timer);
 
@@ -244,14 +295,44 @@ function Queue(options) {
      * @chainable
      */
     run: function run() {
+      var _this3 = this;
+
+      // @debug
+      // console.log('Queue.run...', {
+      //   _status,
+      //   _queue
+      // })
+
+      // Currently already running
+      if (_status === 2) {
+        // What if I control the queue via the queue?
+        var runQueueAgainAfterRunning = function runQueueAgainAfterRunning() {
+          // @debug
+          // console.log('__Queue:runQueueAgainAfterRunning')
+          _this3.run();
+        };
+        return this.queue('__Queue:runQueueAgainAfterRunning', runQueueAgainAfterRunning);
+      }
+
       clearTimeout(_timer);
 
-      // No items in the queue, so set to pause
+      // No items in the queue, so force queue to pause
       if (!Object.keys(_queue).length) {
-        this.pause();
-
+        _status = 0;
         return this;
       }
+
+      // Save the queue's current status
+      var _previousStatus = _status;
+
+      // Set the status to running
+      _status = 2;
+
+      // @debug
+      // console.log('Queue.running...', {
+      //   _previousStatus,
+      //   _status
+      // })
 
       // Process the queue
       for (var actionLabel in _queue) {
@@ -259,7 +340,7 @@ function Queue(options) {
           var queuedItem = _queue[actionLabel];
 
           // @debug
-          // console.log('running queued item', queuedItem)
+          // console.log(` --> ${actionLabel}`, queuedItem)
 
           // Function
           if (queuedItem && typeof queuedItem === 'function') {
@@ -283,10 +364,8 @@ function Queue(options) {
         }
       }
 
-      // Continue playing if in play mode
-      // if (_status) {
-      //   this.play()
-      // }
+      // Revert to status before run
+      _status = _previousStatus;
 
       // @chainable
       return this;
@@ -297,6 +376,7 @@ function Queue(options) {
      * Get the status of the queue:
      *   0 = Paused
      *   1 = Playing
+     *   2 = Running
      * @returns {Number}
      */
     checkStatus: function checkStatus() {

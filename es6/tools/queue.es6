@@ -29,13 +29,13 @@ function Queue (options) {
   }, options)
 
   /**
-   * The batched queue
+   * The batched queue tasks
    * Queue actions are batched in an {Object} with a specific label
    *
    * @type {Object}
    * @private
    */
-  let _queue = _options.queue
+  let _tasks = _options.queue
 
   /**
    * The queue timer
@@ -57,7 +57,25 @@ function Queue (options) {
   let _timerDelay = _options.timerDelay
 
   /**
+   * The queue's replay timer which tracks if/when to fire queued actions while the queue is already running
+   */
+  let _replayTimer = _options.replayTimer || _options.timer
+
+  /**
+   * The queue replay timer delay
+   * The delay between queue replay timer updates (in milliseconds)
+   *
+   * @type {number}
+   * @default 100
+   * @private
+   */
+  let _replayTimerDelay = _options.replayTimerDelay || _options.timerDelay
+
+  /**
    * The play status
+   * 0: paused
+   * 1: play
+   * 2: running
    *
    * @type {Number}
    * @default 1
@@ -65,7 +83,32 @@ function Queue (options) {
    */
   let _status = 1
 
-  return {
+  /**
+   * Check when queue has finished running to then replay the action
+   *
+   * @param {Queue} Q The queue to replay
+   * @param {String} actionName The action to replay
+   * @param {Mixed} ...args Any additional arguments to pass to the action
+   * @private
+   */
+  function _checkQueueFinished (Q, actionName = 'run', ...args) {
+    clearTimeout(_replayTimer)
+    _replayTimer = setTimeout(function checkQueueIsFinishedThenPerformAction(q, aN, a) {
+      if (q.checkStatus === 1 && q.getTasksLength() && q.hasOwnProperty(aN)) {
+        // @debug
+        // console.log('Replaying queue...', {
+        //   Queue: q,
+        //   actionName: aN,
+        //   args: a
+        // })
+
+        // Each action will either perform the action or replay itself if necessary
+        q[aN](...a)
+      }
+    }(Q, actionName, args), _replayTimerDelay)
+  }
+
+  const Queue = {
     /**
      * Queue an action
      *
@@ -84,7 +127,7 @@ function Queue (options) {
 
       // Assign the function to the queue
       if (actionLabel && action && typeof action === 'function') {
-        _queue[actionLabel] = {
+        _tasks[actionLabel] = {
           action,
           args: args
         }
@@ -105,6 +148,12 @@ function Queue (options) {
      * @chainable
      */
     add (actionLabel, action, ...args) {
+      // @debug
+      // console.log('Queue.add', {
+      //   actionLabel,
+      //   action
+      // })
+
       // Queue the action
       this.queue(actionLabel, action, ...args)
 
@@ -131,6 +180,12 @@ function Queue (options) {
      * @chainable
      */
     sync (actionLabel, action, ...args) {
+      // @debug
+      // console.log('Queue.sync', {
+      //   actionLabel,
+      //   action
+      // })
+
       clearTimeout(_timer)
 
       // Queue action...
@@ -150,8 +205,8 @@ function Queue (options) {
      * @return {undefined|Object}
      */
     getActionByLabel (actionLabel) {
-      if (_queue.hasOwnProperty(actionLabel)) {
-        return _queue[actionLabel]
+      if (_tasks.hasOwnProperty(actionLabel)) {
+        return _tasks[actionLabel]
       }
 
       return undefined
@@ -165,9 +220,9 @@ function Queue (options) {
      * @chainable
      */
     remove (actionLabel) {
-      if (_queue.hasOwnProperty(actionLabel)) {
-        _queue[actionLabel] = undefined
-        delete _queue[actionLabel]
+      if (_tasks.hasOwnProperty(actionLabel)) {
+        _tasks[actionLabel] = undefined
+        delete _tasks[actionLabel]
       }
 
       // @chainable
@@ -181,6 +236,16 @@ function Queue (options) {
      * @chainable
      */
     play () {
+      // @debug
+      // console.log('Queue.play', {
+      //   _status
+      // })
+
+      // Currently already running
+      if (_status === 2) {
+        _checkQueueFinished(this, 'play')
+      }
+
       // Only play if already paused
       clearTimeout(_timer)
 
@@ -188,7 +253,7 @@ function Queue (options) {
       _status = 1
 
       // Reset timer to run the queue
-      _timer = setTimeout(function runQueueProcessAfterDelay(queueInstance) {
+      _timer = setTimeout(function runQueueProcessAfterDelay (queueInstance) {
         queueInstance.run()
       }(this), _timerDelay)
 
@@ -203,6 +268,16 @@ function Queue (options) {
      * @chainable
      */
     pause () {
+      // @debug
+      // console.log('Queue.pause', {
+      //   _status
+      // })
+
+      // Queue is already running
+      if (_status === 2) {
+        _checkQueueFinished(this, 'pause')
+      }
+
       // Only pause if already playing
       clearTimeout(_timer)
 
@@ -220,49 +295,70 @@ function Queue (options) {
      * @chainable
      */
     run () {
+      // @debug
+      // console.log('Queue.run...', {
+      //   _status,
+      //   _tasks
+      // })
+
+      // Currently already running, so run again later
+      if (_status === 2) {
+        _checkQueueFinished(this, 'run')
+      }
+
       clearTimeout(_timer)
+      clearTimeout(_replayTimer)
 
-      // No items in the queue, so set to pause
-      if (!Object.keys(_queue).length) {
-        this.pause()
-
+      // No items in the queue, so force queue to pause
+      if (!Object.keys(_tasks).length) {
+        _status = 0
         return this
       }
 
+      // Save the queue's current status
+      let _previousStatus = _status
+
+      // Set the status to running
+      _status = 2
+
+      // @debug
+      // console.log('Queue.running...', {
+      //   _previousStatus,
+      //   _status
+      // })
+
       // Process the queue
-      for (let actionLabel in _queue) {
-        if (_queue.hasOwnProperty(actionLabel) && _queue[actionLabel]) {
-          let queuedItem = _queue[actionLabel]
+      for (let actionLabel in _tasks) {
+        if (_tasks.hasOwnProperty(actionLabel) && _tasks[actionLabel]) {
+          let queuedItem = _tasks[actionLabel]
 
           // @debug
-          // console.log('running queued item', queuedItem)
+          // console.log(` --> ${actionLabel}`, queuedItem)
 
           // Function
           if (queuedItem && typeof queuedItem === 'function') {
             queuedItem()
 
-          // Object
+            // Object
           } else if (queuedItem.hasOwnProperty('action') && typeof queuedItem.action === 'function') {
             // Apply arguments to the action
             if (queuedItem.hasOwnProperty('args') && queuedItem.args instanceof Array) {
               queuedItem.action(...queuedItem.args)
 
-            // Run the action like normal
+              // Run the action like normal
             } else {
               queuedItem.action()
             }
           }
 
           // Delete the queued item
-          _queue[actionLabel] = undefined
-          delete _queue[actionLabel]
+          _tasks[actionLabel] = undefined
+          delete _tasks[actionLabel]
         }
       }
 
-      // Continue playing if in play mode
-      // if (_status) {
-      //   this.play()
-      // }
+      // Revert to status before run
+      _status = _previousStatus
 
       // @chainable
       return this
@@ -272,6 +368,7 @@ function Queue (options) {
      * Get the status of the queue:
      *   0 = Paused
      *   1 = Playing
+     *   2 = Running
      * @returns {Number}
      */
     checkStatus () {
@@ -298,6 +395,7 @@ function Queue (options) {
       // Only set if timerDelay is greater than 0
       if (timerDelay && timerDelay > 0) {
         _timerDelay = timerDelay
+        _replayTimerDelay = timerDelay
       }
 
       // @chainable
@@ -310,9 +408,20 @@ function Queue (options) {
      * @return {Number}
      */
     getQueueLength () {
-      return Object.keys(_queue).length
+      return Object.keys(_tasks).length
+    },
+
+    /**
+     * Get the queue tasks
+     *
+     * @returns {Object}
+     */
+    getTasks () {
+      return _tasks
     }
   }
+
+  return Queue
 }
 
 module.exports = Queue

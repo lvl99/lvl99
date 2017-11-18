@@ -6,6 +6,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -31,16 +33,20 @@ var _require = require('../common'),
 
 var _require2 = require('../utils/parse'),
     extractTriggerDetails = _require2.extractTriggerDetails,
+    extractTargetEventNames = _require2.extractTargetEventNames,
     getTargetBySelector = _require2.getTargetBySelector,
     getTargetSelector = _require2.getTargetSelector;
+
+// Track components and whether they have been initialised and public methods added, etc.
+
+
+var trackComponents = {};
 
 /**
  * The Component's base properties
  *
  * @type {Object}
  */
-
-
 var ComponentProperties = {
   /**
    * NAMESPACE
@@ -309,6 +315,18 @@ var Component = function (_Entity) {
       // @debug
       // console.log(`[${this.NS:init}]`)
 
+      // Track that the component has been initialised
+      if (!trackComponents.hasOwnProperty(this.NS)) {
+        trackComponents[this.NS] = {
+          instances: _defineProperty({}, '' + this.uuid, this)
+        };
+      } else {
+        trackComponents[this.NS].instances['' + this.uuid] = this;
+      }
+
+      // @debug
+      // console.log(trackComponents)
+
       // Mark the element
       this.markElem();
 
@@ -349,10 +367,17 @@ var Component = function (_Entity) {
           }
 
           // @debug
-          // console.log(`[${this.NS}] init: attach public method`, {
+          // console.log(`[${this.NS}] init: public method "${triggerDetails.do}"`, {
           //   triggerDetails,
           //   method
           // })
+
+          // Only attach public method if it hasn't been attached already or has a target
+          if (!triggerDetails.hasOwnProperty('target') && Object.keys(trackComponents[_this2.NS].instances).length > 1) {
+            // @debug
+            // console.warn(`[${this.NS}] init: public method ${this.NS}:${triggerDetails.do} already assigned. Skipping...`)
+            return;
+          }
 
           // Attach the method as a custom event to the target
           if (typeof method === 'function') {
@@ -363,7 +388,7 @@ var Component = function (_Entity) {
               //   _class: this,
               //   _method: method,
               //   jQueryEvent,
-              //   arguments
+              //   args: arguments
               // })
 
               method.call(_this2, jQueryEvent);
@@ -422,6 +447,7 @@ var Component = function (_Entity) {
     /**
      * Bind method to custom event on target
      * Event names are automatically namespaced using the Component's _NS property.
+     * To not use namespaced events, preface with `dom:`
      *
      * @param {String} eventName
      * @param {Function} method
@@ -451,15 +477,21 @@ var Component = function (_Entity) {
         }
       }
 
+      // Extract the target event names from the input given
+      var eventNames = extractTargetEventNames(eventName, this.NS);
+
       // @debug
       // console.log(`[${this.NS}] bindEventToTarget`, {
       //   eventName,
       //   method,
       //   target,
-      //   triggerName: `${this.NS}:${eventName}`
+      //   triggerName: targetEventNames
       // })
 
-      $(target).on(this.NS + ':' + eventName, method);
+      // Assign the trigger
+      if (eventNames) {
+        $(target).on(eventNames.join(' '), method);
+      }
     }
 
     /**
@@ -477,6 +509,7 @@ var Component = function (_Entity) {
     value: function bindEventToTargetSelector(eventName, selector, method, target) {
       target = getTargetBySelector(target, this);
       selector = getTargetSelector(selector, this);
+      var eventNames = extractTargetEventNames(eventName, this.NS);
 
       // @debug
       // console.log(`[${this.NS}] bindEventToTargetSelector`, {
@@ -487,7 +520,9 @@ var Component = function (_Entity) {
       //   triggerName: `${this.NS}:${eventName}`
       // })
 
-      $(target).on(this.NS + ':' + eventName, selector, method);
+      if (eventNames) {
+        $(target).on(eventNames.join(' '), selector, method);
+      }
     }
 
     /**

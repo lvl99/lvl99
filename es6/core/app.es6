@@ -277,60 +277,64 @@ class App extends Entity {
    */
   initialiseComponents () {
     // Find any element marked with the `[data-component]` attribute
-    $('[data-component]').each((index, elem) => {
-      let $elem = $(elem)
-      let elemComponentClass = $elem.attr('data-component')
-      let elemComponentOptions = $elem.attr('data-component-options') || {}
+    $('[data-component]')
+      // Ignore components which already have an ID assigned
+      .not('[data-component-id]')
+      // Initialise each component
+      .each((index, elem) => {
+        let $elem = $(elem)
+        let elemComponentClass = $elem.attr('data-component')
+        let elemComponentOptions = $elem.attr('data-component-options') || {}
 
-      // @debug
-      console.log(`${this._NS}.initialiseComponents: found element to initialise with component`, {
-        index,
-        elem,
-        elemComponentClass,
-        elemComponentOptions
-      })
-
-      // Ensure component class is registered
-      if (!this.getComponentClass(elemComponentClass)) {
         // @debug
-        console.error(`${this._NS}.initialiseComponents: element's component class not registered`, {
-          app: this,
-          index,
-          elem,
-          elemComponentClass,
-          elemComponentOptions
-        })
-        return
-      }
+        // console.log(`${this._NS}.initialiseComponents: found element to initialise with component`, {
+        //   index,
+        //   elem,
+        //   elemComponentClass,
+        //   elemComponentOptions
+        // })
 
-      // Extract/convert the options
-      if (typeof elemComponentOptions === 'string') {
-        // Set as JSON, e.g. '{"name":"value"}`
-        if (/^\{/.test(elemComponentOptions)) {
-          elemComponentOptions = convertStringToJson(elemComponentOptions)
-
-          // Set as style-like attributes, e.g. `name: value; name: value`
-        } else {
-          elemComponentOptions = extractClassDetails(elemComponentOptions)
+        // Ensure component class is registered
+        if (!this.getComponentClass(elemComponentClass)) {
+          // @debug
+          // console.error(`${this._NS}.initialiseComponents: element's component class not registered`, {
+          //   app: this,
+          //   index,
+          //   elem,
+          //   elemComponentClass,
+          //   elemComponentOptions
+          // })
+          return
         }
-      }
 
-      // Add the $elem if it is not already set
-      if (!elemComponentOptions.hasOwnProperty('$elem')) {
-        elemComponentOptions.$elem = $elem
-      }
+        // Extract/convert the options
+        if (typeof elemComponentOptions === 'string') {
+          // Set as JSON, e.g. '{"name":"value"}`
+          if (/^\{/.test(elemComponentOptions)) {
+            elemComponentOptions = convertStringToJson(elemComponentOptions)
 
-      // Create the component
-      let elemComponentInstance = this.createComponentInstance(elemComponentClass, elemComponentOptions)
+            // Set as style-like attributes, e.g. `name: value; name: value`
+          } else {
+            elemComponentOptions = extractClassDetails(elemComponentOptions)
+          }
+        }
 
-      // @debug
-      console.log('Initialised component instance', {
-        index,
-        elem,
-        elemComponentOptions,
-        elemComponentInstance
+        // Add the $elem if it is not already set
+        if (!elemComponentOptions.hasOwnProperty('$elem')) {
+          elemComponentOptions.$elem = $elem
+        }
+
+        // Create the component
+        let elemComponentInstance = this.createComponentInstance(elemComponentClass, elemComponentOptions)
+
+        // @debug
+        // console.log('Initialised component instance', {
+        //   index,
+        //   elem,
+        //   elemComponentOptions,
+        //   elemComponentInstance
+        // })
       })
-    })
   }
 }
 

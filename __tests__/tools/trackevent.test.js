@@ -16,6 +16,5 @@ test(`${_loggerPath} exists`, () => {
 
 test(`${_loggerPath} instantiated`, () => {
   expect(track).toBeDefined()
-  expect(track).ToBeInstanceOf(Function)
+  expect(track).toBeInstanceOf(Function)
 })
-

@@ -105,3 +105,7 @@ test(`${_loggerPath} remove component instance`, () => {
   expect(getComponent).not.toBeTruthy()
   expect(getComponent).toBeUndefined()
 })
+
+test(`${_loggerPath} instantiates components on DOM elements`, () => {
+  // @TODO figure this out...
+})
