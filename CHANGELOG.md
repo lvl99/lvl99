@@ -1,3 +1,9 @@
+### 1.4.1
+
+* Pulled out image-based LESS functions from [responsive.less](less/mixins/responsive.less) and put into their [own LESS
+  file](less/mixins/images.less) for better custom tooling.
+
+
 ### 1.4.0
 
 * Added webpack for building `dist` version

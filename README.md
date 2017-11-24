@@ -1,6 +1,6 @@
 # LVL99
 
-v1.4.0
+v1.4.1
 
 My own personal frontend framework. Primarily uses jQuery, mildly inspired by Bootstrap and Ember.js and also has
 nothing to do with React. I also use it as a self-learning and development exercise experiment.
@@ -97,7 +97,11 @@ Import the `lvl99.less` file in your LESS:
 You can also require/import single files if you don't want the whole LESS framework:
 
 ```less
+  // Import all the mixins
   @import 'path/to/node_modules/lvl99/less/mixins.less';
+  
+  // Or you can import each mixin file that you want
+  @import 'path/to/node_modules/lvl99/less/mixins/inline-svg-code.less';
 ```
 
 
