@@ -6,8 +6,10 @@
 // Size to width
 // For img, svg and canvas elements, this will resize proportionately
 //
-.size-to-width (@upscale: 0) {
-  width: auto;// !important;
+.size-to-width (@upscale: 0; @auto-width: 0) {
+  & when (@auto-width = 1) {
+    width: auto;
+  }
   & when not (@upscale = 1) {
     min-width: 0;
   }
@@ -15,7 +17,8 @@
     min-width: 100%;
   }
   max-width: 100%;
-  height: auto;// !important;
+
+  height: auto;
   min-height: 0;
   max-height: none;
 }
@@ -24,11 +27,14 @@
 // Size to height
 // For img, svg and canvas elements, this will resize proportionately
 //
-.size-to-height (@upscale: 0) {
-  width: auto;// !important;
+.size-to-height (@upscale: 0; @auto-height: 0) {
+  width: auto;
   min-width: 0;
   max-width: auto;
-  height: auto;// !important;
+
+  & when (@auto-height = 1) {
+    height: auto;
+  }
   & when not (@upscale = 1) {
     min-height: 0;
   }
