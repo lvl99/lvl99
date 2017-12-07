@@ -1,25 +1,25 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['module', 'exports', 'uuid', 'lodash.merge', 'object-path', '../utils/inheritance'], factory);
+    define(['module', 'exports', 'lodash.merge', 'uuid', 'object-path', '../utils/inheritance'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(module, exports, require('uuid'), require('lodash.merge'), require('object-path'), require('../utils/inheritance'));
+    factory(module, exports, require('lodash.merge'), require('uuid'), require('object-path'), require('../utils/inheritance'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod, mod.exports, global.uuid, global.lodash, global.objectPath, global.inheritance);
+    factory(mod, mod.exports, global.lodash, global.uuid, global.objectPath, global.inheritance);
     global.entity = mod.exports;
   }
-})(this, function (module, exports, _uuid, _lodash, _objectPath, _inheritance) {
+})(this, function (module, exports, _lodash, _uuid, _objectPath, _inheritance) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
-  var _uuid2 = _interopRequireDefault(_uuid);
-
   var _lodash2 = _interopRequireDefault(_lodash);
+
+  var _uuid2 = _interopRequireDefault(_uuid);
 
   var _objectPath2 = _interopRequireDefault(_objectPath);
 
@@ -102,7 +102,7 @@
 
       // @debug
       // console.log('LVL99:Entity:constructor', {
-      //   arguments
+      //   attributes
       // })
 
       this.extend({
@@ -124,7 +124,6 @@
     /**
      * Extend the Entity with any given {Object} arguments
      *
-     * @param {Object} ...arguments
      * @returns {Self}
      */
 
@@ -134,7 +133,7 @@
       value: function extend() {
         // @debug
         // console.log('LVL99:Entity:extend', {
-        //   arguments
+        //   args
         // })
 
         // Merge the properties with the instantiated attributes and concatenated public methods

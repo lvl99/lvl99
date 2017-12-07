@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['module', 'exports', 'object-path', 'lodash.merge', 'uuid', './entity', '../common', '../utils/parse'], factory);
+    define(['module', 'exports', 'object-path', 'lodash.merge', './entity', '../common', '../utils/parse'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(module, exports, require('object-path'), require('lodash.merge'), require('uuid'), require('./entity'), require('../common'), require('../utils/parse'));
+    factory(module, exports, require('object-path'), require('lodash.merge'), require('./entity'), require('../common'), require('../utils/parse'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod, mod.exports, global.objectPath, global.lodash, global.uuid, global.entity, global.common, global.parse);
+    factory(mod, mod.exports, global.objectPath, global.lodash, global.entity, global.common, global.parse);
     global.component = mod.exports;
   }
-})(this, function (module, exports, _objectPath, _lodash, _uuid, _entity, _common, _parse) {
+})(this, function (module, exports, _objectPath, _lodash, _entity, _common, _parse) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -20,8 +20,6 @@
   var _objectPath2 = _interopRequireDefault(_objectPath);
 
   var _lodash2 = _interopRequireDefault(_lodash);
-
-  var _uuid2 = _interopRequireDefault(_uuid);
 
   var _entity2 = _interopRequireDefault(_entity);
 
@@ -50,6 +48,18 @@
     }
 
     return obj;
+  }
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -238,9 +248,7 @@
     }
 
     /**
-     * Extend the Component's properties
-     *
-     * @param {Object} ...arguments
+     * Extend the Component's properties with any {Object} arguments
      */
 
 
@@ -266,7 +274,7 @@
         allPublicMethods = Array.from(new Set(allPublicMethods));
 
         // Extend the component's properties with the instantiated attributes and concatenated public methods
-        (_get2 = _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'extend', this)).call.apply(_get2, [this, ComponentProperties].concat(Array.prototype.slice.call(arguments), [{
+        (_get2 = _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'extend', this)).call.apply(_get2, [this, ComponentProperties].concat(_toConsumableArray(args), [{
           _properties: {
             publicMethods: allPublicMethods
           }

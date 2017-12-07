@@ -1,7 +1,15 @@
+### 1.4.2
+
+* Added `delayAdd` method to [`Queue`](es6/tools/queue.es6) to enable setting delay time before playing queue.
+* Fixed issue with Jest tests and reverted them back to point to ES6 versions.
+
+
 ### 1.4.1
 
 * Pulled out image-based LESS functions from [responsive.less](less/mixins/responsive.less) and put into their [own LESS
   file](less/mixins/images.less) for better custom tooling.
+* Added extra switch on [`.size-to-width`](less/mixins/images.less) and [`.size-to-height`](less/mixins/images.less) to
+  control if element width/height is set to auto or not.
 
 
 ### 1.4.0

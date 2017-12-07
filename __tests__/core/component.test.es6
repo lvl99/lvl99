@@ -3,7 +3,7 @@
  */
 
 let _loggerPath = 'lvl99/core/component'
-const Component = require('../../es5/core/component')
+const Component = require('../../es6/core/component')
 
 let testComponent = new Component({
   testAttrA: 1,

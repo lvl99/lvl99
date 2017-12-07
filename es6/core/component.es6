@@ -6,7 +6,6 @@
 
 import objectPath from 'object-path'
 import merge from 'lodash.merge'
-import uuid from 'uuid'
 import Entity from './entity'
 import { $, $doc } from '../common'
 // import { wrap } from '../utils/super'
@@ -131,9 +130,7 @@ export default class Component extends Entity {
   }
 
   /**
-   * Extend the Component's properties
-   *
-   * @param {Object} ...arguments
+   * Extend the Component's properties with any {Object} arguments
    */
   extend () {
     // @debug
@@ -153,7 +150,7 @@ export default class Component extends Entity {
     allPublicMethods = Array.from(new Set(allPublicMethods))
 
     // Extend the component's properties with the instantiated attributes and concatenated public methods
-    super.extend(ComponentProperties, ...arguments, {
+    super.extend(ComponentProperties, ...args, {
       _properties: {
         publicMethods: allPublicMethods
       }

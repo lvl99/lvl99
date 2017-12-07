@@ -67,6 +67,1069 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(11)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if (typeof exports !== "undefined") {
+    factory(exports, require('jquery'));
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod.exports, global.jquery);
+    global.common = mod.exports;
+  }
+})(this, function (exports, _jquery) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.events = exports.$body = exports.$html = exports.$win = exports.$doc = exports.$ = undefined;
+
+  var _jquery2 = _interopRequireDefault(_jquery);
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : {
+      default: obj
+    };
+  }
+
+  var $ = exports.$ = _jquery2.default;
+
+  /**
+   * Basic shorthand props to cache/reference common jQuery objects
+   */
+  /**
+   * LVL99 Common
+   *
+   * Common dependencies and other useful things
+   *
+   * @package lvl99
+   */
+
+  var $doc = exports.$doc = $(document);
+  var $win = exports.$win = $(window);
+  var $html = exports.$html = $('html');
+  var $body = exports.$body = $('body');
+
+  /**
+   * Event name shorthands
+   */
+  var events = exports.events = {
+    click: 'click touchend',
+    inputstart: 'mousedown touchstart keydown',
+    inputend: 'mouseup touchend keyup',
+    animationrun: 'animationrun webkitAnimationRun webkitanimationrun mozAnimationRun MSAnimationRun oAnimationRun oanimationrun',
+    animationstart: 'animationstart webkitAnimationStart webkitanimationstart mozAnimationStart MSAnimationStart oAnimationStart oanimationstart',
+    animationend: 'animationend webkitAnimationEnd webkitanimationend mozAnimationEnd MSAnimationEnd oAnimationEnd oanimationend',
+    transitionrun: 'transitionrun webkitTransitionRun webkittransitionrun mozTransitionRun MSTransitionRun oTransitionRun otransitionrun',
+    transitionstart: 'transitionstart webkitTransitionStart webkittransitionstart mozTransitionStart MSTransitionStart oTransitionStart otransitionstart',
+    transitionend: 'transitionend webkitTransitionEnd webkittransitionend mozTransitionEnd MSTransitionEnd oTransitionEnd otransitionend'
+  };
+
+  var utils = {
+    $: $,
+    $doc: $doc,
+    $win: $win,
+    $html: $html,
+    $body: $body,
+    events: events
+  };
+
+  exports.default = utils;
+});
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(2)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if (typeof exports !== "undefined") {
+    factory(exports, require('object-path'));
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod.exports, global.objectPath);
+    global.parse = mod.exports;
+  }
+})(this, function (exports, _objectPath) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.coerceToPrimitiveType = coerceToPrimitiveType;
+  exports.convertToBoolean = convertToBoolean;
+  exports.convertStringToJson = convertStringToJson;
+  exports.convertStringToFloat = convertStringToFloat;
+  exports.extractClassDetails = extractClassDetails;
+  exports.extractTriggerDetails = extractTriggerDetails;
+  exports.fixedEncodeURIComponent = fixedEncodeURIComponent;
+  exports.getTargetBySelector = getTargetBySelector;
+  exports.getTargetSelector = getTargetSelector;
+  exports.extractTargetEventNames = extractTargetEventNames;
+
+  var _objectPath2 = _interopRequireDefault(_objectPath);
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : {
+      default: obj
+    };
+  }
+
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  };
+
+  var __loggerPath = 'lvl99/utils/parse';
+
+  /**
+   * Coerce a value to its primitive type
+   *
+   * @param {Mixed} input
+   * @returns {Mixed}
+   */
+  function coerceToPrimitiveType(input) {
+    // Non-string? Just return it straight away
+    if (typeof input !== 'string') return input;
+
+    // Trim any whitespace
+    input = (input + '').trim();
+
+    // Number
+    if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
+      return parseFloat(input);
+
+      // Boolean: true
+    } else if (/^(true|1)$/.test(input)) {
+      return true;
+
+      // NaN
+    } else if (/^NaN$/.test(input)) {
+      return NaN;
+
+      // undefined
+    } else if (/^undefined$/.test(input)) {
+      return undefined;
+
+      // null
+    } else if (/^null$/.test(input)) {
+      return null;
+
+      // Boolean: false
+    } else if (/^(false|0)$/.test(input) || input === '') {
+      return false;
+
+      // JSON: starts with [ or { and ends with ] or }
+    } else if (/^[\[\{]/.test(input) && /[\]\}]$/.test(input)) {
+      return convertStringToJson(input);
+
+      // String marked with single/double quotation marks
+    } else if (/^['"]|["']$/) {
+      return input.replace(/^['"]|['"]$/g, '');
+    }
+
+    // Default to string
+    return input;
+  }
+
+  /**
+   * Convert value to an explicit boolean. Namely for processing string values.
+   *
+   * @param {Mixed} input
+   * @returns {Boolean}
+   */
+  function convertToBoolean(input) {
+    // Already boolean
+    if (input === true || input === false) {
+      return input;
+    }
+
+    // Cases of truthy/falsey values
+    switch (input) {
+      case 1:
+      case '1':
+      case 'true':
+        return true;
+
+      case 0:
+      case '0':
+      case 'false':
+      case undefined:
+      case 'undefined':
+      case null:
+      case 'null':
+      case NaN:
+      case 'NaN':
+      case '':
+        return false;
+    }
+
+    // Otherwise...
+    return !!input;
+  }
+
+  /**
+   * Convert a string to JSON or just return the string if can't
+   *
+   * @param {String} input
+   * @returns {Object}
+   */
+  function convertStringToJson(input) {
+    var output = input;
+
+    // Convert string data to JSON
+    if (typeof input === 'string') {
+      try {
+        output = JSON.parse(input);
+      } catch (e) {
+        console.error(_loggerPath + '.convertStringToJson: Error parsing string JSON data', input);
+      }
+    }
+
+    return output;
+  }
+
+  /**
+   * Convert a string to a float.
+   * This also converts number constants like Infinity and NaN to zero.
+   *
+   * @param input
+   * @returns {*}
+   */
+  function convertStringToFloat(input) {
+    if (typeof input === 'number') {
+      return input;
+    }
+
+    var output = parseFloat((input + '').replace(/[^\d\-\.]+/g, ''));
+
+    // Infinity / NaN
+    if (!isFinite(input) || isNaN(input) || isNaN(output)) {
+      output = 0;
+    }
+
+    return output;
+  }
+
+  /**
+   * Extract key-values from a string which is like a CSS class declaration, e.g. `key: value; key: value`
+   *
+   * This is slightly more interesting as it can take a name with dots
+   *
+   * @param {String} input
+   * @return {Object}
+   */
+  function extractClassDetails(input) {
+    var output = {};
+    var inputParts = [input];
+
+    // Check if it has semi-colons
+    if (/;/.test(input)) {
+      inputParts = input.split(';');
+    }
+
+    // Process each input part
+    inputParts.forEach(function (part) {
+      part = part.trim();
+      if (part) {
+        var partParts = part.match(/([a-z0-9_.-]+):([^;]+);?/i);
+        var partName = partParts[1].trim();
+        var partValue = coerceToPrimitiveType(partParts[2].trim());
+
+        // @debug
+        // console.log('parsed part', {
+        //   part,
+        //   partName,
+        //   partValue,
+        // })
+
+        // Ensure output object exists if using dot notation
+        if (/\./.test(partName)) {
+          var objParts = partName.split('.');
+          var objPartPath = '';
+
+          // @debug
+          // console.log('part has dot notation', {
+          //   output,
+          //   partName,
+          //   partValue,
+          //   objParts,
+          //   objPartPath
+          // })
+
+          for (var objPartIndex = 0; objPartIndex < objParts.length - 1; objPartIndex++) {
+            objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex];
+
+            // @debug
+            // console.log(objPartPath)
+
+            if (!_objectPath2.default.has(output, objPartPath)) {
+              // @debug
+              // console.log('setting object part path', {
+              //   output,
+              //   partName,
+              //   partValue,
+              //   objPartIndex,
+              //   objPartPath
+              // })
+
+              _objectPath2.default.set(output, objPartPath, {});
+            }
+          }
+        }
+
+        // Set via objectPath
+        _objectPath2.default.set(output, partName, partValue);
+      }
+    });
+
+    return output;
+  }
+
+  /**
+   * Extract the trigger's target details
+   *
+   * This allows you to extract the necessary data from the string and the global window/document available, to create
+   * dynamic event bindings.
+   *
+   * @param {String|Object} input
+   * @param {Object|Function} context Defaults to `window`. Where to find the `do` action
+   * @returns {Object} => { eventName: {String}, method: {Function}, selector: {String}, target: {Object} }
+   */
+  function extractTriggerDetails(input, context) {
+    var trigger = input;
+
+    if (!context) {
+      context = window;
+    }
+
+    // String input given
+    if (typeof input === 'string') {
+      // Try JSON first
+      if (/^{/.test(input)) {
+        trigger = convertStringToJson(input);
+
+        // Try class details
+      } else if (/^[a-z0-9_-]+:/.test(input)) {
+        trigger = extractClassDetails(input);
+
+        // String with no spaces
+      } else if (!/ /.test(input)) {
+        trigger = {
+          do: input
+        };
+      }
+    }
+
+    // No object found!
+    if ((typeof trigger === 'undefined' ? 'undefined' : _typeof(trigger)) !== 'object') {
+      throw new Error(_loggerPath + '.extractTriggerDetails: input was not valid JSON or CSS-style definition');
+    }
+
+    // Ensure it has `on` and `do` properties
+    // if (!objectPath.has(trigger, 'on')) {
+    //   throw new Error(`${_loggerPath}.extractTriggerDetails: trigger is missing required 'on' property`)
+    // }
+    if (!_objectPath2.default.has(trigger, 'do')) {
+      throw new Error(_loggerPath + '.extractTriggerDetails: trigger is missing required \'do\' property');
+    }
+
+    // If target is set, use real values for window and document
+    if (_objectPath2.default.has(trigger, 'target')) {
+      switch (trigger.target) {
+        case 'self':
+          // console.log('Targeting self', context)
+          trigger.target = context;
+          break;
+
+        case 'document':
+          trigger.target = document;
+          break;
+
+        case 'window':
+          trigger.target = window;
+          break;
+      }
+    }
+
+    // Do same as above if a context was set!
+    if (_objectPath2.default.has(trigger, 'context')) {
+      switch (trigger.context) {
+        case 'document':
+          trigger.context = document;
+          break;
+
+        case 'window':
+          trigger.context = window;
+          break;
+      }
+    } else {
+      trigger.context = context;
+    }
+
+    return trigger;
+  }
+
+  /**
+   * Encode string to URL, with spaces that are represented as `+`
+   * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+   *
+   * @param {String} input
+   * @returns {String}
+   */
+  function fixedEncodeURIComponent(input) {
+    return encodeURIComponent(input).replace(/[!'()*]/g, function (c) {
+      return '%' + c.charCodeAt(0).toString(16);
+    });
+  }
+
+  /**
+   * Get the target object by a string selector
+   *
+   * @param {String} target
+   * @param {Object} context
+   * @return {Object}
+   */
+  function getTargetBySelector(target, context) {
+    // Default to document
+    if (!target) {
+      target = document;
+    }
+
+    if (typeof target === 'string') {
+      // Special string values to get the actual object
+      switch (target) {
+        case 'document':
+          target = document;
+          break;
+
+        case 'window':
+          target = window;
+          break;
+
+        case 'self':
+          target = context;
+          break;
+      }
+    }
+
+    return target;
+  }
+
+  /**
+   * Get the target object's string selector
+   *
+   * @param {Object} target
+   * @param {Object} context
+   * @return {undefined|String}
+   */
+  function getTargetSelector(target, context) {
+    if (typeof target === 'string') {
+      return target;
+    }
+
+    // Window
+    if (jquery.isWindow(target)) {
+      return 'window';
+
+      // Document
+    } else if (target === document) {
+      return 'document';
+
+      // Self
+    } else if (target.hasOwnProperty('uuid')) {
+      return '[data-component-id="' + target.uuid + '"]';
+
+      // HTML Elem
+    } else if (jquery(target).length) {
+      if (jquery(target).attr('data-component-id')) {
+        return '[data-component-id="' + jquery(target).attr('data-component-id') + '"]';
+      } else if (jquery(target).attr('id')) {
+        return '#' + jquery(target).attr('id');
+      } else {
+        return '' + target.tagName.toLowerCase();
+      }
+    }
+
+    return target;
+  }
+
+  /**
+   * Parse the target event names
+   *
+   * @param {Array|String} eventNames e.g. `Component:customEvent dom:mouseover`
+   * @param {String} namespace Optional namespace to assign each extracted custom (non-DOM) event name
+   * @returns {Array}
+   */
+  function extractTargetEventNames(inputEventNames, namespace) {
+    var targetEventNames = [];
+    var eventNames = inputEventNames;
+
+    if (typeof inputEventNames === 'string') {
+      // Split eventNames by spaces
+      if (/\s/.test(inputEventNames)) {
+        eventNames = inputEventNames.split(/\s+/);
+      } else {
+        eventNames = [inputEventNames];
+      }
+    }
+
+    if (eventNames instanceof Array) {
+      // Process each event name
+      eventNames.forEach(function (eventName) {
+        // Default to namespaced event name
+        var targetEventName = typeof namespace === 'string' && namespace !== '' ? namespace + ':' + eventName : eventName;
+
+        // Remove any reference to the native DOM event namespace
+        if (/^dom:/i.test(eventName)) {
+          targetEventName = eventName.replace(/^dom\:/gi, '', eventName);
+        }
+
+        // Add to the list
+        targetEventNames.push(targetEventName);
+      });
+
+      return targetEventNames;
+    }
+
+    return false;
+  }
+
+  var parse = {
+    coerceToPrimitiveType: coerceToPrimitiveType,
+    convertToBoolean: convertToBoolean,
+    convertStringToJson: convertStringToJson,
+    convertStringToFloat: convertStringToFloat,
+    extractClassDetails: extractClassDetails,
+    extractTriggerDetails: extractTriggerDetails,
+    fixedEncodeURIComponent: fixedEncodeURIComponent,
+    getTargetBySelector: getTargetBySelector,
+    getTargetSelector: getTargetSelector,
+    extractTargetEventNames: extractTargetEventNames
+  };
+
+  exports.default = parse;
+});
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory){
+  'use strict';
+
+  /*istanbul ignore next:cant test*/
+  if (typeof module === 'object' && typeof module.exports === 'object') {
+    module.exports = factory();
+  } else if (true) {
+    // AMD. Register as an anonymous module.
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else {
+    // Browser globals
+    root.objectPath = factory();
+  }
+})(this, function(){
+  'use strict';
+
+  var toStr = Object.prototype.toString;
+  function hasOwnProperty(obj, prop) {
+    if(obj == null) {
+      return false
+    }
+    //to handle objects with null prototypes (too edge case?)
+    return Object.prototype.hasOwnProperty.call(obj, prop)
+  }
+
+  function isEmpty(value){
+    if (!value) {
+      return true;
+    }
+    if (isArray(value) && value.length === 0) {
+        return true;
+    } else if (typeof value !== 'string') {
+        for (var i in value) {
+            if (hasOwnProperty(value, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+  }
+
+  function toString(type){
+    return toStr.call(type);
+  }
+
+  function isObject(obj){
+    return typeof obj === 'object' && toString(obj) === "[object Object]";
+  }
+
+  var isArray = Array.isArray || function(obj){
+    /*istanbul ignore next:cant test*/
+    return toStr.call(obj) === '[object Array]';
+  }
+
+  function isBoolean(obj){
+    return typeof obj === 'boolean' || toString(obj) === '[object Boolean]';
+  }
+
+  function getKey(key){
+    var intKey = parseInt(key);
+    if (intKey.toString() === key) {
+      return intKey;
+    }
+    return key;
+  }
+
+  function factory(options) {
+    options = options || {}
+
+    var objectPath = function(obj) {
+      return Object.keys(objectPath).reduce(function(proxy, prop) {
+        if(prop === 'create') {
+          return proxy;
+        }
+
+        /*istanbul ignore else*/
+        if (typeof objectPath[prop] === 'function') {
+          proxy[prop] = objectPath[prop].bind(objectPath, obj);
+        }
+
+        return proxy;
+      }, {});
+    };
+
+    function hasShallowProperty(obj, prop) {
+      return (options.includeInheritedProps || (typeof prop === 'number' && Array.isArray(obj)) || hasOwnProperty(obj, prop))
+    }
+
+    function getShallowProperty(obj, prop) {
+      if (hasShallowProperty(obj, prop)) {
+        return obj[prop];
+      }
+    }
+
+    function set(obj, path, value, doNotReplace){
+      if (typeof path === 'number') {
+        path = [path];
+      }
+      if (!path || path.length === 0) {
+        return obj;
+      }
+      if (typeof path === 'string') {
+        return set(obj, path.split('.').map(getKey), value, doNotReplace);
+      }
+      var currentPath = path[0];
+      var currentValue = getShallowProperty(obj, currentPath);
+      if (path.length === 1) {
+        if (currentValue === void 0 || !doNotReplace) {
+          obj[currentPath] = value;
+        }
+        return currentValue;
+      }
+
+      if (currentValue === void 0) {
+        //check if we assume an array
+        if(typeof path[1] === 'number') {
+          obj[currentPath] = [];
+        } else {
+          obj[currentPath] = {};
+        }
+      }
+
+      return set(obj[currentPath], path.slice(1), value, doNotReplace);
+    }
+
+    objectPath.has = function (obj, path) {
+      if (typeof path === 'number') {
+        path = [path];
+      } else if (typeof path === 'string') {
+        path = path.split('.');
+      }
+
+      if (!path || path.length === 0) {
+        return !!obj;
+      }
+
+      for (var i = 0; i < path.length; i++) {
+        var j = getKey(path[i]);
+
+        if((typeof j === 'number' && isArray(obj) && j < obj.length) ||
+          (options.includeInheritedProps ? (j in Object(obj)) : hasOwnProperty(obj, j))) {
+          obj = obj[j];
+        } else {
+          return false;
+        }
+      }
+
+      return true;
+    };
+
+    objectPath.ensureExists = function (obj, path, value){
+      return set(obj, path, value, true);
+    };
+
+    objectPath.set = function (obj, path, value, doNotReplace){
+      return set(obj, path, value, doNotReplace);
+    };
+
+    objectPath.insert = function (obj, path, value, at){
+      var arr = objectPath.get(obj, path);
+      at = ~~at;
+      if (!isArray(arr)) {
+        arr = [];
+        objectPath.set(obj, path, arr);
+      }
+      arr.splice(at, 0, value);
+    };
+
+    objectPath.empty = function(obj, path) {
+      if (isEmpty(path)) {
+        return void 0;
+      }
+      if (obj == null) {
+        return void 0;
+      }
+
+      var value, i;
+      if (!(value = objectPath.get(obj, path))) {
+        return void 0;
+      }
+
+      if (typeof value === 'string') {
+        return objectPath.set(obj, path, '');
+      } else if (isBoolean(value)) {
+        return objectPath.set(obj, path, false);
+      } else if (typeof value === 'number') {
+        return objectPath.set(obj, path, 0);
+      } else if (isArray(value)) {
+        value.length = 0;
+      } else if (isObject(value)) {
+        for (i in value) {
+          if (hasShallowProperty(value, i)) {
+            delete value[i];
+          }
+        }
+      } else {
+        return objectPath.set(obj, path, null);
+      }
+    };
+
+    objectPath.push = function (obj, path /*, values */){
+      var arr = objectPath.get(obj, path);
+      if (!isArray(arr)) {
+        arr = [];
+        objectPath.set(obj, path, arr);
+      }
+
+      arr.push.apply(arr, Array.prototype.slice.call(arguments, 2));
+    };
+
+    objectPath.coalesce = function (obj, paths, defaultValue) {
+      var value;
+
+      for (var i = 0, len = paths.length; i < len; i++) {
+        if ((value = objectPath.get(obj, paths[i])) !== void 0) {
+          return value;
+        }
+      }
+
+      return defaultValue;
+    };
+
+    objectPath.get = function (obj, path, defaultValue){
+      if (typeof path === 'number') {
+        path = [path];
+      }
+      if (!path || path.length === 0) {
+        return obj;
+      }
+      if (obj == null) {
+        return defaultValue;
+      }
+      if (typeof path === 'string') {
+        return objectPath.get(obj, path.split('.'), defaultValue);
+      }
+
+      var currentPath = getKey(path[0]);
+      var nextObj = getShallowProperty(obj, currentPath)
+      if (nextObj === void 0) {
+        return defaultValue;
+      }
+
+      if (path.length === 1) {
+        return nextObj;
+      }
+
+      return objectPath.get(obj[currentPath], path.slice(1), defaultValue);
+    };
+
+    objectPath.del = function del(obj, path) {
+      if (typeof path === 'number') {
+        path = [path];
+      }
+
+      if (obj == null) {
+        return obj;
+      }
+
+      if (isEmpty(path)) {
+        return obj;
+      }
+      if(typeof path === 'string') {
+        return objectPath.del(obj, path.split('.'));
+      }
+
+      var currentPath = getKey(path[0]);
+      if (!hasShallowProperty(obj, currentPath)) {
+        return obj;
+      }
+
+      if(path.length === 1) {
+        if (isArray(obj)) {
+          obj.splice(currentPath, 1);
+        } else {
+          delete obj[currentPath];
+        }
+      } else {
+        return objectPath.del(obj[currentPath], path.slice(1));
+      }
+
+      return obj;
+    }
+
+    return objectPath;
+  }
+
+  var mod = factory();
+  mod.create = factory;
+  mod.withInheritedProps = factory({includeInheritedProps: true})
+  return mod;
+});
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(4), __webpack_require__(7), __webpack_require__(2), __webpack_require__(5)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if (typeof exports !== "undefined") {
+    factory(module, exports, require('lodash.merge'), require('uuid'), require('object-path'), require('../utils/inheritance'));
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod, mod.exports, global.lodash, global.uuid, global.objectPath, global.inheritance);
+    global.entity = mod.exports;
+  }
+})(this, function (module, exports, _lodash, _uuid, _objectPath, _inheritance) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _lodash2 = _interopRequireDefault(_lodash);
+
+  var _uuid2 = _interopRequireDefault(_uuid);
+
+  var _objectPath2 = _interopRequireDefault(_objectPath);
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : {
+      default: obj
+    };
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+
+  /**
+   * The Entity's base properties
+   *
+   * @type {Object}
+   */
+  var EntityProperties = {
+    /**
+     * NAMESPACE
+     * This is used for custom events and error reporting
+     *
+     * @type {String}
+     */
+    _NS: 'LVL99:Entity',
+
+    /**
+     * namespace
+     * This is used for CSS classes (only if the entity has an HTMLElement)
+     *
+     * @type {String}
+     */
+    _ns: 'lvl99-entity',
+
+    /**
+     * The properties shared between all instances of this Entity
+     *
+     * @type {Object}
+     */
+    _properties: {},
+
+    /**
+     * The default attributes to load a created Entity instance with.
+     *
+     * @type {Object}
+     */
+    _attributes: {}
+  };
+
+  var Entity = function () {
+    /**
+     * Entity constructor
+     *
+     * @constructor
+     * @param {Object} attributes
+     */
+    function Entity(attributes) {
+      _classCallCheck(this, Entity);
+
+      // @debug
+      // console.log('LVL99:Entity:constructor', {
+      //   attributes
+      // })
+
+      this.extend({
+        _attributes: attributes
+      });
+
+      // Expose private values
+      (0, _inheritance.exposePrivateProperties)(this);
+
+      // Create a unique ID for this Entity
+      Object.defineProperty(this, 'uuid', {
+        value: this.NS + ':' + _uuid2.default.v4(),
+        writable: false,
+        enumerable: true,
+        configurable: false
+      });
+    }
+
+    /**
+     * Extend the Entity with any given {Object} arguments
+     *
+     * @returns {Self}
+     */
+
+
+    _createClass(Entity, [{
+      key: 'extend',
+      value: function extend() {
+        // @debug
+        // console.log('LVL99:Entity:extend', {
+        //   args
+        // })
+
+        // Merge the properties with the instantiated attributes and concatenated public methods
+        _lodash2.default.apply(undefined, [this, EntityProperties].concat(Array.prototype.slice.call(arguments)));
+
+        return this;
+      }
+    }, {
+      key: 'getProp',
+      value: function getProp(propName) {
+        if (!propName || typeof propName !== 'string') {
+          throw new Error('[' + this.NS + '] get: \'propName\' value is invalid');
+        }
+
+        return _objectPath2.default.get(this.properties, propName);
+      }
+    }, {
+      key: 'setProp',
+      value: function setProp(propName, propValue) {
+        if (!propName || typeof propName !== 'string') {
+          throw new Error('[' + this.NS + '] set: \'propName\' value is invalid');
+        }
+
+        return _objectPath2.default.set(this.properties, propName, propValue);
+      }
+    }, {
+      key: 'getAttr',
+      value: function getAttr(attrName) {
+        if (!attrName || typeof attrName !== 'string') {
+          throw new Error('[' + this.NS + '] getAttr: \'attrName\' value is invalid');
+        }
+
+        return _objectPath2.default.get(this.attributes, attrName);
+      }
+    }, {
+      key: 'setAttr',
+      value: function setAttr(attrName, attrValue) {
+        if (!attrName || typeof attrName !== 'string') {
+          throw new Error('[' + this.NS + '] setAttr: \'attrName\' value is invalid');
+        }
+
+        return _objectPath2.default.set(this.attributes, attrName, attrValue);
+      }
+    }, {
+      key: 'init',
+      value: function init() {}
+    }, {
+      key: 'destroy',
+      value: function destroy() {}
+    }]);
+
+    return Entity;
+  }();
+
+  exports.default = Entity;
+  module.exports = exports['default'];
+});
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(global, module) {/**
  * lodash (Custom Build) <https://lodash.com/>
  * Build: `lodash modularize exports="npm" -o ./`
@@ -2275,1088 +3338,10 @@ function stubFalse() {
 
 module.exports = merge;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8), __webpack_require__(16)(module)))
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-  if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(11)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else if (typeof exports !== "undefined") {
-    factory(exports, require('jquery'));
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory(mod.exports, global.jquery);
-    global.common = mod.exports;
-  }
-})(this, function (exports, _jquery) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.events = exports.$body = exports.$html = exports.$win = exports.$doc = exports.$ = undefined;
-
-  var _jquery2 = _interopRequireDefault(_jquery);
-
-  function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {
-      default: obj
-    };
-  }
-
-  var $ = exports.$ = _jquery2.default;
-
-  /**
-   * Basic shorthand props to cache/reference common jQuery objects
-   */
-  /**
-   * LVL99 Common
-   *
-   * Common dependencies and other useful things
-   *
-   * @package lvl99
-   */
-
-  var $doc = exports.$doc = $(document);
-  var $win = exports.$win = $(window);
-  var $html = exports.$html = $('html');
-  var $body = exports.$body = $('body');
-
-  /**
-   * Event name shorthands
-   */
-  var events = exports.events = {
-    click: 'click touchend',
-    inputstart: 'mousedown touchstart keydown',
-    inputend: 'mouseup touchend keyup',
-    animationrun: 'animationrun webkitAnimationRun webkitanimationrun mozAnimationRun MSAnimationRun oAnimationRun oanimationrun',
-    animationstart: 'animationstart webkitAnimationStart webkitanimationstart mozAnimationStart MSAnimationStart oAnimationStart oanimationstart',
-    animationend: 'animationend webkitAnimationEnd webkitanimationend mozAnimationEnd MSAnimationEnd oAnimationEnd oanimationend',
-    transitionrun: 'transitionrun webkitTransitionRun webkittransitionrun mozTransitionRun MSTransitionRun oTransitionRun otransitionrun',
-    transitionstart: 'transitionstart webkitTransitionStart webkittransitionstart mozTransitionStart MSTransitionStart oTransitionStart otransitionstart',
-    transitionend: 'transitionend webkitTransitionEnd webkittransitionend mozTransitionEnd MSTransitionEnd oTransitionEnd otransitionend'
-  };
-
-  var utils = {
-    $: $,
-    $doc: $doc,
-    $win: $win,
-    $html: $html,
-    $body: $body,
-    events: events
-  };
-
-  exports.default = utils;
-});
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-  if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else if (typeof exports !== "undefined") {
-    factory(exports, require('object-path'));
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory(mod.exports, global.objectPath);
-    global.parse = mod.exports;
-  }
-})(this, function (exports, _objectPath) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.coerceToPrimitiveType = coerceToPrimitiveType;
-  exports.convertToBoolean = convertToBoolean;
-  exports.convertStringToJson = convertStringToJson;
-  exports.convertStringToFloat = convertStringToFloat;
-  exports.extractClassDetails = extractClassDetails;
-  exports.extractTriggerDetails = extractTriggerDetails;
-  exports.fixedEncodeURIComponent = fixedEncodeURIComponent;
-  exports.getTargetBySelector = getTargetBySelector;
-  exports.getTargetSelector = getTargetSelector;
-  exports.extractTargetEventNames = extractTargetEventNames;
-
-  var _objectPath2 = _interopRequireDefault(_objectPath);
-
-  function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {
-      default: obj
-    };
-  }
-
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  };
-
-  var __loggerPath = 'lvl99/utils/parse';
-
-  /**
-   * Coerce a value to its primitive type
-   *
-   * @param {Mixed} input
-   * @returns {Mixed}
-   */
-  function coerceToPrimitiveType(input) {
-    // Non-string? Just return it straight away
-    if (typeof input !== 'string') return input;
-
-    // Trim any whitespace
-    input = (input + '').trim();
-
-    // Number
-    if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
-      return parseFloat(input);
-
-      // Boolean: true
-    } else if (/^(true|1)$/.test(input)) {
-      return true;
-
-      // NaN
-    } else if (/^NaN$/.test(input)) {
-      return NaN;
-
-      // undefined
-    } else if (/^undefined$/.test(input)) {
-      return undefined;
-
-      // null
-    } else if (/^null$/.test(input)) {
-      return null;
-
-      // Boolean: false
-    } else if (/^(false|0)$/.test(input) || input === '') {
-      return false;
-
-      // JSON: starts with [ or { and ends with ] or }
-    } else if (/^[\[\{]/.test(input) && /[\]\}]$/.test(input)) {
-      return convertStringToJson(input);
-
-      // String marked with single/double quotation marks
-    } else if (/^['"]|["']$/) {
-      return input.replace(/^['"]|['"]$/g, '');
-    }
-
-    // Default to string
-    return input;
-  }
-
-  /**
-   * Convert value to an explicit boolean. Namely for processing string values.
-   *
-   * @param {Mixed} input
-   * @returns {Boolean}
-   */
-  function convertToBoolean(input) {
-    // Already boolean
-    if (input === true || input === false) {
-      return input;
-    }
-
-    // Cases of truthy/falsey values
-    switch (input) {
-      case 1:
-      case '1':
-      case 'true':
-        return true;
-
-      case 0:
-      case '0':
-      case 'false':
-      case undefined:
-      case 'undefined':
-      case null:
-      case 'null':
-      case NaN:
-      case 'NaN':
-      case '':
-        return false;
-    }
-
-    // Otherwise...
-    return !!input;
-  }
-
-  /**
-   * Convert a string to JSON or just return the string if can't
-   *
-   * @param {String} input
-   * @returns {Object}
-   */
-  function convertStringToJson(input) {
-    var output = input;
-
-    // Convert string data to JSON
-    if (typeof input === 'string') {
-      try {
-        output = JSON.parse(input);
-      } catch (e) {
-        console.error(_loggerPath + '.convertStringToJson: Error parsing string JSON data', input);
-      }
-    }
-
-    return output;
-  }
-
-  /**
-   * Convert a string to a float.
-   * This also converts number constants like Infinity and NaN to zero.
-   *
-   * @param input
-   * @returns {*}
-   */
-  function convertStringToFloat(input) {
-    if (typeof input === 'number') {
-      return input;
-    }
-
-    var output = parseFloat((input + '').replace(/[^\d\-\.]+/g, ''));
-
-    // Infinity / NaN
-    if (!isFinite(input) || isNaN(input) || isNaN(output)) {
-      output = 0;
-    }
-
-    return output;
-  }
-
-  /**
-   * Extract key-values from a string which is like a CSS class declaration, e.g. `key: value; key: value`
-   *
-   * This is slightly more interesting as it can take a name with dots
-   *
-   * @param {String} input
-   * @return {Object}
-   */
-  function extractClassDetails(input) {
-    var output = {};
-    var inputParts = [input];
-
-    // Check if it has semi-colons
-    if (/;/.test(input)) {
-      inputParts = input.split(';');
-    }
-
-    // Process each input part
-    inputParts.forEach(function (part) {
-      part = part.trim();
-      if (part) {
-        var partParts = part.match(/([a-z0-9_.-]+):([^;]+);?/i);
-        var partName = partParts[1].trim();
-        var partValue = coerceToPrimitiveType(partParts[2].trim());
-
-        // @debug
-        // console.log('parsed part', {
-        //   part,
-        //   partName,
-        //   partValue,
-        // })
-
-        // Ensure output object exists if using dot notation
-        if (/\./.test(partName)) {
-          var objParts = partName.split('.');
-          var objPartPath = '';
-
-          // @debug
-          // console.log('part has dot notation', {
-          //   output,
-          //   partName,
-          //   partValue,
-          //   objParts,
-          //   objPartPath
-          // })
-
-          for (var objPartIndex = 0; objPartIndex < objParts.length - 1; objPartIndex++) {
-            objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex];
-
-            // @debug
-            // console.log(objPartPath)
-
-            if (!_objectPath2.default.has(output, objPartPath)) {
-              // @debug
-              // console.log('setting object part path', {
-              //   output,
-              //   partName,
-              //   partValue,
-              //   objPartIndex,
-              //   objPartPath
-              // })
-
-              _objectPath2.default.set(output, objPartPath, {});
-            }
-          }
-        }
-
-        // Set via objectPath
-        _objectPath2.default.set(output, partName, partValue);
-      }
-    });
-
-    return output;
-  }
-
-  /**
-   * Extract the trigger's target details
-   *
-   * This allows you to extract the necessary data from the string and the global window/document available, to create
-   * dynamic event bindings.
-   *
-   * @param {String|Object} input
-   * @param {Object|Function} context Defaults to `window`. Where to find the `do` action
-   * @returns {Object} => { eventName: {String}, method: {Function}, selector: {String}, target: {Object} }
-   */
-  function extractTriggerDetails(input, context) {
-    var trigger = input;
-
-    if (!context) {
-      context = window;
-    }
-
-    // String input given
-    if (typeof input === 'string') {
-      // Try JSON first
-      if (/^{/.test(input)) {
-        trigger = convertStringToJson(input);
-
-        // Try class details
-      } else if (/^[a-z0-9_-]+:/.test(input)) {
-        trigger = extractClassDetails(input);
-
-        // String with no spaces
-      } else if (!/ /.test(input)) {
-        trigger = {
-          do: input
-        };
-      }
-    }
-
-    // No object found!
-    if ((typeof trigger === 'undefined' ? 'undefined' : _typeof(trigger)) !== 'object') {
-      throw new Error(_loggerPath + '.extractTriggerDetails: input was not valid JSON or CSS-style definition');
-    }
-
-    // Ensure it has `on` and `do` properties
-    // if (!objectPath.has(trigger, 'on')) {
-    //   throw new Error(`${_loggerPath}.extractTriggerDetails: trigger is missing required 'on' property`)
-    // }
-    if (!_objectPath2.default.has(trigger, 'do')) {
-      throw new Error(_loggerPath + '.extractTriggerDetails: trigger is missing required \'do\' property');
-    }
-
-    // If target is set, use real values for window and document
-    if (_objectPath2.default.has(trigger, 'target')) {
-      switch (trigger.target) {
-        case 'self':
-          // console.log('Targeting self', context)
-          trigger.target = context;
-          break;
-
-        case 'document':
-          trigger.target = document;
-          break;
-
-        case 'window':
-          trigger.target = window;
-          break;
-      }
-    }
-
-    // Do same as above if a context was set!
-    if (_objectPath2.default.has(trigger, 'context')) {
-      switch (trigger.context) {
-        case 'document':
-          trigger.context = document;
-          break;
-
-        case 'window':
-          trigger.context = window;
-          break;
-      }
-    } else {
-      trigger.context = context;
-    }
-
-    return trigger;
-  }
-
-  /**
-   * Encode string to URL, with spaces that are represented as `+`
-   * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
-   *
-   * @param {String} input
-   * @returns {String}
-   */
-  function fixedEncodeURIComponent(input) {
-    return encodeURIComponent(input).replace(/[!'()*]/g, function (c) {
-      return '%' + c.charCodeAt(0).toString(16);
-    });
-  }
-
-  /**
-   * Get the target object by a string selector
-   *
-   * @param {String} target
-   * @param {Object} context
-   * @return {Object}
-   */
-  function getTargetBySelector(target, context) {
-    // Default to document
-    if (!target) {
-      target = document;
-    }
-
-    if (typeof target === 'string') {
-      // Special string values to get the actual object
-      switch (target) {
-        case 'document':
-          target = document;
-          break;
-
-        case 'window':
-          target = window;
-          break;
-
-        case 'self':
-          target = context;
-          break;
-      }
-    }
-
-    return target;
-  }
-
-  /**
-   * Get the target object's string selector
-   *
-   * @param {Object} target
-   * @param {Object} context
-   * @return {undefined|String}
-   */
-  function getTargetSelector(target, context) {
-    if (typeof target === 'string') {
-      return target;
-    }
-
-    // Window
-    if (jquery.isWindow(target)) {
-      return 'window';
-
-      // Document
-    } else if (target === document) {
-      return 'document';
-
-      // Self
-    } else if (target.hasOwnProperty('uuid')) {
-      return '[data-component-id="' + target.uuid + '"]';
-
-      // HTML Elem
-    } else if (jquery(target).length) {
-      if (jquery(target).attr('data-component-id')) {
-        return '[data-component-id="' + jquery(target).attr('data-component-id') + '"]';
-      } else if (jquery(target).attr('id')) {
-        return '#' + jquery(target).attr('id');
-      } else {
-        return '' + target.tagName.toLowerCase();
-      }
-    }
-
-    return target;
-  }
-
-  /**
-   * Parse the target event names
-   *
-   * @param {Array|String} eventNames e.g. `Component:customEvent dom:mouseover`
-   * @param {String} namespace Optional namespace to assign each extracted custom (non-DOM) event name
-   * @returns {Array}
-   */
-  function extractTargetEventNames(inputEventNames, namespace) {
-    var targetEventNames = [];
-    var eventNames = inputEventNames;
-
-    if (typeof inputEventNames === 'string') {
-      // Split eventNames by spaces
-      if (/\s/.test(inputEventNames)) {
-        eventNames = inputEventNames.split(/\s+/);
-      } else {
-        eventNames = [inputEventNames];
-      }
-    }
-
-    if (eventNames instanceof Array) {
-      // Process each event name
-      eventNames.forEach(function (eventName) {
-        // Default to namespaced event name
-        var targetEventName = typeof namespace === 'string' && namespace !== '' ? namespace + ':' + eventName : eventName;
-
-        // Remove any reference to the native DOM event namespace
-        if (/^dom:/i.test(eventName)) {
-          targetEventName = eventName.replace(/^dom\:/gi, '', eventName);
-        }
-
-        // Add to the list
-        targetEventNames.push(targetEventName);
-      });
-
-      return targetEventNames;
-    }
-
-    return false;
-  }
-
-  var parse = {
-    coerceToPrimitiveType: coerceToPrimitiveType,
-    convertToBoolean: convertToBoolean,
-    convertStringToJson: convertStringToJson,
-    convertStringToFloat: convertStringToFloat,
-    extractClassDetails: extractClassDetails,
-    extractTriggerDetails: extractTriggerDetails,
-    fixedEncodeURIComponent: fixedEncodeURIComponent,
-    getTargetBySelector: getTargetBySelector,
-    getTargetSelector: getTargetSelector,
-    extractTargetEventNames: extractTargetEventNames
-  };
-
-  exports.default = parse;
-});
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory){
-  'use strict';
-
-  /*istanbul ignore next:cant test*/
-  if (typeof module === 'object' && typeof module.exports === 'object') {
-    module.exports = factory();
-  } else if (true) {
-    // AMD. Register as an anonymous module.
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else {
-    // Browser globals
-    root.objectPath = factory();
-  }
-})(this, function(){
-  'use strict';
-
-  var toStr = Object.prototype.toString;
-  function hasOwnProperty(obj, prop) {
-    if(obj == null) {
-      return false
-    }
-    //to handle objects with null prototypes (too edge case?)
-    return Object.prototype.hasOwnProperty.call(obj, prop)
-  }
-
-  function isEmpty(value){
-    if (!value) {
-      return true;
-    }
-    if (isArray(value) && value.length === 0) {
-        return true;
-    } else if (typeof value !== 'string') {
-        for (var i in value) {
-            if (hasOwnProperty(value, i)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
-  }
-
-  function toString(type){
-    return toStr.call(type);
-  }
-
-  function isObject(obj){
-    return typeof obj === 'object' && toString(obj) === "[object Object]";
-  }
-
-  var isArray = Array.isArray || function(obj){
-    /*istanbul ignore next:cant test*/
-    return toStr.call(obj) === '[object Array]';
-  }
-
-  function isBoolean(obj){
-    return typeof obj === 'boolean' || toString(obj) === '[object Boolean]';
-  }
-
-  function getKey(key){
-    var intKey = parseInt(key);
-    if (intKey.toString() === key) {
-      return intKey;
-    }
-    return key;
-  }
-
-  function factory(options) {
-    options = options || {}
-
-    var objectPath = function(obj) {
-      return Object.keys(objectPath).reduce(function(proxy, prop) {
-        if(prop === 'create') {
-          return proxy;
-        }
-
-        /*istanbul ignore else*/
-        if (typeof objectPath[prop] === 'function') {
-          proxy[prop] = objectPath[prop].bind(objectPath, obj);
-        }
-
-        return proxy;
-      }, {});
-    };
-
-    function hasShallowProperty(obj, prop) {
-      return (options.includeInheritedProps || (typeof prop === 'number' && Array.isArray(obj)) || hasOwnProperty(obj, prop))
-    }
-
-    function getShallowProperty(obj, prop) {
-      if (hasShallowProperty(obj, prop)) {
-        return obj[prop];
-      }
-    }
-
-    function set(obj, path, value, doNotReplace){
-      if (typeof path === 'number') {
-        path = [path];
-      }
-      if (!path || path.length === 0) {
-        return obj;
-      }
-      if (typeof path === 'string') {
-        return set(obj, path.split('.').map(getKey), value, doNotReplace);
-      }
-      var currentPath = path[0];
-      var currentValue = getShallowProperty(obj, currentPath);
-      if (path.length === 1) {
-        if (currentValue === void 0 || !doNotReplace) {
-          obj[currentPath] = value;
-        }
-        return currentValue;
-      }
-
-      if (currentValue === void 0) {
-        //check if we assume an array
-        if(typeof path[1] === 'number') {
-          obj[currentPath] = [];
-        } else {
-          obj[currentPath] = {};
-        }
-      }
-
-      return set(obj[currentPath], path.slice(1), value, doNotReplace);
-    }
-
-    objectPath.has = function (obj, path) {
-      if (typeof path === 'number') {
-        path = [path];
-      } else if (typeof path === 'string') {
-        path = path.split('.');
-      }
-
-      if (!path || path.length === 0) {
-        return !!obj;
-      }
-
-      for (var i = 0; i < path.length; i++) {
-        var j = getKey(path[i]);
-
-        if((typeof j === 'number' && isArray(obj) && j < obj.length) ||
-          (options.includeInheritedProps ? (j in Object(obj)) : hasOwnProperty(obj, j))) {
-          obj = obj[j];
-        } else {
-          return false;
-        }
-      }
-
-      return true;
-    };
-
-    objectPath.ensureExists = function (obj, path, value){
-      return set(obj, path, value, true);
-    };
-
-    objectPath.set = function (obj, path, value, doNotReplace){
-      return set(obj, path, value, doNotReplace);
-    };
-
-    objectPath.insert = function (obj, path, value, at){
-      var arr = objectPath.get(obj, path);
-      at = ~~at;
-      if (!isArray(arr)) {
-        arr = [];
-        objectPath.set(obj, path, arr);
-      }
-      arr.splice(at, 0, value);
-    };
-
-    objectPath.empty = function(obj, path) {
-      if (isEmpty(path)) {
-        return void 0;
-      }
-      if (obj == null) {
-        return void 0;
-      }
-
-      var value, i;
-      if (!(value = objectPath.get(obj, path))) {
-        return void 0;
-      }
-
-      if (typeof value === 'string') {
-        return objectPath.set(obj, path, '');
-      } else if (isBoolean(value)) {
-        return objectPath.set(obj, path, false);
-      } else if (typeof value === 'number') {
-        return objectPath.set(obj, path, 0);
-      } else if (isArray(value)) {
-        value.length = 0;
-      } else if (isObject(value)) {
-        for (i in value) {
-          if (hasShallowProperty(value, i)) {
-            delete value[i];
-          }
-        }
-      } else {
-        return objectPath.set(obj, path, null);
-      }
-    };
-
-    objectPath.push = function (obj, path /*, values */){
-      var arr = objectPath.get(obj, path);
-      if (!isArray(arr)) {
-        arr = [];
-        objectPath.set(obj, path, arr);
-      }
-
-      arr.push.apply(arr, Array.prototype.slice.call(arguments, 2));
-    };
-
-    objectPath.coalesce = function (obj, paths, defaultValue) {
-      var value;
-
-      for (var i = 0, len = paths.length; i < len; i++) {
-        if ((value = objectPath.get(obj, paths[i])) !== void 0) {
-          return value;
-        }
-      }
-
-      return defaultValue;
-    };
-
-    objectPath.get = function (obj, path, defaultValue){
-      if (typeof path === 'number') {
-        path = [path];
-      }
-      if (!path || path.length === 0) {
-        return obj;
-      }
-      if (obj == null) {
-        return defaultValue;
-      }
-      if (typeof path === 'string') {
-        return objectPath.get(obj, path.split('.'), defaultValue);
-      }
-
-      var currentPath = getKey(path[0]);
-      var nextObj = getShallowProperty(obj, currentPath)
-      if (nextObj === void 0) {
-        return defaultValue;
-      }
-
-      if (path.length === 1) {
-        return nextObj;
-      }
-
-      return objectPath.get(obj[currentPath], path.slice(1), defaultValue);
-    };
-
-    objectPath.del = function del(obj, path) {
-      if (typeof path === 'number') {
-        path = [path];
-      }
-
-      if (obj == null) {
-        return obj;
-      }
-
-      if (isEmpty(path)) {
-        return obj;
-      }
-      if(typeof path === 'string') {
-        return objectPath.del(obj, path.split('.'));
-      }
-
-      var currentPath = getKey(path[0]);
-      if (!hasShallowProperty(obj, currentPath)) {
-        return obj;
-      }
-
-      if(path.length === 1) {
-        if (isArray(obj)) {
-          obj.splice(currentPath, 1);
-        } else {
-          delete obj[currentPath];
-        }
-      } else {
-        return objectPath.del(obj[currentPath], path.slice(1));
-      }
-
-      return obj;
-    }
-
-    return objectPath;
-  }
-
-  var mod = factory();
-  mod.create = factory;
-  mod.withInheritedProps = factory({includeInheritedProps: true})
-  return mod;
-});
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
-  if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(5), __webpack_require__(0), __webpack_require__(3), __webpack_require__(6)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else if (typeof exports !== "undefined") {
-    factory(module, exports, require('uuid'), require('lodash.merge'), require('object-path'), require('../utils/inheritance'));
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory(mod, mod.exports, global.uuid, global.lodash, global.objectPath, global.inheritance);
-    global.entity = mod.exports;
-  }
-})(this, function (module, exports, _uuid, _lodash, _objectPath, _inheritance) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  var _uuid2 = _interopRequireDefault(_uuid);
-
-  var _lodash2 = _interopRequireDefault(_lodash);
-
-  var _objectPath2 = _interopRequireDefault(_objectPath);
-
-  function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {
-      default: obj
-    };
-  }
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var _createClass = function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  }();
-
-  /**
-   * The Entity's base properties
-   *
-   * @type {Object}
-   */
-  var EntityProperties = {
-    /**
-     * NAMESPACE
-     * This is used for custom events and error reporting
-     *
-     * @type {String}
-     */
-    _NS: 'LVL99:Entity',
-
-    /**
-     * namespace
-     * This is used for CSS classes (only if the entity has an HTMLElement)
-     *
-     * @type {String}
-     */
-    _ns: 'lvl99-entity',
-
-    /**
-     * The properties shared between all instances of this Entity
-     *
-     * @type {Object}
-     */
-    _properties: {},
-
-    /**
-     * The default attributes to load a created Entity instance with.
-     *
-     * @type {Object}
-     */
-    _attributes: {}
-  };
-
-  var Entity = function () {
-    /**
-     * Entity constructor
-     *
-     * @constructor
-     * @param {Object} attributes
-     */
-    function Entity(attributes) {
-      _classCallCheck(this, Entity);
-
-      // @debug
-      // console.log('LVL99:Entity:constructor', {
-      //   arguments
-      // })
-
-      this.extend({
-        _attributes: attributes
-      });
-
-      // Expose private values
-      (0, _inheritance.exposePrivateProperties)(this);
-
-      // Create a unique ID for this Entity
-      Object.defineProperty(this, 'uuid', {
-        value: this.NS + ':' + _uuid2.default.v4(),
-        writable: false,
-        enumerable: true,
-        configurable: false
-      });
-    }
-
-    /**
-     * Extend the Entity with any given {Object} arguments
-     *
-     * @param {Object} ...arguments
-     * @returns {Self}
-     */
-
-
-    _createClass(Entity, [{
-      key: 'extend',
-      value: function extend() {
-        // @debug
-        // console.log('LVL99:Entity:extend', {
-        //   arguments
-        // })
-
-        // Merge the properties with the instantiated attributes and concatenated public methods
-        _lodash2.default.apply(undefined, [this, EntityProperties].concat(Array.prototype.slice.call(arguments)));
-
-        return this;
-      }
-    }, {
-      key: 'getProp',
-      value: function getProp(propName) {
-        if (!propName || typeof propName !== 'string') {
-          throw new Error('[' + this.NS + '] get: \'propName\' value is invalid');
-        }
-
-        return _objectPath2.default.get(this.properties, propName);
-      }
-    }, {
-      key: 'setProp',
-      value: function setProp(propName, propValue) {
-        if (!propName || typeof propName !== 'string') {
-          throw new Error('[' + this.NS + '] set: \'propName\' value is invalid');
-        }
-
-        return _objectPath2.default.set(this.properties, propName, propValue);
-      }
-    }, {
-      key: 'getAttr',
-      value: function getAttr(attrName) {
-        if (!attrName || typeof attrName !== 'string') {
-          throw new Error('[' + this.NS + '] getAttr: \'attrName\' value is invalid');
-        }
-
-        return _objectPath2.default.get(this.attributes, attrName);
-      }
-    }, {
-      key: 'setAttr',
-      value: function setAttr(attrName, attrValue) {
-        if (!attrName || typeof attrName !== 'string') {
-          throw new Error('[' + this.NS + '] setAttr: \'attrName\' value is invalid');
-        }
-
-        return _objectPath2.default.set(this.attributes, attrName, attrValue);
-      }
-    }, {
-      key: 'init',
-      value: function init() {}
-    }, {
-      key: 'destroy',
-      value: function destroy() {}
-    }]);
-
-    return Entity;
-  }();
-
-  exports.default = Entity;
-  module.exports = exports['default'];
-});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(14)(module)))
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var v1 = __webpack_require__(14);
-var v4 = __webpack_require__(15);
-
-var uuid = v4;
-uuid.v1 = v1;
-uuid.v4 = v4;
-
-module.exports = uuid;
-
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -3466,19 +3451,23 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    * by adding the property's name to the whitelist {Array}
    *
    * @param {Object|Function} target
-   * @param {Object|Function} defaultPropValues
+   * @param {Boolean|Object|Function} defaultPropValues
    * @param {Array} whitelist
    */
-  function exposePrivateProperties(target, defaultPropValues, whitelist) {
+  function exposePrivateProperties(target) {
+    var defaultPropValues = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    var whitelist = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
     var properties = void 0;
 
+    // Target is always required
     if (!target) {
       throw new Error('No target was given');
     }
 
     // Filter non-private or non-whitelisted properties
     properties = Object.keys(target).filter(function (item) {
-      if (whitelist && whitelist.includes(item) || !whitelist) {
+      if (whitelist && whitelist.includes(item) || !whitelist || !whitelist.length) {
         return RE_PRIVATE.test(item);
       }
       return false;
@@ -3492,8 +3481,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       return;
     }
 
-    // Default prop values to target
-    if (typeof defaultPropValues === 'undefined') {
+    // If default prop values not set, just use target properties
+    if (!defaultPropValues || defaultPropValues === undefined) {
       defaultPropValues = target;
     }
 
@@ -3564,7 +3553,48 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
 /* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var v1 = __webpack_require__(15);
+var v4 = __webpack_require__(16);
+
+var uuid = v4;
+uuid.v1 = v1;
+uuid.v4 = v4;
+
+module.exports = uuid;
+
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {// Unique ID creation requires a high quality random # generator.  In the
@@ -3601,34 +3631,7 @@ if (!rng) {
 
 module.exports = rng;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 /* 9 */
@@ -3665,7 +3668,7 @@ module.exports = bytesToUuid;
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(1), __webpack_require__(12), __webpack_require__(13), __webpack_require__(19)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(0), __webpack_require__(12), __webpack_require__(13), __webpack_require__(19)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -3730,7 +3733,7 @@ module.exports = window.jQuery;
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(2), __webpack_require__(6)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(1), __webpack_require__(5)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -3785,7 +3788,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(4), __webpack_require__(17), __webpack_require__(18)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(3), __webpack_require__(17), __webpack_require__(18)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -3835,9 +3838,37 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 /* 14 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var rng = __webpack_require__(7);
+var rng = __webpack_require__(8);
 var bytesToUuid = __webpack_require__(9);
 
 // **`v1()` - Generate time-based UUID**
@@ -3940,10 +3971,10 @@ module.exports = v1;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var rng = __webpack_require__(7);
+var rng = __webpack_require__(8);
 var bytesToUuid = __webpack_require__(9);
 
 function v4(options, buf, offset) {
@@ -3975,53 +4006,25 @@ module.exports = v4;
 
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(1), __webpack_require__(5), __webpack_require__(4), __webpack_require__(2)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(7), __webpack_require__(3), __webpack_require__(0), __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   } else if (typeof exports !== "undefined") {
-    factory(module, exports, require('../common'), require('uuid'), require('./entity'), require('../utils/parse'));
+    factory(module, exports, require('uuid'), require('./entity'), require('../common'), require('../utils/parse'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod, mod.exports, global.common, global.uuid, global.entity, global.parse);
+    factory(mod, mod.exports, global.uuid, global.entity, global.common, global.parse);
     global.app = mod.exports;
   }
-})(this, function (module, exports, _common, _uuid, _entity, _parse) {
+})(this, function (module, exports, _uuid, _entity, _common, _parse) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -4208,8 +4211,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     /**
      * Extend the App with any given {Object} arguments
-     *
-     * @param {Object} ...arguments
      */
 
 
@@ -4219,9 +4220,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var _get2;
 
         // @debug
-        // console.log(`LVL99:App:extend`, {
-        //   arguments
-        // })
+        // console.log(`LVL99:App:extend`, ...arguments)
 
         // Merge the properties with the instantiated attributes
         (_get2 = _get(App.prototype.__proto__ || Object.getPrototypeOf(App.prototype), 'extend', this)).call.apply(_get2, [this, AppProperties].concat(Array.prototype.slice.call(arguments)));
@@ -4424,20 +4423,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(3), __webpack_require__(0), __webpack_require__(5), __webpack_require__(4), __webpack_require__(1), __webpack_require__(2)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(2), __webpack_require__(4), __webpack_require__(3), __webpack_require__(0), __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   } else if (typeof exports !== "undefined") {
-    factory(module, exports, require('object-path'), require('lodash.merge'), require('uuid'), require('./entity'), require('../common'), require('../utils/parse'));
+    factory(module, exports, require('object-path'), require('lodash.merge'), require('./entity'), require('../common'), require('../utils/parse'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod, mod.exports, global.objectPath, global.lodash, global.uuid, global.entity, global.common, global.parse);
+    factory(mod, mod.exports, global.objectPath, global.lodash, global.entity, global.common, global.parse);
     global.component = mod.exports;
   }
-})(this, function (module, exports, _objectPath, _lodash, _uuid, _entity, _common, _parse) {
+})(this, function (module, exports, _objectPath, _lodash, _entity, _common, _parse) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -4447,8 +4446,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   var _objectPath2 = _interopRequireDefault(_objectPath);
 
   var _lodash2 = _interopRequireDefault(_lodash);
-
-  var _uuid2 = _interopRequireDefault(_uuid);
 
   var _entity2 = _interopRequireDefault(_entity);
 
@@ -4477,6 +4474,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     }
 
     return obj;
+  }
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -4665,9 +4674,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     }
 
     /**
-     * Extend the Component's properties
-     *
-     * @param {Object} ...arguments
+     * Extend the Component's properties with any {Object} arguments
      */
 
 
@@ -4693,7 +4700,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         allPublicMethods = Array.from(new Set(allPublicMethods));
 
         // Extend the component's properties with the instantiated attributes and concatenated public methods
-        (_get2 = _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'extend', this)).call.apply(_get2, [this, ComponentProperties].concat(Array.prototype.slice.call(arguments), [{
+        (_get2 = _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'extend', this)).call.apply(_get2, [this, ComponentProperties].concat(_toConsumableArray(args), [{
           _properties: {
             publicMethods: allPublicMethods
           }
@@ -5076,34 +5083,32 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(0)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   } else if (typeof exports !== "undefined") {
-    factory(module, exports, require('lodash.merge'));
+    factory(module, exports);
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod, mod.exports, global.lodash);
+    factory(mod, mod.exports);
     global.breakpoints = mod.exports;
   }
-})(this, function (module, exports, _lodash) {
+})(this, function (module, exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = Breakpoints;
-
-  var _lodash2 = _interopRequireDefault(_lodash);
-
-  function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {
-      default: obj
-    };
-  }
+  /**
+   * LVL99 Breakpoints
+   * Detect via JS what the breakpoint is by keyword
+   *
+   * @package lvl99
+   */
 
   function Breakpoints(sizes) {
     return {
@@ -5153,13 +5158,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         return input.test(this.getActive() + '');
       }
     };
-  } /**
-     * LVL99 Breakpoints
-     * Detect via JS what the breakpoint is by keyword
-     *
-     * @package lvl99
-     */
-
+  }
   module.exports = exports['default'];
 });
 
@@ -5233,7 +5232,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(0)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(4)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -5428,6 +5427,31 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         // @chainable
         return this;
       },
+      delayAdd: function delayAdd(delay, actionLabel, action) {
+        // @debug
+        // console.log('Queue.delayAdd', {
+        //   actionLabel,
+        //   action
+        // })
+
+        var _delay = delay || _timerDelay;
+
+        // Queue the action
+
+        for (var _len4 = arguments.length, args = Array(_len4 > 3 ? _len4 - 3 : 0), _key4 = 3; _key4 < _len4; _key4++) {
+          args[_key4 - 3] = arguments[_key4];
+        }
+
+        this.queue.apply(this, [actionLabel, action].concat(_toConsumableArray(args)));
+
+        // Play the timer to get the queue to run after a delay (only when playing)
+        if (_status) {
+          this.play(_delay);
+        }
+
+        // @chainable
+        return this;
+      },
       sync: function sync(actionLabel, action) {
         // @debug
         // console.log('Queue.sync', {
@@ -5435,12 +5459,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         //   action
         // })
 
+        // Ensure to clear the queue
         clearTimeout(_timer);
 
         // Queue action...
 
-        for (var _len4 = arguments.length, args = Array(_len4 > 2 ? _len4 - 2 : 0), _key4 = 2; _key4 < _len4; _key4++) {
-          args[_key4 - 2] = arguments[_key4];
+        for (var _len5 = arguments.length, args = Array(_len5 > 2 ? _len5 - 2 : 0), _key5 = 2; _key5 < _len5; _key5++) {
+          args[_key5 - 2] = arguments[_key5];
         }
 
         this.queue.apply(this, [actionLabel, action].concat(_toConsumableArray(args)));
@@ -5468,14 +5493,23 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         return this;
       },
       play: function play() {
+        var delay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _timerDelay;
+
         // @debug
         // console.log('Queue.play', {
         //   _status
         // })
 
+        // Ensure delay is really set property (if someone sets to null or undefined it should default back to regular delay time)
+        var _delay = delay || _timerDelay;
+
         // Currently already running
         if (_status === 2) {
-          _checkQueueFinished(this, 'play');
+          for (var _len6 = arguments.length, args = Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
+            args[_key6 - 1] = arguments[_key6];
+          }
+
+          _checkQueueFinished.apply(undefined, [this, 'play'].concat(_toConsumableArray(args)));
         }
 
         // Only play if already paused
@@ -5485,9 +5519,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         _status = 1;
 
         // Reset timer to run the queue
-        _timer = setTimeout(function runQueueProcessAfterDelay(queueInstance) {
-          queueInstance.run();
-        }(this), _timerDelay);
+        _timer = setTimeout(function runQueueProcessAfterDelay(q) {
+          q.run();
+        }(this), _delay);
 
         // @chainable
         return this;
@@ -5597,8 +5631,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         // @chainable
         return this;
       },
-      getQueueLength: function getQueueLength() {
+      length: function length() {
         return Object.keys(_tasks).length;
+      },
+      getQueueLength: function getQueueLength() {
+        return this.length;
       },
       getTasks: function getTasks() {
         return _tasks;

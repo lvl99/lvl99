@@ -5,7 +5,7 @@
 // @TODO figure out why babel breaks
 
 // const _loggerPath = 'lvl99/tools/trackevent'
-// const TrackEvent = require('../../es5/tools/trackevent')
+// import TrackEvent from '../../es6/tools/trackevent'
 //
 // // Use fake timers because waiting is boring
 // jest.useFakeTimers()

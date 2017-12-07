@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['module', 'exports', '../common', 'uuid', './entity', '../utils/parse'], factory);
+    define(['module', 'exports', 'uuid', './entity', '../common', '../utils/parse'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(module, exports, require('../common'), require('uuid'), require('./entity'), require('../utils/parse'));
+    factory(module, exports, require('uuid'), require('./entity'), require('../common'), require('../utils/parse'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod, mod.exports, global.common, global.uuid, global.entity, global.parse);
+    factory(mod, mod.exports, global.uuid, global.entity, global.common, global.parse);
     global.app = mod.exports;
   }
-})(this, function (module, exports, _common, _uuid, _entity, _parse) {
+})(this, function (module, exports, _uuid, _entity, _common, _parse) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -197,8 +197,6 @@
 
     /**
      * Extend the App with any given {Object} arguments
-     *
-     * @param {Object} ...arguments
      */
 
 
@@ -208,9 +206,7 @@
         var _get2;
 
         // @debug
-        // console.log(`LVL99:App:extend`, {
-        //   arguments
-        // })
+        // console.log(`LVL99:App:extend`, ...arguments)
 
         // Merge the properties with the instantiated attributes
         (_get2 = _get(App.prototype.__proto__ || Object.getPrototypeOf(App.prototype), 'extend', this)).call.apply(_get2, [this, AppProperties].concat(Array.prototype.slice.call(arguments)));

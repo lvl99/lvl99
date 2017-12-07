@@ -7,12 +7,10 @@
  * @package lvl99
  */
 
-import uuid from 'uuid'
 import merge from 'lodash.merge'
+import uuid from 'uuid'
 import objectPath from 'object-path'
-import {
-  exposePrivateProperties
-} from '../utils/inheritance'
+import { exposePrivateProperties } from '../utils/inheritance'
 
 /**
  * The Entity's base properties
@@ -61,7 +59,7 @@ export default class Entity {
   constructor (attributes) {
     // @debug
     // console.log('LVL99:Entity:constructor', {
-    //   arguments
+    //   attributes
     // })
 
     this.extend({
@@ -83,13 +81,12 @@ export default class Entity {
   /**
    * Extend the Entity with any given {Object} arguments
    *
-   * @param {Object} ...arguments
    * @returns {Self}
    */
   extend () {
     // @debug
     // console.log('LVL99:Entity:extend', {
-    //   arguments
+    //   args
     // })
 
     // Merge the properties with the instantiated attributes and concatenated public methods

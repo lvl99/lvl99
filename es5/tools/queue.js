@@ -192,6 +192,31 @@
         // @chainable
         return this;
       },
+      delayAdd: function delayAdd(delay, actionLabel, action) {
+        // @debug
+        // console.log('Queue.delayAdd', {
+        //   actionLabel,
+        //   action
+        // })
+
+        var _delay = delay || _timerDelay;
+
+        // Queue the action
+
+        for (var _len4 = arguments.length, args = Array(_len4 > 3 ? _len4 - 3 : 0), _key4 = 3; _key4 < _len4; _key4++) {
+          args[_key4 - 3] = arguments[_key4];
+        }
+
+        this.queue.apply(this, [actionLabel, action].concat(_toConsumableArray(args)));
+
+        // Play the timer to get the queue to run after a delay (only when playing)
+        if (_status) {
+          this.play(_delay);
+        }
+
+        // @chainable
+        return this;
+      },
       sync: function sync(actionLabel, action) {
         // @debug
         // console.log('Queue.sync', {
@@ -199,12 +224,13 @@
         //   action
         // })
 
+        // Ensure to clear the queue
         clearTimeout(_timer);
 
         // Queue action...
 
-        for (var _len4 = arguments.length, args = Array(_len4 > 2 ? _len4 - 2 : 0), _key4 = 2; _key4 < _len4; _key4++) {
-          args[_key4 - 2] = arguments[_key4];
+        for (var _len5 = arguments.length, args = Array(_len5 > 2 ? _len5 - 2 : 0), _key5 = 2; _key5 < _len5; _key5++) {
+          args[_key5 - 2] = arguments[_key5];
         }
 
         this.queue.apply(this, [actionLabel, action].concat(_toConsumableArray(args)));
@@ -232,14 +258,23 @@
         return this;
       },
       play: function play() {
+        var delay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _timerDelay;
+
         // @debug
         // console.log('Queue.play', {
         //   _status
         // })
 
+        // Ensure delay is really set property (if someone sets to null or undefined it should default back to regular delay time)
+        var _delay = delay || _timerDelay;
+
         // Currently already running
         if (_status === 2) {
-          _checkQueueFinished(this, 'play');
+          for (var _len6 = arguments.length, args = Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
+            args[_key6 - 1] = arguments[_key6];
+          }
+
+          _checkQueueFinished.apply(undefined, [this, 'play'].concat(_toConsumableArray(args)));
         }
 
         // Only play if already paused
@@ -249,9 +284,9 @@
         _status = 1;
 
         // Reset timer to run the queue
-        _timer = setTimeout(function runQueueProcessAfterDelay(queueInstance) {
-          queueInstance.run();
-        }(this), _timerDelay);
+        _timer = setTimeout(function runQueueProcessAfterDelay(q) {
+          q.run();
+        }(this), _delay);
 
         // @chainable
         return this;
@@ -361,8 +396,11 @@
         // @chainable
         return this;
       },
-      getQueueLength: function getQueueLength() {
+      length: function length() {
         return Object.keys(_tasks).length;
+      },
+      getQueueLength: function getQueueLength() {
+        return this.length;
       },
       getTasks: function getTasks() {
         return _tasks;

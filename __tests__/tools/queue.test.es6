@@ -2,10 +2,8 @@
  * LVL99 Queue
  */
 
-// @TODO can't seem to get the mock timers to work properly (see
-
 let _loggerPath = 'lvl99/tools/queue'
-let Queue = require('../../es5/tools/queue')
+import Queue from '../../es6/tools/queue'
 
 // Use fake timers because waiting is boring
 jest.useFakeTimers()
@@ -32,7 +30,7 @@ test(`${_loggerPath} instantiated with options correctly`, () => {
 
 test(`${_loggerPath} queue unnamed action`, () => {
   testQueue.queue(undefined, testQueuedFunction, 1)
-  expect(testQueue.getQueueLength()).toBe(1)
+  expect(testQueue.length()).toBe(1)
 })
 
 test(`${_loggerPath} queue named action`, () => {
@@ -47,7 +45,7 @@ test(`${_loggerPath} queue named action`, () => {
 
 test(`${_loggerPath} remove named item in queue`, () => {
   testQueue.remove('test')
-  expect(testQueue.getQueueLength()).toBe(1)
+  expect(testQueue.length()).toBe(1)
 })
 
 test(`${_loggerPath} replace named item in queue`, () => {
@@ -72,10 +70,10 @@ test(`${_loggerPath} run queue works`, () => {
   // The unnamed and the named queued functions should be added together
   testQueue.run()
   expect(testCounter).toBe(3)
-  expect(testQueue.getQueueLength()).toBe(0)
+  expect(testQueue.length()).toBe(0)
 })
 
-test(`${_loggerPath} add to queue and play after delay of 1000ms`, () => {
+test(`${_loggerPath} add to queue and play after default delay of 1000ms`, () => {
   const callback = jest.fn()
   testQueue.add('test2', callback)
   testQueue.add('test3', testQueuedFunction, 2)
@@ -89,10 +87,20 @@ test(`${_loggerPath} add to queue and play after delay of 1000ms`, () => {
   expect(testCounter).toBe(5)
 })
 
+test(`${_loggerPath} add to queue and play after 2 delays of 2000ms each`, () => {
+  const callback = jest.fn()
+  testQueue.delayAdd(2000, 'test4', callback)
+  testQueue.delayAdd(2000, 'test5', testQueuedFunction, 10)
+
+  expect(callback).toBeCalled()
+  expect(callback.mock.calls.length).toBe(1)
+  expect(testCounter).toBe(15)
+})
+
 test(`${_loggerPath} sync queue works`, () => {
-  testQueue.queue('test4', testQueuedFunction, 10)
-  testQueue.sync('test5', testQueuedFunction, 15)
-  expect(testCounter).toBe(30)
+  testQueue.queue('test6', testQueuedFunction, 10)
+  testQueue.sync('test7', testQueuedFunction, 15)
+  expect(testCounter).toBe(40)
 })
 
 test(`${_loggerPath} pause queue works`, () => {
@@ -114,6 +122,6 @@ test(`${_loggerPath} add to paused queue should not run`, () => {
 test(`${_loggerPath} play queue works`, () => {
   testQueue.play()
   expect(testQueue.checkStatus()).toBe(1)
-  expect(testCounter).toBe(40)
-  expect(testQueue.getQueueLength()).toBe(0)
+  expect(testCounter).toBe(50)
+  expect(testQueue.length()).toBe(0)
 })
