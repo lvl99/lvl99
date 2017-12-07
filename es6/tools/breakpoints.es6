@@ -5,8 +5,6 @@
  * @package lvl99
  */
 
-import merge from 'lodash.merge'
-
 export default function Breakpoints (sizes) {
   return {
     /**

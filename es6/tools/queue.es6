@@ -171,6 +171,38 @@ export default function Queue (options) {
     },
 
     /**
+     * Same as `add` except you can affect the delay time that the queue will play
+     *
+     * @param {Number} delay The milliseconds to delay before running
+     * @param {String} actionLabel A unique label for the action in the queue.
+     *                             Can be set to {undefined} (which means the action can't be removed)
+     * @param {Function} action The function to handle the action
+     * @param {Mixed} ...args The arguments to pass to the action handler
+     * @return {Self}
+     * @chainable
+     */
+    delayAdd (delay, actionLabel, action, ...args) {
+      // @debug
+      // console.log('Queue.delayAdd', {
+      //   actionLabel,
+      //   action
+      // })
+
+      let _delay = delay || _timerDelay
+
+      // Queue the action
+      this.queue(actionLabel, action, ...args)
+
+      // Play the timer to get the queue to run after a delay (only when playing)
+      if (_status) {
+        this.play(_delay)
+      }
+
+      // @chainable
+      return this
+    },
+
+    /**
      * Add action and then run the queue immediately
      *
      * @param {String} actionLabel
@@ -186,6 +218,7 @@ export default function Queue (options) {
       //   action
       // })
 
+      // Ensure to clear the queue
       clearTimeout(_timer)
 
       // Queue action...
@@ -232,18 +265,22 @@ export default function Queue (options) {
     /**
      * Play the queue timer (will run queue after timer delay)
      *
+     * @param {Number} delay The time in milliseconds before playing
      * @return {Self}
      * @chainable
      */
-    play () {
+    play (delay = _timerDelay, ...args) {
       // @debug
       // console.log('Queue.play', {
       //   _status
       // })
 
+      // Ensure delay is really set property (if someone sets to null or undefined it should default back to regular delay time)
+      let _delay = delay || _timerDelay
+
       // Currently already running
       if (_status === 2) {
-        _checkQueueFinished(this, 'play')
+        _checkQueueFinished(this, 'play', ...args)
       }
 
       // Only play if already paused
@@ -253,9 +290,9 @@ export default function Queue (options) {
       _status = 1
 
       // Reset timer to run the queue
-      _timer = setTimeout(function runQueueProcessAfterDelay (queueInstance) {
-        queueInstance.run()
-      }(this), _timerDelay)
+      _timer = setTimeout(function runQueueProcessAfterDelay (q) {
+        q.run()
+      }(this), _delay)
 
       // @chainable
       return this
@@ -407,8 +444,17 @@ export default function Queue (options) {
      *
      * @return {Number}
      */
-    getQueueLength () {
+    length () {
       return Object.keys(_tasks).length
+    },
+
+    /**
+     * Backward compatible alias
+     *
+     * @returns {Queue.length}
+     */
+    getQueueLength() {
+      return this.length
     },
 
     /**

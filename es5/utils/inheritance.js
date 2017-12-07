@@ -102,19 +102,23 @@
    * by adding the property's name to the whitelist {Array}
    *
    * @param {Object|Function} target
-   * @param {Object|Function} defaultPropValues
+   * @param {Boolean|Object|Function} defaultPropValues
    * @param {Array} whitelist
    */
-  function exposePrivateProperties(target, defaultPropValues, whitelist) {
+  function exposePrivateProperties(target) {
+    var defaultPropValues = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    var whitelist = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
     var properties = void 0;
 
+    // Target is always required
     if (!target) {
       throw new Error('No target was given');
     }
 
     // Filter non-private or non-whitelisted properties
     properties = Object.keys(target).filter(function (item) {
-      if (whitelist && whitelist.includes(item) || !whitelist) {
+      if (whitelist && whitelist.includes(item) || !whitelist || !whitelist.length) {
         return RE_PRIVATE.test(item);
       }
       return false;
@@ -128,8 +132,8 @@
       return;
     }
 
-    // Default prop values to target
-    if (typeof defaultPropValues === 'undefined') {
+    // If default prop values not set, just use target properties
+    if (!defaultPropValues || defaultPropValues === undefined) {
       defaultPropValues = target;
     }
 

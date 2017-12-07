@@ -3,8 +3,8 @@
  */
 
 let _loggerPath = 'lvl99/core/entity'
-const Debug = require('../../es5/tools/debug')
-const Entity = require('../../es5/core/entity')
+import Debug from '../../es6/tools/debug'
+import Entity from '../../es6/core/entity'
 
 const TestEntityProperties = {
   _NS: "Test:Entity",

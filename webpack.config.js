@@ -16,6 +16,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.es6', '.js', '.json'],
+    alias: {
+      '@lvl99': path.resolve(__dirname, 'es6')
+    },
     modules: [
       path.resolve(__dirname, 'es6'),
       'node_modules'

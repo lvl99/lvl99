@@ -1,11 +1,12 @@
 {
   "name": "lvl99",
-  "version": "1.4.1",
+  "version": "1.4.3",
   "description": "Nothing to see here, just another frontend framework",
   "private": false,
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "npm run test && gulp build"
   },
   "keywords": [
     "jaff",
@@ -25,14 +26,13 @@
   },
   "author": "Matt Scheurich <matt@lvl99.com>",
   "license": "MIT",
+  "peerDependencies": {
+    "jquery": "^3.2.1"
+  },
   "dependencies": {
-    "jquery": "^3.2.1",
     "lodash.merge": "^4.6.0",
     "object-path": "^0.11.4",
     "uuid": "^3.1.0"
-  },
-  "peerDependencies": {
-    "jquery": "^3.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

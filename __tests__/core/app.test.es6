@@ -3,11 +3,10 @@
  */
 
 let _loggerPath = 'lvl99/core/app'
-const Entity = require('../../es5/core/entity')
-const App = require('../../es5/core/app')
-const Component = require('../../es5/core/component')
+import App from '../../es6/core/app'
+import Component from '../../es6/core/component'
 
-let testApp = new App({
+const testApp = new App({
   config: {
     debug: true,
     homepage: undefined
@@ -38,6 +37,7 @@ test(`${_loggerPath} can be extended`, () => {
 
 test(`${_loggerPath} getProp works`, () => {
   expect(testApp.getProp('testPropA')).toBe(true)
+  expect(testApp.getProp('testPropB')).toBe(undefined)
 })
 
 test(`${_loggerPath} setProp works`, () => {
@@ -51,8 +51,8 @@ test(`${_loggerPath} getAttr works`, () => {
 })
 
 test(`${_loggerPath} setAttr works`, () => {
-  testApp.setAttr('config.homepage', 'http://www.example.com')
-  expect(testApp.getAttr('config.homepage')).toBe('http://www.example.com')
+  testApp.setAttr('config.homepage', 'https://www.example.com')
+  expect(testApp.getAttr('config.homepage')).toBe('https://www.example.com')
 })
 
 test(`${_loggerPath} register a component class with default constructor name`, () => {

@@ -4,10 +4,9 @@
  * @package lvl99
  */
 
-// const Promise = require('bluebird')
-import { $ } from '../common'
 import uuid from 'uuid'
 import Entity from './entity'
+import { $ } from '../common'
 import {
   convertStringToJson,
   extractClassDetails
@@ -109,14 +108,10 @@ export default class App extends Entity {
 
   /**
    * Extend the App with any given {Object} arguments
-   *
-   * @param {Object} ...arguments
    */
   extend () {
     // @debug
-    // console.log(`LVL99:App:extend`, {
-    //   arguments
-    // })
+    // console.log(`LVL99:App:extend`, ...arguments)
 
     // Merge the properties with the instantiated attributes
     super.extend(AppProperties, ...arguments)
