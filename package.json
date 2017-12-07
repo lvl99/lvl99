@@ -90,10 +90,6 @@
     "testMatch": [
       "**/__tests__/**/*.test.{js,es6}"
     ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/bower_components/"
-    ],
     "transform": {
       "^.+\\.es6?$": "babel-jest"
     },
