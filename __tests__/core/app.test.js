@@ -46,7 +46,8 @@ test(`${_loggerPath} setProp works`, () => {
 })
 
 test(`${_loggerPath} getAttr works`, () => {
-  expect(testApp.getAttr('config')).toBeTruthy()
+  expect(testApp.getAttr('config')).toHaveProperty('debug', true)
+  expect(testApp.getAttr('config')).toHaveProperty('homepage', undefined)
 })
 
 test(`${_loggerPath} setAttr works`, () => {

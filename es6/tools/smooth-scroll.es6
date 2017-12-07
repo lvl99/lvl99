@@ -43,6 +43,34 @@ export default function SmoothScroll ($, options) {
   }, options)
 
   /**
+   * Get any scrollable parents and ensure they scroll too
+   */
+  function getScrollableParents (target) {
+    let $target = $(target)
+    let scrollable = []
+
+    $target.parents().each(function getEachScrollableParent (elem) {
+      let $elem = $(elem)
+      let isVisibleAreaScrolled = elem.scrollHeight !== elem.scrollTop
+      let isOverflowScrollable = $elem.css('overflow') === 'auto' || $elem.css('overflow') === 'scroll' || $elem.css('overflow-y') === 'auto' || $elem.css('overflow-y') === 'scroll'
+
+      console.log('[SmoothScroll] getScrollableParents', {
+        elem,
+        scrollHeight: elem.scrollHeight,
+        scrollTop: elem.scrollTop,
+        isVisibleAreaScrolled,
+        isOverflowScrollable
+      })
+
+      if (isVisibleAreaScrolled && isOverflowScrollable) {
+        scrollable.push(elem)
+      }
+    })
+
+    return scrollable
+  }
+
+  /**
    * Smoothly scroll to a target
    *
    * @param {String|HTMLElement|jQueryObject} target
@@ -57,7 +85,13 @@ export default function SmoothScroll ($, options) {
     // Does a scroll target exist?
     if ($target.length === 1) {
       // Load in per-use settings
-      let scrollToSettings = $.extend({}, settings, scrollToOptions)
+      let scrollToSettings = $.extend({
+        // The parent selector. By default this is `html,body`
+        parent: 'html,body'
+      }, settings, scrollToOptions)
+
+      // The parent is the element(s) which will be scrolled to show the target in place
+      let $parent = $(scrollToSettings.parent)
 
       // Get the target's top offset
       let targetOffsetTop = $target.offset().top
@@ -84,7 +118,7 @@ export default function SmoothScroll ($, options) {
       $target.trigger('SmoothScroll.scrollTo:start', [ scrollToSettings ])
 
       // Do the scroll thing
-      $('html, body').animate({
+      $parent.animate({
         scrollTop
       }, scrollToSettings.scrollSpeed, () => {
         // Callback after animation
