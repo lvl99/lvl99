@@ -29,6 +29,7 @@
     Object.defineProperty(exports, "__esModule", {
       value: true
     });
+    exports.STORAGE_TYPES = exports.LOCAL_STORAGE = exports.SESSION_STORAGE = undefined;
     exports.testStorageType = testStorageType;
     exports.getSupportedStorageTypes = getSupportedStorageTypes;
     exports.eachStorageType = eachStorageType;
@@ -66,9 +67,9 @@
     }();
 
     // Types of storage
-    var SESSION_STORAGE = 'sessionStorage';
-    var LOCAL_STORAGE = 'localStorage';
-    var STORAGE_TYPES = [SESSION_STORAGE, LOCAL_STORAGE];
+    var SESSION_STORAGE = exports.SESSION_STORAGE = 'sessionStorage';
+    var LOCAL_STORAGE = exports.LOCAL_STORAGE = 'localStorage';
+    var STORAGE_TYPES = exports.STORAGE_TYPES = [SESSION_STORAGE, LOCAL_STORAGE];
 
     /**
      * Test to see if a storage type works within the environment
@@ -219,7 +220,7 @@
             throw new Error('Storage type ' + storageType + ' not supported');
           }
 
-          window[storageType].setItem(name, value);
+          window[storageType].setItem(name, JSON.stringify(value));
         }
       }, {
         key: 'setItemLocal',

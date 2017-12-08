@@ -16,11 +16,13 @@ const __loggerPath = 'lvl99/utils/parse'
  * @returns {Mixed}
  */
 export function coerceToPrimitiveType (input) {
-  // Non-string? Just return it straight away
-  if (typeof input !== 'string') return input
+  // Non-string or empty string? Just return it straight away
+  if (typeof input !== 'string' || input === '') {
+    return input
+  }
 
   // Trim any whitespace
-  input = (input + '').trim()
+  let output = (input + '').trim()
 
   // Number
   if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
@@ -109,7 +111,7 @@ export function convertStringToJson (input) {
     try {
       output = JSON.parse(input)
     } catch (e) {
-      console.error(`${_loggerPath}.convertStringToJson: Error parsing string JSON data`, input)
+      console.error(`${__loggerPath}.convertStringToJson: Error parsing string JSON data`, input)
     }
   }
 
@@ -250,15 +252,15 @@ export function extractTriggerDetails(input, context) {
 
   // No object found!
   if (typeof trigger !== 'object') {
-    throw new Error(`${_loggerPath}.extractTriggerDetails: input was not valid JSON or CSS-style definition`)
+    throw new Error(`${__loggerPath}.extractTriggerDetails: input was not valid JSON or CSS-style definition`)
   }
 
   // Ensure it has `on` and `do` properties
   // if (!objectPath.has(trigger, 'on')) {
-  //   throw new Error(`${_loggerPath}.extractTriggerDetails: trigger is missing required 'on' property`)
+  //   throw new Error(`${__loggerPath}.extractTriggerDetails: trigger is missing required 'on' property`)
   // }
   if (!objectPath.has(trigger, 'do')) {
-    throw new Error(`${_loggerPath}.extractTriggerDetails: trigger is missing required 'do' property`)
+    throw new Error(`${__loggerPath}.extractTriggerDetails: trigger is missing required 'do' property`)
   }
 
   // If target is set, use real values for window and document

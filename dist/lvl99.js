@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2275,7 +2275,7 @@ function stubFalse() {
 
 module.exports = merge;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11), __webpack_require__(22)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), __webpack_require__(23)(module)))
 
 /***/ }),
 /* 1 */
@@ -2352,11 +2352,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
      * @returns {Mixed}
      */
     function coerceToPrimitiveType(input) {
-      // Non-string? Just return it straight away
-      if (typeof input !== 'string') return input;
+      // Non-string or empty string? Just return it straight away
+      if (typeof input !== 'string' || input === '') {
+        return input;
+      }
 
       // Trim any whitespace
-      input = (input + '').trim();
+      var output = (input + '').trim();
 
       // Number
       if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
@@ -2445,7 +2447,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         try {
           output = JSON.parse(input);
         } catch (e) {
-          console.error(_loggerPath + '.convertStringToJson: Error parsing string JSON data', input);
+          console.error(__loggerPath + '.convertStringToJson: Error parsing string JSON data', input);
         }
       }
 
@@ -2586,15 +2588,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       // No object found!
       if ((typeof trigger === 'undefined' ? 'undefined' : _typeof(trigger)) !== 'object') {
-        throw new Error(_loggerPath + '.extractTriggerDetails: input was not valid JSON or CSS-style definition');
+        throw new Error(__loggerPath + '.extractTriggerDetails: input was not valid JSON or CSS-style definition');
       }
 
       // Ensure it has `on` and `do` properties
       // if (!objectPath.has(trigger, 'on')) {
-      //   throw new Error(`${_loggerPath}.extractTriggerDetails: trigger is missing required 'on' property`)
+      //   throw new Error(`${__loggerPath}.extractTriggerDetails: trigger is missing required 'on' property`)
       // }
       if (!_objectPath2.default.has(trigger, 'do')) {
-        throw new Error(_loggerPath + '.extractTriggerDetails: trigger is missing required \'do\' property');
+        throw new Error(__loggerPath + '.extractTriggerDetails: trigger is missing required \'do\' property');
       }
 
       // If target is set, use real values for window and document
@@ -3082,7 +3084,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(16)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(17)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -3098,7 +3100,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 })(this, function (exports) {
   (function (global, factory) {
     if (true) {
-      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(16)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(17)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -3624,8 +3626,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var v1 = __webpack_require__(23);
-var v4 = __webpack_require__(24);
+var v1 = __webpack_require__(24);
+var v4 = __webpack_require__(25);
 
 var uuid = v4;
 uuid.v1 = v1;
@@ -3640,23 +3642,23 @@ module.exports = uuid;
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(13), __webpack_require__(12), __webpack_require__(10), __webpack_require__(9), __webpack_require__(8)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(14), __webpack_require__(13), __webpack_require__(12), __webpack_require__(11), __webpack_require__(10), __webpack_require__(8)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   } else if (typeof exports !== "undefined") {
-    factory(module, exports, require('./breakpoints'), require('./debug'), require('./queue'), require('./trackevent'), require('./smooth-scroll'));
+    factory(module, exports, require('./breakpoints'), require('./debug'), require('./queue'), require('./trackevent'), require('./smooth-scroll'), require('./storage'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod, mod.exports, global.breakpoints, global.debug, global.queue, global.trackevent, global.smoothScroll);
+    factory(mod, mod.exports, global.breakpoints, global.debug, global.queue, global.trackevent, global.smoothScroll, global.storage);
     global.index = mod.exports;
   }
 })(this, function (module, exports) {
   (function (global, factory) {
     if (true) {
-      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(13), __webpack_require__(12), __webpack_require__(10), __webpack_require__(9), __webpack_require__(8)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(14), __webpack_require__(13), __webpack_require__(12), __webpack_require__(11), __webpack_require__(10), __webpack_require__(8)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -3666,10 +3668,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       var mod = {
         exports: {}
       };
-      factory(mod, mod.exports, global.breakpoints, global.debug, global.queue, global.trackevent, global.smoothScroll);
+      factory(mod, mod.exports, global.breakpoints, global.debug, global.queue, global.trackevent, global.smoothScroll, global.storage);
       global.index = mod.exports;
     }
-  })(this, function (module, exports, _breakpoints, _debug, _queue, _trackevent, _smoothScroll) {
+  })(this, function (module, exports, _breakpoints, _debug, _queue, _trackevent, _smoothScroll, _storage) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -3686,23 +3688,28 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     var _smoothScroll2 = _interopRequireDefault(_smoothScroll);
 
+    var _storage2 = _interopRequireDefault(_storage);
+
     function _interopRequireDefault(obj) {
       return obj && obj.__esModule ? obj : {
         default: obj
       };
     }
 
+    /**
+     * LVL99 Tools
+     *
+     * Standalone tools that don't require any dependencies within the framework, but work alongside
+     */
+
     var utils = {
       Breakpoints: _breakpoints2.default,
       Debug: _debug2.default,
       Queue: _queue2.default,
       TrackEvent: _trackevent2.default,
-      SmoothScroll: _smoothScroll2.default
-    }; /**
-        * LVL99 Tools
-        *
-        * Standalone tools that don't require any dependencies within the framework, but work alongside
-        */
+      SmoothScroll: _smoothScroll2.default,
+      Storage: _storage2.default
+    };
 
     exports.default = tools;
     module.exports = exports['default'];
@@ -3711,6 +3718,311 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 /* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(0), __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if (typeof exports !== "undefined") {
+    factory(exports, require('lodash.merge'), require('../utils/parse'));
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod.exports, global.lodash, global.parse);
+    global.storage = mod.exports;
+  }
+})(this, function (exports) {
+  (function (global, factory) {
+    if (true) {
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(0), __webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== "undefined") {
+      factory(exports);
+    } else {
+      var mod = {
+        exports: {}
+      };
+      factory(mod.exports, global.lodash, global.parse);
+      global.storage = mod.exports;
+    }
+  })(this, function (exports, _lodash, _parse) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.STORAGE_TYPES = exports.LOCAL_STORAGE = exports.SESSION_STORAGE = undefined;
+    exports.testStorageType = testStorageType;
+    exports.getSupportedStorageTypes = getSupportedStorageTypes;
+    exports.eachStorageType = eachStorageType;
+
+    var _lodash2 = _interopRequireDefault(_lodash);
+
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : {
+        default: obj
+      };
+    }
+
+    function _classCallCheck(instance, Constructor) {
+      if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+      }
+    }
+
+    var _createClass = function () {
+      function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+          var descriptor = props[i];
+          descriptor.enumerable = descriptor.enumerable || false;
+          descriptor.configurable = true;
+          if ("value" in descriptor) descriptor.writable = true;
+          Object.defineProperty(target, descriptor.key, descriptor);
+        }
+      }
+
+      return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);
+        if (staticProps) defineProperties(Constructor, staticProps);
+        return Constructor;
+      };
+    }();
+
+    // Types of storage
+    var SESSION_STORAGE = exports.SESSION_STORAGE = 'sessionStorage';
+    var LOCAL_STORAGE = exports.LOCAL_STORAGE = 'localStorage';
+    var STORAGE_TYPES = exports.STORAGE_TYPES = [SESSION_STORAGE, LOCAL_STORAGE];
+
+    /**
+     * Test to see if a storage type works within the environment
+     *
+     * @param {String} storageType
+     * @return {Boolean}
+     */
+    function testStorageType(storageType) {
+      try {
+        var envStorage = window[storageType];
+        var x = '__test__storage__';
+        envStorage.setItem(x, storageType);
+        envStorage.removeItem(x);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    /**
+     * Get the supported types of storage
+     *
+     * @returns {Object} with name of storage type as keys with {Boolean} value
+     */
+    function getSupportedStorageTypes() {
+      var supports = {};
+
+      // Build the object from the constant's values
+      STORAGE_TYPES.forEach(function (storageType, index) {
+        supports[storageType] = testStorageType(storageType);
+      });
+
+      return supports;
+    }
+
+    /**
+     * Perform a callback on each supported (or not) storage type
+     *
+     * @param {Function} cb
+     */
+    function eachStorageType(cb) {
+      var supported = getSupportedStorageTypes();
+
+      for (var storageType in supported) {
+        if (supported.hasOwnProperty(storageType)) {
+          cb.apply(this, [storageType, supported[storageType], supported]);
+        }
+      }
+    }
+
+    /**
+     * Storage class
+     */
+
+    var Storage = function () {
+      /**
+       * Create the storage class
+       *
+       * @param options
+       */
+      function Storage(options) {
+        _classCallCheck(this, Storage);
+
+        this.settings = (0, _lodash2.default)({
+          // default to localStorage
+          storageType: LOCAL_STORAGE
+        }, options);
+
+        return this;
+      }
+
+      /**
+       * Reset a single storage type
+       *
+       * @param storageType
+       */
+
+
+      _createClass(Storage, [{
+        key: 'clear',
+        value: function clear(storageType) {
+          // Use default storage type
+          if (!storageType) {
+            storageType = this.settings.storageType;
+          }
+
+          if (!testStorageType(storageType)) {
+            throw new Error('Storage type ' + storageType + ' not supported');
+          }
+
+          window[storageType].clear();
+        }
+      }, {
+        key: 'clearAll',
+        value: function clearAll() {
+          eachStorageType(function (storageType, isSupported) {
+            if (isSupported) {
+              window[storageType].clear();
+            }
+          });
+        }
+      }, {
+        key: 'clearLocal',
+        value: function clearLocal() {
+          this.clear(LOCAL_STORAGE);
+        }
+      }, {
+        key: 'clearSession',
+        value: function clearSession() {
+          this.clear(SESSION_STORAGE);
+        }
+      }, {
+        key: 'getItem',
+        value: function getItem(name, storageType) {
+          // Use default storage type
+          if (!storageType) {
+            storageType = this.settings.storageType;
+          }
+
+          // Check if storage type is available
+          if (!testStorageType(storageType)) {
+            throw new Error('Storage type ' + storageType + ' not supported');
+          }
+
+          // Ensure value is coerced since storage stores as JSON/string
+          return (0, _parse.coerceToPrimitiveType)(window[storageType].getItem(name));
+        }
+      }, {
+        key: 'getItemLocal',
+        value: function getItemLocal(name) {
+          return this.getItem(name, LOCAL_STORAGE);
+        }
+      }, {
+        key: 'getItemSession',
+        value: function getItemSession(name) {
+          return this.getItem(name, SESSION_STORAGE);
+        }
+      }, {
+        key: 'setItem',
+        value: function setItem(name, value, storageType) {
+          // Use default storage type
+          if (!storageType) {
+            storageType = this.settings.storageType;
+          }
+
+          // Check if storage type is available
+          if (!testStorageType(storageType)) {
+            throw new Error('Storage type ' + storageType + ' not supported');
+          }
+
+          window[storageType].setItem(name, JSON.stringify(value));
+        }
+      }, {
+        key: 'setItemLocal',
+        value: function setItemLocal(name, value) {
+          this.setItem(name, value, LOCAL_STORAGE);
+        }
+      }, {
+        key: 'setItemSession',
+        value: function setItemSession(name, value) {
+          this.setItem(name, value, SESSION_STORAGE);
+        }
+      }, {
+        key: 'removeItem',
+        value: function removeItem(name, storageType) {
+          // Use default storage type
+          if (!storageType) {
+            storageType = this.settings.storageType;
+          }
+
+          // Check if storage type is available
+          if (!testStorageType(storageType)) {
+            throw new Error('Storage type ' + storageType + ' not supported');
+          }
+
+          window[storageType].removeItem(name);
+        }
+      }, {
+        key: 'removeItemLocal',
+        value: function removeItemLocal(name) {
+          this.removeItem(name, LOCAL_STORAGE);
+        }
+      }, {
+        key: 'removeItemSession',
+        value: function removeItemSession(name) {
+          this.removeItem(name, SESSION_STORAGE);
+        }
+      }]);
+
+      return Storage;
+    }();
+
+    exports.default = Storage;
+  });
+});
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -3946,7 +4258,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -4070,7 +4382,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -4508,34 +4820,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -4578,6 +4863,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     exports.default = Debug;
     /**
      * LVL99 Debug
+     *
      * A console-like replacement which creates a noop console object if you don't want to output stuff via the console
      */
 
@@ -4616,7 +4902,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -4718,12 +5004,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(4), __webpack_require__(19), __webpack_require__(15)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(4), __webpack_require__(20), __webpack_require__(16)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -4739,7 +5025,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 })(this, function (module, exports) {
   (function (global, factory) {
     if (true) {
-      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(4), __webpack_require__(19), __webpack_require__(15)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(4), __webpack_require__(20), __webpack_require__(16)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -4789,7 +5075,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -5408,13 +5694,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = window.jQuery;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {// Unique ID creation requires a high quality random # generator.  In the
@@ -5451,10 +5737,10 @@ if (!rng) {
 
 module.exports = rng;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 /**
@@ -5483,7 +5769,7 @@ module.exports = bytesToUuid;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -5912,7 +6198,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -5984,12 +6270,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(3), __webpack_require__(20), __webpack_require__(14), __webpack_require__(7)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(3), __webpack_require__(21), __webpack_require__(15), __webpack_require__(7)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -6005,7 +6291,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 })(this, function (module, exports) {
   (function (global, factory) {
     if (true) {
-      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(3), __webpack_require__(20), __webpack_require__(14), __webpack_require__(7)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module, exports, __webpack_require__(3), __webpack_require__(21), __webpack_require__(15), __webpack_require__(7)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -6060,7 +6346,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -6088,11 +6374,11 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var rng = __webpack_require__(17);
-var bytesToUuid = __webpack_require__(18);
+var rng = __webpack_require__(18);
+var bytesToUuid = __webpack_require__(19);
 
 // **`v1()` - Generate time-based UUID**
 //
@@ -6194,11 +6480,11 @@ module.exports = v1;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var rng = __webpack_require__(17);
-var bytesToUuid = __webpack_require__(18);
+var rng = __webpack_require__(18);
+var bytesToUuid = __webpack_require__(19);
 
 function v4(options, buf, offset) {
   var i = buf && offset || 0;

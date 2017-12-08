@@ -10,9 +10,9 @@ import merge from 'lodash.merge'
 import { coerceToPrimitiveType } from '../utils/parse'
 
 // Types of storage
-const SESSION_STORAGE = 'sessionStorage'
-const LOCAL_STORAGE = 'localStorage'
-const STORAGE_TYPES = [SESSION_STORAGE, LOCAL_STORAGE]
+export const SESSION_STORAGE = 'sessionStorage'
+export const LOCAL_STORAGE = 'localStorage'
+export const STORAGE_TYPES = [SESSION_STORAGE, LOCAL_STORAGE]
 
 /**
  * Test to see if a storage type works within the environment
@@ -186,7 +186,7 @@ export default class Storage {
       throw new Error(`Storage type ${storageType} not supported`)
     }
 
-    window[storageType].setItem(name, value)
+    window[storageType].setItem(name, JSON.stringify(value))
   }
 
   /**

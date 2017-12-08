@@ -113,32 +113,34 @@ You can also require/import single files if you don't want the whole LESS framew
 ## Folder structure
 
 ```bash
-  # Javascript (ES6 flavoured)
-  es6/
+  # Javascript (ES5 or ES6 flavours available)
+  {es5,es6}/
     core/
-      app.js                  # The app class 
-      component.js            # The component class that all other components inherit
-      entity.js               # The base entity class that all other classes inherit from
-      index.js                # All core modules in one
+      app.{js,es6}            # The app class 
+      component.{js,es6}      # The component class that all other components inherit
+      entity.{js,es6}         # The base entity class that all other classes inherit from
+      index.{js,es6}          # All core modules in one
     components/
-      accordion.js
-      index.js                # All component modules in one
-      modal.js
-      spinner.js 
-      toggleable.js 
+      accordion.{js,es6}
+      index.{js,es6}          # All component modules in one
+      modal.{js,es6}
+      spinner.{js,es6} 
+      toggleable.{js,es6}
     tools/
-      breakpoints.js          # Test for breakpoints in JS
-      index.js                # All tools modules in one
-      queue.js                # Basic debounce queue for actions
-      trackevent.js           # Cache GA event tracking until GA object loaded
-      smooth-scroll.js        # Enable smooth scrolling when clicking anchor links
-      storage.js              # Convenience wrapper when using local/session storage
+      breakpoints.{js,es6}    # Test for breakpoints in JS
+      form-state.{js,es6}     # Enable saving form data to browser storage 
+      index.{js,es6}          # All tools modules in one
+      queue.{js,es6}          # Basic debounce queue for actions
+      trackevent.{js,es6}     # Cache GA event tracking until GA object loaded
+      smooth-scroll.{js,es6}  # Enable smooth scrolling when clicking anchor links
+      storage.{js,es6}        # Convenience wrapper when using local/session storage
     utils/
-      index.js                # All utils modules in one
-      parse.js                # Some parsing functions like type coercion, etc.
-      super.js                # Ember implementation of super behaviour
-    common.js                 # Basic common used dependencies and variables
-    index.js                  # All modules in one
+      index.{js,es6}          # All utils modules in one
+      inheritance.{js,es6}    # Some inheritance functions
+      parse.{js,es6}          # Some parsing functions like type coercion, etc.
+      super.{js,es6}          # Ember implementation of super behaviour
+    common.{js,es6}           # Basic common used dependencies and variables
+    index.{js,es6}            # All modules in one
     
   # LESS
   less/

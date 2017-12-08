@@ -1,5 +1,6 @@
 /**
  * LVL99 Debug
+ *
  * A console-like replacement which creates a noop console object if you don't want to output stuff via the console
  */
 

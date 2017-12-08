@@ -13,6 +13,10 @@ test(`${_loggerPath} exists`, () => {
   expect(Parse).toBeTruthy()
 })
 
+test(`${_loggerPath}.coerceToPrimitiveType: ''`, () => {
+  expect(Parse.coerceToPrimitiveType('')).toBe('')
+})
+
 test(`${_loggerPath}.coerceToPrimitiveType: 0`, () => {
   expect(Parse.coerceToPrimitiveType('0')).toBe(0)
 })

@@ -9,13 +9,15 @@ import Debug from './debug'
 import Queue from './queue'
 import TrackEvent from './trackevent'
 import SmoothScroll from './smooth-scroll'
+import Storage from './storage'
 
 const utils = {
   Breakpoints,
   Debug,
   Queue,
   TrackEvent,
-  SmoothScroll
+  SmoothScroll,
+  Storage
 }
 
 export default tools
