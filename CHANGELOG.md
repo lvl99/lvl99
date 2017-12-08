@@ -1,3 +1,9 @@
+### 1.4.3
+
+* Added new tool [`Storage`](es6/tools/storage.es6) which acts as a convenience wrapper with some extra small features
+  when using local/session storage.
+
+
 ### 1.4.2
 
 * Added `delayAdd` method to [`Queue`](es6/tools/queue.es6) to enable setting delay time before playing queue.

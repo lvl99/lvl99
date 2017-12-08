@@ -3,7 +3,7 @@
  */
 
 let _loggerPath = 'lvl99/core/component'
-const Component = require('../../es6/core/component')
+import Component from '../../es6/core/component'
 
 let testComponent = new Component({
   testAttrA: 1,
@@ -12,7 +12,7 @@ let testComponent = new Component({
 })
 
 test(`${_loggerPath} exists`, () => {
-  expect(Component).toBeDefined()
+  expect(Component).toBeTruthy()
 })
 
 test(`${_loggerPath} instantiates correctly`, () => {

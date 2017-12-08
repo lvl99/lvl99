@@ -5,9 +5,10 @@
  */
 
 let _loggerPath = 'lvl99/tools/storage'
-import Storage from '../../es6/tools/storage'
+import Storage, { getSupportedStorageTypes } from '../../es6/tools/storage'
 
 // default storageType is local
+const supported = getSupportedStorageTypes()
 const storage = new Storage()
 
 test(`${_loggerPath} exists`, () => {

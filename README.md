@@ -1,6 +1,6 @@
 # LVL99
 
-v1.4.2
+v1.4.3
 
 My own personal frontend framework. Primarily uses jQuery, mildly inspired by Bootstrap and Ember.js and also has
 nothing to do with React. I also use it as a self-learning and development exercise experiment.
@@ -132,6 +132,7 @@ You can also require/import single files if you don't want the whole LESS framew
       queue.js                # Basic debounce queue for actions
       trackevent.js           # Cache GA event tracking until GA object loaded
       smooth-scroll.js        # Enable smooth scrolling when clicking anchor links
+      storage.js              # Convenience wrapper when using local/session storage
     utils/
       index.js                # All utils modules in one
       parse.js                # Some parsing functions like type coercion, etc.
