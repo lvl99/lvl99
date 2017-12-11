@@ -40,8 +40,7 @@ function getComponentNamespace (component) {
 /**
  * The App's base properties
  *
- * @private
- * @type {Object}
+ * @namespace lvl99.core.Component
  */
 const AppProperties = {
   /**

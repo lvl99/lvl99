@@ -3,7 +3,8 @@
  *
  * Core classes used throughout the framework.
  *
- * @module lvl99/es6/core
+ * @namespace lvl99
+ * @module lvl99/core
  */
 
 import Entity from './entity'
@@ -11,7 +12,7 @@ import App from './app'
 import Component from './component'
 
 /**
- * @namespace lvl99.core
+ * @alias lvl99.core
  */
 const core = {
   Entity,

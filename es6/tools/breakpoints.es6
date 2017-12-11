@@ -2,16 +2,21 @@
  * # Breakpoints
  *
  * Detect via JS what the breakpoint is by keyword
+ *
+ * @namespace lvl99.tools.Breakpoints
+ * @module lvl99/tools/breakpoints
  */
 
 /**
- * @class
- * @namespace
- * @property sizes The defined breakpoint names with min/max widths (in 72dpi pixels). Should coincide with CSS for optimum expected behaviour
+ * Breakpoints class.
+ *
+ * @constructor
  */
 export default function Breakpoints (sizes) {
   return {
     /**
+     * The defined breakpoint names with min/max widths (in 72dpi pixels). Should coincide with CSS for optimum expected behaviour.
+     *
      * @type {Object}
      */
     sizes: sizes || {
@@ -50,7 +55,7 @@ export default function Breakpoints (sizes) {
     /**
      * Check if a breakpoint keyword is currently active.
      *
-     * @param {String|Array|RegExp} input The breakpoint keyword(s) (as {String} or {Array}) or a {RegExp} to check which are currently active.
+     * @param {String|Array|RegExp} input - The breakpoint keyword(s) (as {String} or {Array}) or a {RegExp} to check which are currently active.
      * @return {Boolean}
      */
     isActive (input) {

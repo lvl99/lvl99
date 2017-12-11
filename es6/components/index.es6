@@ -3,7 +3,8 @@
  *
  * All the standard framework's components.
  *
- * @module lvl99/es6/components
+ * @namespace lvl99
+ * @module lvl99/components
  */
 
 import Accordion from './accordion'
@@ -12,7 +13,7 @@ import Spinner from './spinner'
 import Toggleable from './toggleable'
 
 /**
- * @namespace lvl99.components
+ * @alias lvl99.components
  */
 const components = {
   Accordion,

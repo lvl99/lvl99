@@ -9,41 +9,85 @@ import { $, $body, events } from '../common'
 import Component from '../core/component'
 
 /**
- * @namespace lvl99.components.Accordion
+ * The default Accordion properties.
+ *
+ * @type {Object}
+ * @memberof Accordion
  */
 const AccordionProperties = {
-  // Namespaces
+  /**
+   * @prop {String} _NS - Accordion component and event namespace.
+   * @default
+   */
   _NS: 'LVL99:Accordion',
+
+  /**
+   * @prop {String} _ns - Accordion CSS namespace
+   * @default
+   */
   _ns: 'lvl99-accordion',
 
-  // Modal properties
+  /**
+   * @prop {Object} _properties - Accordion properties shared between all instances.
+   */
   _properties: {
-    // Public methods
+    /**
+     * @prop {Array} publicMethods - The Accordion's public methods map.
+     * @default
+     */
     publicMethods: [],
 
-    // The target DOM element which will hold the open/transition classes. If undefined it will revert to the `$elem` attribute value
+    /**
+     * @prop {undefined|jQueryObject} $classTarget - The target DOM element which will hold the open/transition classes. If undefined it will revert to the `$elem` attribute value
+     * @default
+     */
     $classTarget: undefined
   },
 
-  // Default Accordion attributes
+  /**
+   * @prop {Object} _attributes - Default Accordion attributes. These will only be per instance.
+   */
   _attributes: {
     /**
-     * Enable accessibility features.
-     *
-     * @type {Boolean}
+     * @prop {Boolean} _a11y - Enable accessibility features.
+     * @default
      */
     _a11y: true,
 
     /**
-     * The class to give to the current active accordion item.
-     *
-     * @type {String}
+     * @prop {String} _accordionClassItemActive - The class to give to the current active accordion item.
+     * @default
      */
     _accordionClassItemActive: 'active',
+
+    /**
+     * @prop {String} _accordionItemSelector - The selector to find the Accordion's toggleable items.
+     * @default
+     */
     _accordionItemSelector: '.accordion-item',
+
+    /**
+     * @prop {String} _accordionItemToggleSelector - The selector to attach toggle trigger events to.
+     * @default
+     */
     _accordionItemToggleSelector: '.accordion-item-toggle',
-    _accordionItemContentSelector: '.accordion-item-content',
+
+    /**
+     * @prop {String} _accordionItemContentSelector - The selector to find the Accordion's content elements.
+     * @default
+     */
+    _accordionItemContentSelector: '.accordion-item-content'
+
+    /**
+     * @prop {Boolean} _accordionCloseOthersOnOpen - Change the behaviour of the accordion to close other children when one is open.
+     * @default
+     */,
     _accordionCloseOthersOnOpen: true,
+
+    /**
+     * @prop {Object} _accordionItemToggleableAttributes - The attributes to pass to each toggleable Accordion item.
+     * @default
+     */
     _accordionItemToggleableAttributes: {
       _a11y: false,
       _toggleableUseTransitioning: false,
@@ -53,8 +97,23 @@ const AccordionProperties = {
       _toggleableClassTransitioningClose: 'ui-accordion-item-closing',
       _toggleableCloseOnBlur: false
     },
+
+    /**
+     * @prop {undefined|jQueryObject} $elem - The Accordion's DOM element.
+     * @default
+     */
     $elem: undefined,
+
+    /**
+     * @prop {undefined|jQueryObject} $item - The Accordion's toggleable items.
+     * @default
+     */
     $items: undefined,
+
+    /**
+     * @prop {undefined|jQueryObject} $activeItem - The currently active Accordion toggleable item.
+     * @default
+     */
     $activeItem: undefined
   }
 }
@@ -65,11 +124,14 @@ const AccordionProperties = {
  * An {Accordion} manages the toggleable states of its children. Each child can be opened/closed, which may or may not
  * close the other children.
  *
- * @namespace lvl99.components.Accordion
+ * @namespace Accordion
  * @class
+ * @extends Component
  */
 export default class Accordion extends Component {
   /**
+   * Create a new Accordion.
+   *
    * @constructor
    */
   constructor (attributes) {

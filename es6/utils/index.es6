@@ -2,6 +2,8 @@
  * # Utils
  *
  * Utilities used throughout the framework.
+ *
+ * @namespace lvl99
  */
 
 import parse from './parse'
@@ -9,7 +11,7 @@ import inheritance from './inheritance'
 // import super from './super'
 
 /**
- * @namespace lvl99.utils
+ * @alias lvl99.utils
  */
 const utils = {
   parse,

@@ -2,19 +2,21 @@
  * # Track Event
  *
  * Caches tracked events until Google Analytics is loaded, then uploads to GA.
+ *
+ * @namespace lvl99.tools.TrackEvent
+ * @module lvl99/tools/trackevent
  */
 
 /**
  * TrackEvent
  *
- * @param {Boolean} debug
- * @returns {Function}
  * @constructor
+ * @param {Boolean} debug - Enable/disable outputting debug messages
  */
 export default function TrackEvent (debug) {
   /**
    * Collect tracked events before GA is loaded.
-   * 
+   *
    * @private
    * @type {Array}
    */

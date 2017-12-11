@@ -3,7 +3,7 @@
  *
  * Standalone tools that don't require any dependencies within the framework, but work alongside
  *
- * @module lvl99/es6/tools
+ * @namespace lvl99
  */
 
 import Breakpoints from './breakpoints'
@@ -14,7 +14,7 @@ import SmoothScroll from './smooth-scroll'
 import Storage from './storage'
 
 /**
- * @namespace lvl99.tools
+ * @alias lvl99.tools
  */
 const tools = {
   Breakpoints,

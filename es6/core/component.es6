@@ -36,8 +36,6 @@
  *     on: 'scroll'
  *   }
  * ```
- *
- * @module lvl99/core/component
  */
 
 import objectPath from 'object-path'
@@ -57,41 +55,46 @@ const trackComponents = {}
 
 /**
  * The Component's base properties.
+ *
+ * @namespace Component
+ * @type {Object}
  */
 const ComponentProperties = {
   /**
    * Used for custom events and error reporting
    *
-   * @type {String}
-   * @default LVL99:Component
+   * @prop {String} _NS
+   * @default
    */
   _NS: 'LVL99:Component',
 
   /**
    * Used for CSS classes
    *
-   * @type {String}
-   * @default lvl99-component
+   * @prop {String} _ns
+   * @default
    */
   _ns: 'lvl99-component',
 
   /**
    * The properties shared between all instances of this Component
    *
-   * @type {Object}
+   * @prop {Object} _properties
    */
   _properties: {
     /**
      * The names of Component methods to publicly expose in the DOM via custom events (attached during `init`).
      *
-     * @type {Array}
+     * @prop {Array} publicMethods
+     * @default
      */
     publicMethods: [],
 
     /**
      * The target to apply any CSS classes to
      *
-     * @type {jQueryObject}
+     * @prop {undefined|jQueryObject} $classTarget
+     * @default
      */
     $classTarget: undefined
   },
@@ -99,13 +102,14 @@ const ComponentProperties = {
   /**
    * The default attributes to load a created Component instance with.
    *
-   * @type {Object}
+   * @prop {Object} _attributes
    */
   _attributes: {
     /**
      * The main element that represents the Component in the DOM. Component events will be managed through this element.
      *
-     * @type {jQueryObject}
+     * @prop {undefined|jQueryObject} $elem
+     * @default
      */
     $elem: undefined
   }
@@ -114,9 +118,9 @@ const ComponentProperties = {
 /**
  * Component Class.
  *
- * @namespace lvl99.core.Component
+ * @namespace Component
  * @class
- * @extends lvl99.core.Entity
+ * @extends Entity
  */
 export default class Component extends Entity {
   /**

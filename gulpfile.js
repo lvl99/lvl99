@@ -49,7 +49,9 @@ gulp.task('docs', () => {
       jsdoc: {
         recurse: true,
         relativePath: path.resolve(__dirname, 'es6'),
-        includePattern: ".+\\.es6$"
+        includePattern: ".+\\.es6$",
+        hierarchy: true,
+        sort: "grouped"
       },
       markdown: {
         gfm: true,

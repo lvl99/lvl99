@@ -175,26 +175,26 @@ You can also require/import single files if you don't want the whole LESS framew
 
 ## Dependencies
 
-* **jQuery**: Browser events, cross-browser implementations, standardized DOM traversing, etc.
-* **object-path**: Good for working with deep-nested objects
-* **lodash.merge**: Deep object extend
-* **uuid**: Unique ID generation
+- **jQuery**: Browser events, cross-browser implementations, standardized DOM traversing, etc.
+- **object-path**: Good for working with deep-nested objects
+- **lodash.merge**: Deep object extend
+- **uuid**: Unique ID generation
 
 
 ## Dev Dependencies
 
-* **Gulp**: Task runner
-* **Babel**: Transpile ES6 to ES5
-* **Webpack**: Create lvl99.js distribution bundle
-* **Jest**: Unit testing
+- **Gulp**: Task runner
+- **Babel**: Transpile ES6 to ES5
+- **Webpack**: Create lvl99.js distribution bundle
+- **Jest**: Unit testing
 
 
 ## TODO
 
-[ ] Complete the README
-[ ] Write more unit tests
-[x] ~Write more documentation throughout source~
-[ ] Create minified version of [`dist/lvl99.js`](dist/lvl99.js)
+- [ ] Complete the README
+- [ ] Write more unit tests
+- [x] ~Write more documentation throughout source~
+- [ ] Create minified version of [`dist/lvl99.js`](dist/lvl99.js)
 
 
 ## Contribute

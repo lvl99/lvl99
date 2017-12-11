@@ -3,6 +3,12 @@
  *
  * Use local or session storage to save a form's state. This means if a user navigates away that their data can be
  * stored and they can choose to resume or reset the form's state.
+ *
+ * @namespace lvl99.tools.FormState
+ * @requires module:lodash.merge
+ * @requires module:jquery
+ * @requires module:lvl99/utils/parse
+ * @requires module:lvl99/tools/storage
  */
 
 import merge from 'lodash.merge'

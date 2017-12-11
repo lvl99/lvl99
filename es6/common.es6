@@ -2,6 +2,8 @@
  * # Common
  *
  * Common dependencies and other useful things.
+ *
+ * @namespace lvl99.common
  */
 
 import jQuery from 'jquery'
@@ -63,7 +65,7 @@ export const events = {
 }
 
 /**
- * @namespace lvl99.common
+ * @alias lvl99.common
  */
 const common = {
   $,
