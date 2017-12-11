@@ -16,6 +16,62 @@ import Storage, { LOCAL_STORAGE } from './storage'
 const storage = new Storage()
 
 /**
+ * Get a field's current state.
+ *
+ * @param {String|HTMLElement|jQueryObject} targetField
+ * @returns {undefined|Object}
+ */
+export function getFieldState (targetField) {
+  let $field = $(targetField)
+  let tagName = $field[0].tagName.toLowerCase()
+  let id = $field.attr('id')
+  let type = $field.attr('type')
+  let name = $field.attr('name')
+  let $relatedFields = $field.parents('form').find(`[name="${name}"]`)
+  let nameIndex = $relatedFields.index($field)
+  let value = $field.val()
+  let fieldState = {
+    snapshot: Date.now(),
+    tagName,
+    id,
+    type,
+    name,
+    nameIndex,
+    value
+  }
+
+  // Extra transforms on the value depending on the type of field and its state
+  switch (type) {
+    // If a checkbox is not checked, it's state value should be ''
+    case 'checkbox':
+      if (!$field.is(':checked')) {
+        fieldState.value = ''
+      }
+      break
+
+    // Ignore checkboxes which haven't been checked
+    case 'radio':
+      if (!$field.is(':checked')) {
+        return undefined
+      }
+  }
+
+  /**
+   * Trigger a custom event on the field to allow other things to manipulate the field's returned state.
+   *
+   * @trigger FormState.getFieldState:after
+   * @param {Object} fieldState The generated field's state
+   * @param {Object} options Extra data used to generate the state
+   */
+  $field.trigger('FormState.getFieldState:after', [fieldState, {
+    $field,
+    $relatedFields
+  }])
+
+  return fieldState
+}
+
+/**
  * FormState class
  */
 export default class FormState {
@@ -145,6 +201,16 @@ export default class FormState {
   }
 
   /**
+   * Get a field's current state.
+   *
+   * @param {String|HTMLElement|jQueryObject} targetField
+   * @returns {undefined|Object}
+   */
+  getField (targetField) {
+    return getFieldState(targetField)
+  }
+
+  /**
    * Get a snapshot of the form's current state.
    *
    * @returns {Object}
@@ -197,63 +263,6 @@ export default class FormState {
     }
 
     return savedFormState
-  }
-
-  /**
-   * Get a field's current state.
-   *
-   * @param {String|HTMLElement|jQueryObject} targetField
-   * @returns {undefined|Object}
-   */
-  getField (targetField) {
-    let $field = $(targetField)
-    let tagName = $field[0].tagName.toLowerCase()
-    let id = $field.attr('id')
-    let type = $field.attr('type')
-    let name = $field.attr('name')
-    let $relatedFields = this.$target.find(`[name="${name}"]`)
-    let nameIndex = $relatedFields.index($field)
-    let value = $field.val()
-    let fieldState = {
-      snapshot: Date.now(),
-      tagName,
-      id,
-      type,
-      name,
-      nameIndex,
-      value
-    }
-
-    // Extra transforms on the value depending on the type of field and its state
-    switch (type) {
-      // If a checkbox is not checked, it's state value should be ''
-      case 'checkbox':
-        if (!$field.is(':checked')) {
-          fieldState.value = ''
-        }
-        break
-
-      // Ignore checkboxes which haven't been checked
-      case 'radio':
-        if (!$field.is(':checked')) {
-          return undefined
-        }
-    }
-
-    /**
-     * Trigger a custom event on the field to allow other things to manipulate the field's returned state.
-     *
-     * @trigger FormState.getFieldState:after
-     * @param {Object} fieldState The generated field's state
-     * @param {Object} options Extra data used to generate the state
-     */
-    $field.trigger('FormState.getFieldState:after', [fieldState, {
-      FormState: this,
-      $field,
-      $relatedFields
-    }])
-
-    return fieldState
   }
 
   /**
@@ -391,9 +400,9 @@ export default class FormState {
           case 'checkbox':
           case 'radio':
             if (fieldState.value !== '' && fieldState.value !== undefined && fieldState.value !== null) {
-              $field.attr('checked', 'checked')
+              $field.prop('checked', true)
             } else {
-              $field.removeAttr('checked')
+              $field.prop('checked', false)
             }
             break
 
@@ -416,9 +425,9 @@ export default class FormState {
 
           // Yes linter, I do want to use ==
           if ($option.val() == fieldState.value) {
-            $option.attr('selected', 'selected')
+            $option.prop('selected', true)
           } else {
-            $option.removeAttr('selected')
+            $option.prop('selected', false)
           }
         })
         break
