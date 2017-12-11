@@ -1,8 +1,7 @@
 /**
- * LVL99.Spinner
- * Extends {Component} to enable starting/stopping a spinner based on the events of other elements
+ * # Spinner Component
  *
- * @package lvl99
+ * Extends {Component} to enable starting/stopping a spinner based on the events of other elements
  */
 
 import { $, $doc, $body, events } from '../common'
@@ -80,13 +79,10 @@ const SpinnerProperties = {
 }
 
 /**
- * LVL99.Spinner
+ * Spinner Class
  *
  * Spinners show when stuff is loading, working, etc. Spinners can watch other DOM element targets for
  * events to start/stop spinning on.
- *
- * @constructor
- * @extends {Toggleable}
  */
 export default class Spinner extends Toggleable {
   constructor (attributes) {

@@ -180,13 +180,10 @@
       }
 
       /**
-       * LVL99.Spinner
+       * Spinner Class
        *
        * Spinners show when stuff is loading, working, etc. Spinners can watch other DOM element targets for
        * events to start/stop spinning on.
-       *
-       * @constructor
-       * @extends {Toggleable}
        */
     };
     var Spinner = function (_Toggleable) {

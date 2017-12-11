@@ -1,9 +1,8 @@
 /**
- * LVL99.Modal
+ * # Modal
+ *
  * Extends {Toggleable} and adds some extra Modal-specific behaviours to support dialogs and modals like
  * alerts, confirm and input prompts.
- *
- * @package lvl99
  */
 
 import { $, $body, events } from '../common'
@@ -49,14 +48,11 @@ const ModalProperties = {
 }
 
 /**
- * LVL99.Modal
+ * Modal Class
  *
  * Modal inherit {Toggleable} public behaviours.
  *
  * To incorporate this behaviour with your component, simply import and extend the {Modal} class.
- *
- * @constructor
- * @extends {Toggleable}
  */
 export default class Modal extends Toggleable {
   constructor (attributes) {

@@ -239,10 +239,7 @@
       }
 
       /**
-       * Component
-       *
-       * @class
-       * @extends Entity
+       * Component Class
        */
     };
     var Component = function (_Entity) {

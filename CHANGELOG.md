@@ -2,9 +2,12 @@
 
 * Added new tool [`Storage`](es6/tools/storage.es6) which acts as a convenience wrapper with some extra small features
   when using local/session storage.
-* Added tests for [`Storage`](__tests__/tools/storage.test.es6) and [`SmoothScroll`](__tests__/tools/smooth-scroll.test.es6)
-  tools.
+* Added new tool [`FormState`](es6/tools/form-state.es6) which uses the browser storage to save and restore the form's
+  data for improved form UX when navigating between pages.
+* Added tests for [`Storage`](__tests__/tools/storage.test.es6), [`FormState`](__tests__/tools/form-state.test.es6),
+  [`SmoothScroll`](__tests__/tools/smooth-scroll.test.es6) tools.
 * Refactored some of the configuration setup for Babel and Jest.
+* Other minor tweaks/improvements.
 
 
 ### 1.4.2

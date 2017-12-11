@@ -45,9 +45,9 @@
     }
 
     /**
-     * LVL99 Components
+     * # Components
      *
-     * @package lvl99
+     * All the standard framework's components.
      */
 
     var components = {

@@ -1,9 +1,7 @@
 /**
- * LVL99 Parse
+ * # Parse Utilities
  *
- * Parse strings or transform from one format to another
- *
- * @package lvl99
+ * Parse strings or transform from one format to another.
  */
 
 import objectPath from 'object-path'
@@ -13,7 +11,7 @@ const __loggerPath = 'lvl99/utils/parse'
  * Coerce a value to its primitive type
  *
  * @param {Mixed} input
- * @returns {Mixed}
+ * @return {Mixed}
  */
 export function coerceToPrimitiveType (input) {
   // Non-string or empty string? Just return it straight away
@@ -65,7 +63,7 @@ export function coerceToPrimitiveType (input) {
  * Convert value to an explicit boolean. Namely for processing string values.
  *
  * @param {Mixed} input
- * @returns {Boolean}
+ * @return {Boolean}
  */
 export function convertToBoolean (input) {
   // Already boolean
@@ -101,7 +99,7 @@ export function convertToBoolean (input) {
  * Convert a string to JSON or just return the string if can't
  *
  * @param {String} input
- * @returns {Object}
+ * @return {Object}
  */
 export function convertStringToJson (input) {
   let output = input
@@ -123,7 +121,7 @@ export function convertStringToJson (input) {
  * This also converts number constants like Infinity and NaN to zero.
  *
  * @param input
- * @returns {*}
+ * @return {*}
  */
 export function convertStringToFloat (input) {
   if (typeof input === 'number') {
@@ -223,7 +221,7 @@ export function extractClassDetails (input) {
  *
  * @param {String|Object} input
  * @param {Object|Function} context Defaults to `window`. Where to find the `do` action
- * @returns {Object} => { eventName: {String}, method: {Function}, selector: {String}, target: {Object} }
+ * @return {Object} => { eventName: {String}, method: {Function}, selector: {String}, target: {Object} }
  */
 export function extractTriggerDetails(input, context) {
   let trigger = input
@@ -304,7 +302,7 @@ export function extractTriggerDetails(input, context) {
  * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
  *
  * @param {String} input
- * @returns {String}
+ * @return {String}
  */
 export function fixedEncodeURIComponent (input) {
   return encodeURIComponent(input).replace(/[!'()*]/g, function(c) {
@@ -388,7 +386,7 @@ export function getTargetSelector (target, context) {
  *
  * @param {Array|String} eventNames e.g. `Component:customEvent dom:mouseover`
  * @param {String} namespace Optional namespace to assign each extracted custom (non-DOM) event name
- * @returns {Array}
+ * @return {Array}
  */
 export function extractTargetEventNames (inputEventNames, namespace) {
   let targetEventNames = []

@@ -1,10 +1,8 @@
 /**
- * LVL99 Form State
+ * # Form State
  *
  * Use local or session storage to save a form's state. This means if a user navigates away that their data can be
  * stored and they can choose to resume or reset the form's state.
- *
- * @package lvl99
  */
 
 import merge from 'lodash.merge'
@@ -19,7 +17,7 @@ const storage = new Storage()
  * Get a field's current state.
  *
  * @param {String|HTMLElement|jQueryObject} targetField
- * @returns {undefined|Object}
+ * @return {undefined|Object}
  */
 export function getFieldState (targetField) {
   let $field = $(targetField)
@@ -188,7 +186,7 @@ export default class FormState {
   /**
    * Get the target's supported fields as a jQuery object.
    *
-   * @returns {jQuery}
+   * @return {jQuery}
    */
   getFields () {
     return this.$target
@@ -204,7 +202,7 @@ export default class FormState {
    * Get a field's current state.
    *
    * @param {String|HTMLElement|jQueryObject} targetField
-   * @returns {undefined|Object}
+   * @return {undefined|Object}
    */
   getField (targetField) {
     return getFieldState(targetField)
@@ -213,7 +211,7 @@ export default class FormState {
   /**
    * Get a snapshot of the form's current state.
    *
-   * @returns {Object}
+   * @return {Object}
    */
   getCurrentState () {
     let formState = {
@@ -238,7 +236,7 @@ export default class FormState {
    * Get a previously saved snapshot of the form's state.
    *
    * @param {String} version
-   * @returns {Object}
+   * @return {Object}
    */
   getSavedState (version = '') {
     // Set a version in the name that will be stored

@@ -34,7 +34,9 @@
     exports.createPublicGetProperty = createPublicGetProperty;
     exports.createPublicGetSetProperty = createPublicGetSetProperty;
     /**
-     * LVL99 Inheritance utilities
+     * # Inheritance utilities
+     *
+     * Related to {Entity} classes and any sub-classes that extend them.
      */
 
     var RE_PRIVATE = /^_/;

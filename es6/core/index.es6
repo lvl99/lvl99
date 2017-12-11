@@ -1,15 +1,18 @@
 /**
- * LVL99 Core
+ * # Core
  *
- * Core classes used throughout the framework
+ * Core classes used throughout the framework.
  *
- * @package lvl99
+ * @module lvl99/es6/core
  */
 
 import Entity from './entity'
 import App from './app'
 import Component from './component'
 
+/**
+ * @namespace lvl99.core
+ */
 const core = {
   Entity,
   App,

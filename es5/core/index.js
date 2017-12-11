@@ -47,11 +47,9 @@
       App: _app2.default,
       Component: _component2.default
     }; /**
-        * LVL99 Core
+        * # Core
         *
-        * Core classes used throughout the framework
-        *
-        * @package lvl99
+        * Core classes used throughout the framework.
         */
 
     exports.default = core;

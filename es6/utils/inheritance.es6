@@ -1,5 +1,7 @@
 /**
- * LVL99 Inheritance utilities
+ * # Inheritance utilities
+ *
+ * Related to {Entity} classes and any sub-classes that extend them.
  */
 
 const RE_PRIVATE = /^_/

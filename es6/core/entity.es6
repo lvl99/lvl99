@@ -1,10 +1,8 @@
 /**
- * LVL99 Entity
+ * # Entity
  *
  * Base class used for programmable entities within the app, such as components or other such entities that rely on
  * state and lifecycle functions.
- *
- * @package lvl99
  */
 
 import merge from 'lodash.merge'
@@ -49,6 +47,9 @@ const EntityProperties = {
   _attributes: {}
 }
 
+/**
+ * Entity Class
+ */
 export default class Entity {
   /**
    * Entity constructor
@@ -81,7 +82,7 @@ export default class Entity {
   /**
    * Extend the Entity with any given {Object} arguments
    *
-   * @returns {Self}
+   * @return {Self}
    */
   extend () {
     // @debug

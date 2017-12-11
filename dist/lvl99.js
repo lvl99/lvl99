@@ -3133,13 +3133,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     /**
      * Basic shorthand props to cache/reference common jQuery objects
+     *
+     * @type {jQueryObject}
      */
     /**
-     * LVL99 Common
+     * # Common
      *
-     * Common dependencies and other useful things
-     *
-     * @package lvl99
+     * Common dependencies and other useful things.
      */
 
     var $doc = exports.$doc = $(document);
@@ -3149,6 +3149,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     /**
      * Event name shorthands
+     *
+     * @type {Object}
      */
     var events = exports.events = {
       click: 'click touchend',
@@ -3288,8 +3290,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
        * @type {Object}
        */
       _attributes: {}
-    };
 
+      /**
+       * Entity Class
+       */
+    };
     var Entity = function () {
       /**
        * Entity constructor
@@ -3439,7 +3444,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     exports.createPublicGetProperty = createPublicGetProperty;
     exports.createPublicGetSetProperty = createPublicGetSetProperty;
     /**
-     * LVL99 Inheritance utilities
+     * # Inheritance utilities
+     *
+     * Related to {Entity} classes and any sub-classes that extend them.
      */
 
     var RE_PRIVATE = /^_/;
@@ -3697,7 +3704,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     }
 
     /**
-     * LVL99 Tools
+     * # Tools
      *
      * Standalone tools that don't require any dependencies within the framework, but work alongside
      */
@@ -4064,7 +4071,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     });
     exports.default = SmoothScroll;
     /**
-     * LVL99 Smooth Scroll
+     * # Smooth Scroll
      *
      * Smoothly scroll to internal anchor links on a page.
      *
@@ -4072,7 +4079,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
      *
      * Smooth Scroll needs to be instantiated with jQuery and any configured options before using.
      *
-     * ```
+     * ```javascript
      *   let SmoothScroll = require('lvl99/es6/tools/smooth-scroll')(jQuery, { bufferTop: 0 })
      * ```
      *
@@ -4081,14 +4088,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
      *
      * You can trigger the scrollTo event by using the custom event `SmoothScroll.scrollTo`, e.g.:
      *
-     * ```
+     * ```javascript
      *   $(document).trigger('SmoothScroll.scrollTo', [ scrollToOptions ])
      * ```
      *
      * The `scrollTo` function emits a custom event `SmoothScroll.scrollTo:start` when the action is invoked and
      * `SmoothScroll.scrollTo:end` when it finishes.
-     *
-     * @package lvl99
      */
 
     function SmoothScroll($, options) {
@@ -4300,27 +4305,24 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     });
     exports.default = TrackEvent;
     /**
-     * LVL99 Track Event
-     * Caches tracked events until Google Analytics is loaded, then uploads to GA
+     * # Track Event
      *
-     * @package lvl99
+     * Caches tracked events until Google Analytics is loaded, then uploads to GA.
      */
 
     function TrackEvent(debug) {
       /**
-       * Collect tracked events before GA is loaded
+       * Collect tracked events before GA is loaded.
+       *
        * @type {Array}
        */
       var saved = [];
 
       /**
-       * Start checking to see if the GA object is loaded
-       */
-      /**
-       * Detect if GA is loaded and then send any stored GA events
+       * Detect if GA is loaded and then send any stored GA events.
        */
       this.gaLoadedTimer = setInterval(function (lvl99TrackEvent) {
-        var i = void 0;
+        var index = void 0;
 
         // Wait until GA object is available
         if (typeof window.ga !== 'undefined') {
@@ -4333,8 +4335,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
 
             for (i in lvl99TrackEvent.saved) {
-              if (lvl99TrackEvent.saved.hasOwnProperty(i)) {
-                window.ga('send', lvl99TrackEvent.saved[i]);
+              if (lvl99TrackEvent.saved.hasOwnProperty(index)) {
+                window.ga('send', lvl99TrackEvent.saved[index]);
               }
             }
             lvl99TrackEvent.saved = [];
@@ -4343,11 +4345,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }(this), 5000);
 
       /**
-       * Track event magic
-       * @param eventCategory
-       * @param eventAction
-       * @param eventLabel
-       * @param eventValue
+       * Track an event.
+       *
+       * @param {String} eventCategory
+       * @param {String} eventAction
+       * @param {String} eventLabel
+       * @param {String} eventValue
        */
       return function track(eventCategory, eventAction, eventLabel, eventValue) {
         var trackedEvent = {
@@ -4862,7 +4865,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     });
     exports.default = Debug;
     /**
-     * LVL99 Debug
+     * # Debug
      *
      * A console-like replacement which creates a noop console object if you don't want to output stuff via the console
      */
@@ -4870,7 +4873,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     function noop() {}
 
     /**
-     * Debug
+     * Debug class.
      *
      * @param {Boolean} silent Set to true to make the console behaviours silent
      * @constructor
@@ -4944,10 +4947,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     });
     exports.default = Breakpoints;
     /**
-     * LVL99 Breakpoints
-     * Detect via JS what the breakpoint is by keyword
+     * # Breakpoints
      *
-     * @package lvl99
+     * Detect via JS what the breakpoint is by keyword
      */
 
     function Breakpoints(sizes) {
@@ -5062,11 +5064,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       App: _app2.default,
       Component: _component2.default
     }; /**
-        * LVL99 Core
+        * # Core
         *
-        * Core classes used throughout the framework
-        *
-        * @package lvl99
+        * Core classes used throughout the framework.
         */
 
     exports.default = core;
@@ -5325,10 +5325,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
 
       /**
-       * Component
-       *
-       * @class
-       * @extends Entity
+       * Component Class
        */
     };
     var Component = function (_Entity) {
@@ -5967,10 +5964,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       _componentInstances: {}
 
       /**
-       * App
-       *
-       * @class
-       * @extends Entity
+       * App Class.
        */
     };
     var App = function (_Entity) {
@@ -6252,11 +6246,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     // import super from './super'
 
     /**
-     * LVL99 Utils
+     * # Utils
      *
-     * Utilities used throughout the framework
-     *
-     * @package lvl99
+     * Utilities used throughout the framework.
      */
 
     var utils = {
@@ -6328,9 +6320,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     /**
      * LVL99
      *
-     * The whole framework in one discrete package
-     *
-     * @package lvl99
+     * The whole framework in one discrete package.
      */
 
     var lvl99 = {

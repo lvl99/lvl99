@@ -1,7 +1,43 @@
 /**
- * LVL99 Component
+ * # Component
  *
- * @package lvl99
+ * The base class for components. All components rely on a HTML DOM element and may output a warning if one isn't set.
+ *
+ * ## Public Methods
+ *
+ * Components can have public methods configured which will automate creating event listeners to component methods.
+ *
+ * Each entry can be a string (which will then be a global event; be careful with global events being attached twice),
+ * or can be an object where you specify the target (often 'self') and set what method to do on whatever event, e.g.:
+ *
+ * ```
+ *   // This will trigger the Component's `exampleMethod` when the Component's $elem is targeted/triggered
+ *   // using the automatically generated custom event name:
+ *   // `$elem.trigger('LVL99:Component:exampleMethod')`
+ *   {
+ *     target: 'self',
+ *     do: 'exampleMethod'
+ *   }
+ *
+ *   // This will trigger the Component's `exampleMethod` when the document is targeted/triggered using a custom
+ *   // event name:
+ *   // `$(document).trigger('customEventName')`
+ *   {
+ *     target: 'document',
+ *     do: 'exampleMethod',
+ *     on: 'customEventName'
+ *   }
+ *
+ *   // This will trigger the Component's `exampleMethod` when the window is scrolled:
+ *   // `$(window).scroll()`
+ *   {
+ *     target: 'window',
+ *     do: 'exampleMethod',
+ *     on: 'scroll'
+ *   }
+ * ```
+ *
+ * @module lvl99/core/component
  */
 
 import objectPath from 'object-path'
@@ -20,26 +56,22 @@ import {
 const trackComponents = {}
 
 /**
- * The Component's base properties
- *
- * @type {Object}
+ * The Component's base properties.
  */
 const ComponentProperties = {
   /**
-   * NAMESPACE
-   * This is used for custom events and error reporting
+   * Used for custom events and error reporting
    *
    * @type {String}
-   * @default LVL99
+   * @default LVL99:Component
    */
   _NS: 'LVL99:Component',
 
   /**
-   * namespace
-   * This is used for CSS classes
+   * Used for CSS classes
    *
    * @type {String}
-   * @default lvl99
+   * @default lvl99-component
    */
   _ns: 'lvl99-component',
 
@@ -51,36 +83,6 @@ const ComponentProperties = {
   _properties: {
     /**
      * The names of Component methods to publicly expose in the DOM via custom events (attached during `init`).
-     *
-     * Each entry can be a string (which will then be a global event; be careful with global events being attached twice),
-     * or can be an object where you specify the target (often 'self') and set what method to do on whatever event, e.g.:
-     *
-     * ```
-     *   // This will trigger the Component's `exampleMethod` when the Component's $elem is targeted/triggered
-     *   // using the automatically generated custom event name:
-     *   // `$elem.trigger('Component:exampleMethod')`
-     *   {
-     *     target: 'self',
-     *     do: 'exampleMethod'
-     *   }
-     *
-     *   // This will trigger the Component's `exampleMethod` when the document is targeted/triggered using a custom
-     *   // event name:
-     *   // `$(document).trigger('customEventName')`
-     *   {
-     *     target: 'document',
-     *     do: 'exampleMethod',
-     *     on: 'customEventName'
-     *   }
-     *
-     *   // This will trigger the Component's `exampleMethod` when the window is scrolled:
-     *   // `$(window).scroll()`
-     *   {
-     *     target: 'window',
-     *     do: 'exampleMethod',
-     *     on: 'scroll'
-     *   }
-     * ```
      *
      * @type {Array}
      */
@@ -102,22 +104,24 @@ const ComponentProperties = {
   _attributes: {
     /**
      * The main element that represents the Component in the DOM. Component events will be managed through this element.
+     *
+     * @type {jQueryObject}
      */
     $elem: undefined
   }
 }
 
 /**
- * Component
+ * Component Class.
  *
+ * @namespace lvl99.core.Component
  * @class
- * @extends Entity
+ * @extends lvl99.core.Entity
  */
 export default class Component extends Entity {
   /**
-   * Component constructor
+   * Create a new Component instance.
    *
-   * @constructor
    * @param {Object} attributes
    */
   constructor (attributes) {
@@ -130,7 +134,9 @@ export default class Component extends Entity {
   }
 
   /**
-   * Extend the Component's properties with any {Object} arguments
+   * Extend the Component's properties with any extra properties/methods.
+   *
+   * @param {...Object} properties
    */
   extend () {
     // @debug
@@ -158,7 +164,7 @@ export default class Component extends Entity {
   }
 
   /**
-   * Get the component's element
+   * Get the component's DOM element.
    *
    * @return {undefined|jQueryObject}
    */
@@ -187,7 +193,7 @@ export default class Component extends Entity {
   }
 
   /**
-   * Mark the Component's element with necessary attributes
+   * Mark the Component's element with necessary attributes.
    */
   markElem () {
     // Mark the element
@@ -280,10 +286,10 @@ export default class Component extends Entity {
     // Mark the element
     this.markElem()
 
-    /**
-     * Attach Component's public methods to targets
-     * Public methods can be triggered on the targets via `$(target).trigger('NAMESPACE:publicMethodName')`
-     */
+    //
+    // Attach Component's public methods to targets
+    // Public methods can be triggered on the targets via `$(target).trigger('NAMESPACE:publicMethodName')`
+    //
     let publicMethods = this.getProp('publicMethods')
     if (publicMethods && publicMethods.length) {
       publicMethods.forEach((trigger) => {
@@ -363,14 +369,11 @@ export default class Component extends Entity {
       })
     }
 
-    /**
-     * Load any attributes that were attached to the DOM element
-     */
+    // Load any attributes that were attached to the DOM element
     this.loadAttrs()
 
     /**
-     * @trigger NAMESPACE:init:end
-     * @param {Component}
+     * @event NAMESPACE:init:end
      */
     this.triggerEvent('init:end')
   }
@@ -384,8 +387,7 @@ export default class Component extends Entity {
     // @TODO other garbage collection/memory management
 
     /**
-     * @trigger NAMESPACE:destroy:beforeend
-     * @param {Component}
+     * @event NAMESPACE:destroy:beforeend
      */
     this.triggerEvent('destroy:beforeend')
 
@@ -393,13 +395,15 @@ export default class Component extends Entity {
   }
 
   /**
-   * Bind method to custom event on target
+   * Bind method to custom event on target.
+   *
    * Event names are automatically namespaced using the Component's _NS property.
-   * To not use namespaced events, preface with `dom:`
+   *
+   * To not use the component's own namespaced events, preface the `eventName` with `dom:`
    *
    * @param {String} eventName
    * @param {Function} method
-   * @param {Object} target Default is `document`. This is the target DOM element which the custom event will bubble up to
+   * @param {Object} target - Default is `document`. This is the target DOM element which the custom event will bubble up to
    */
   bindEventToTarget (eventName, method, target) {
     // Default to document
@@ -441,12 +445,13 @@ export default class Component extends Entity {
 
   /**
    * Bind method to custom event on target with an element selector.
+   *
    * Event names are automatically namespaced using the Component's _NS property.
    *
    * @param {String} eventName
-   * @param {String} selector Target a specific element (via query selector) to trigger the event
+   * @param {String} selector - Target a specific element (via query selector) to trigger the event
    * @param {Function} method
-   * @param {Object} target Default is `document`. This is the target DOM element which the custom event will bubble up to
+   * @param {Object} target - Default is `document`. This is the target DOM element which the custom event will bubble up to
    */
   bindEventToTargetSelector (eventName, selector, method, target) {
     target = getTargetBySelector(target, this)

@@ -1,0 +1,124 @@
+
+<html><head></head><body><h3 id="1-4-3">1.4.3</h3>
+<ul>
+<li>Added new tool <a href="es6/tools/storage.es6"><code>Storage</code></a> which acts as a convenience wrapper with some extra small features<br>when using local/session storage.</li>
+<li>Added new tool <a href="es6/tools/form-state.es6"><code>FormState</code></a> which uses the browser storage to save and restore the form's<br>data for improved form UX when navigating between pages.</li>
+<li>Added tests for <a href="__tests__/tools/storage.test.es6"><code>Storage</code></a>, <a href="__tests__/tools/form-state.test.es6"><code>FormState</code></a>,<br><a href="__tests__/tools/smooth-scroll.test.es6"><code>SmoothScroll</code></a> tools.</li>
+<li>Refactored some of the configuration setup for Babel and Jest.</li>
+<li>Other minor tweaks/improvements.</li>
+</ul>
+<h3 id="1-4-2">1.4.2</h3>
+<ul>
+<li>Added <code>delayAdd</code> method to <a href="es6/tools/queue.es6"><code>Queue</code></a> to enable setting delay time before playing queue.</li>
+<li>Fixed issue with Jest tests and reverted them back to point to ES6 versions.</li>
+</ul>
+<h3 id="1-4-1">1.4.1</h3>
+<ul>
+<li>Pulled out image-based LESS functions from <a href="less/mixins/responsive.less">responsive.less</a> and put into their <a href="less/mixins/images.less">own LESS<br>file</a> for better custom tooling.</li>
+<li>Added extra switch on <a href="less/mixins/images.less"><code>.size-to-width</code></a> and <a href="less/mixins/images.less"><code>.size-to-height</code></a> to<br>control if element width/height is set to auto or not.</li>
+</ul>
+<h3 id="1-4-0">1.4.0</h3>
+<ul>
+<li>Added webpack for building <code>dist</code> version</li>
+<li>Jest tests now point to ES5 versions</li>
+<li>Refactored to have <code>import</code>/<code>export</code> interface for webpack and tree shaking</li>
+</ul>
+<h3 id="1-3-16">1.3.16</h3>
+<ul>
+<li>Refactored the <a href="es6/tools/queue.es6">Queue</a> a little bit to make more sense.</li>
+</ul>
+<h3 id="1-3-15">1.3.15</h3>
+<ul>
+<li>Prevented public methods with no target from being assigned more than once during <a href="es6/core/component.es6">Component</a><br>init phase.</li>
+</ul>
+<h3 id="1-3-14">1.3.14</h3>
+<ul>
+<li>Fixed the <a href="es6/tools/queue.es6">Queue</a> to not run while already running</li>
+</ul>
+<h3 id="1-3-13">1.3.13</h3>
+<ul>
+<li>Fixed <a href="es6/utils/parse.es6"><code>parse.extractClassDetails</code></a> to strip start/end single/double quotation marks from strings</li>
+</ul>
+<h3 id="1-3-12">1.3.12</h3>
+<ul>
+<li>Refactored the custom input LESS mixins to enable separating the different states for styling other elements with the<br>same styles. </li>
+</ul>
+<h3 id="1-3-11">1.3.11</h3>
+<ul>
+<li>Cleaned up some unnecessary debug logging.</li>
+</ul>
+<h3 id="1-3-10">1.3.10</h3>
+<ul>
+<li>Missed <em>another</em> minor issue which could have been spotted with a good test or two.</li>
+</ul>
+<h3 id="1-3-9">1.3.9</h3>
+<ul>
+<li>Fixed a minor issue and updated tests accordingly to avoid such minor issues...</li>
+</ul>
+<h3 id="1-3-8">1.3.8</h3>
+<ul>
+<li>Fixed issue with assigning component's public methods and using multiple event names. It will now extract the event<br>names (see <a href="es6/utils/parse.es6"><code>parse.extractTargetEventNames</code></a>) to assign the public method properly. Before all<br>public methods were namespaced with the component's namespace, so now you can also choose to use the built-in DOM<br>event (using <code>dom:eventName</code>) otherwise it defaults to the component's namespace.</li>
+</ul>
+<h3 id="1-3-7">1.3.7</h3>
+<ul>
+<li>Added support for "dot.notation" (see <a href="es6/utils/parse.es6"><code>parse.extractClassDetails</code></a>)when setting nested<br>properties in a DOM element's component options, e.g.<pre><code class="lang-html">&lt;div data-component="Component" data-component-options="example.nested.prop: value"&gt;&lt;/div&gt;
+</code></pre>
+The element will then initialise with an extracted options object like so:<pre><code class="lang-js">{
+example: {
+  nested: {
+    prop: "value"
+  }
+}
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="1-3-6">1.3.6</h3>
+<ul>
+<li>Added <a href="es6/core/app.es6"><code>initialiseComponents</code></a> method to initialise DOM elements marked with <code>data-component</code><br>attributes with any component class behaviours that have been registered in the app.</li>
+</ul>
+<h3 id="1-3-5">1.3.5</h3>
+<ul>
+<li>Added <a href="es6/tools/smooth-scroll.es6">SmoothScroll</a> tool to enable smooth scrolling when clicking anchor links</li>
+<li>Some version numbering got munched with all my silly little updates</li>
+</ul>
+<h3 id="1-3-3">1.3.3</h3>
+<ul>
+<li>Renamed <a href="es6">es6</a> files to have extension <code>.es6</code></li>
+<li>Added <a href="es5">es5</a> and <a href="dist">dist</a> versions of the framework</li>
+</ul>
+<h3 id="1-3-2">1.3.2</h3>
+<ul>
+<li>Added <a href="es6/tools/debug.es6">Debug</a> tool</li>
+<li>Refactored tools references to be uppercase</li>
+<li>Fixed issue with package's main <a href="es6/index.es6">index.js</a> file require path</li>
+</ul>
+<h3 id="1-3-1">1.3.1</h3>
+<ul>
+<li>Defined <code>@display-types</code> list for <a href="less/mixins/responsive.less"><code>responsive</code></a> <code>.devices-display-types</code> mixin to work </li>
+<li>Fixed incorrect require reference to <a href="es6/common.es6"><code>common</code></a> in named <a href="es6/components">components</a></li>
+</ul>
+<h3 id="1-3-0">1.3.0</h3>
+<ul>
+<li>Experimented with creating some <a href="es6/utils/inheritance.es6">inheritance</a> util methods to automatically process class<br>instances and expose private <code>_underscored</code> properties with a public getter interfaces (see <code>exposePrivateProperties</code>).<br>I really hate class inheritance in JavaScript though and I think I will try to go back to functional/prototype with<br><a href="es6/utils/super.es6">super</a> inheritance à la Ember JS.</li>
+</ul>
+<h3 id="1-2-1">1.2.1</h3>
+<ul>
+<li>Refactored the <a href="es6/tools/queue.es6"><code>Queue</code></a> tool (changed behaviour of <code>add</code> and <code>sync</code>) and added some extra<br>functionality (<code>queue</code>, <code>play</code>, <code>pause</code>, <code>getActionByLabel</code>, <code>getTimerDelay</code>, <code>setTimerDelay</code>, <code>getQueueLength</code> and<br><code>checkStatus</code>)</li>
+<li>Fixed imports/exports on <a href="es6/utils/super.es6"><code>super</code></a></li>
+</ul>
+<h3 id="1-1-0">1.1.0</h3>
+<ul>
+<li>Added the core <a href="es6/core/entity.es6"><code>Entity</code></a> class</li>
+<li>Added the core <a href="es6/core/app.es6"><code>App</code></a> class</li>
+<li>Refactored <a href="es6/core/component.es6"><code>Component</code></a> class to extend <a href="es6/core/entity.es6"><code>Entity</code></a> and be categorised as<br>core</li>
+</ul>
+<h3 id="1-0-1">1.0.1</h3>
+<ul>
+<li>npm publish error (whoops)</li>
+</ul>
+<h3 id="1-0-0">1.0.0</h3>
+<ul>
+<li>First release!</li>
+</ul>
+</body></html>

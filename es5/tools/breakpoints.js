@@ -31,10 +31,9 @@
     });
     exports.default = Breakpoints;
     /**
-     * LVL99 Breakpoints
-     * Detect via JS what the breakpoint is by keyword
+     * # Breakpoints
      *
-     * @package lvl99
+     * Detect via JS what the breakpoint is by keyword
      */
 
     function Breakpoints(sizes) {

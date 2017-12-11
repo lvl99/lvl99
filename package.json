@@ -45,6 +45,7 @@
     "babelify": "^8.0.0",
     "chalk": "^2.3.0",
     "clean-webpack-plugin": "^0.1.17",
+    "docma": "^1.5.2",
     "extend": "^3.0.1",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.0",

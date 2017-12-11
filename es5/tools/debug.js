@@ -31,7 +31,7 @@
     });
     exports.default = Debug;
     /**
-     * LVL99 Debug
+     * # Debug
      *
      * A console-like replacement which creates a noop console object if you don't want to output stuff via the console
      */
@@ -39,7 +39,7 @@
     function noop() {}
 
     /**
-     * Debug
+     * Debug class.
      *
      * @param {Boolean} silent Set to true to make the console behaviours silent
      * @constructor

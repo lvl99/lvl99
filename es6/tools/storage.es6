@@ -1,9 +1,7 @@
 /**
- * LVL99 Storage
+ * # Storage
  *
- * Utilise modern browser features like localStorage and sessionStorage (if available within the environment)
- *
- * @package lvl99
+ * Utilise modern browser features like localStorage and sessionStorage (if available within the environment).
  */
 
 import merge from 'lodash.merge'
@@ -35,7 +33,7 @@ export function testStorageType (storageType) {
 /**
  * Get the supported types of storage
  *
- * @returns {Object} with name of storage type as keys with {Boolean} value
+ * @return {Object} with name of storage type as keys with {Boolean} value
  */
 export function getSupportedStorageTypes () {
   let supports = {}
@@ -129,7 +127,7 @@ export default class Storage {
    *
    * @param {String} name The name of the data to retrieve from storage
    * @param {String} storageType The name of the storage type to retrieve from
-   * @returns {Mixed}
+   * @return {Mixed}
    * @throws {Error}
    */
   getItem (name, storageType) {
@@ -151,7 +149,7 @@ export default class Storage {
    * Get stored item's value by key from local storage
    *
    * @param {String} name The name of the data to retrieve from storage
-   * @returns {Mixed}
+   * @return {Mixed}
    */
   getItemLocal (name) {
     return this.getItem(name, LOCAL_STORAGE)
@@ -161,7 +159,7 @@ export default class Storage {
    * Get stored item's value by key from session storage
    *
    * @param {String} name The name of the item to retrieve from storage
-   * @returns {Mixed}
+   * @return {Mixed}
    */
   getItemSession (name) {
     return this.getItem(name, SESSION_STORAGE)

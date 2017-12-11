@@ -1,14 +1,16 @@
 /**
- * LVL99.Accordion
- * Uses the {ToggleableComponent} and manages the parent/child relationship between children
+ * # Accordion Component
  *
- * @package lvl99
+ * Uses the {ToggleableComponent} and manages the parent/child relationship between children.
  */
 
 import merge from 'lodash.merge'
 import { $, $body, events } from '../common'
 import Component from '../core/component'
 
+/**
+ * @namespace lvl99.components.Accordion
+ */
 const AccordionProperties = {
   // Namespaces
   _NS: 'LVL99:Accordion',
@@ -25,7 +27,18 @@ const AccordionProperties = {
 
   // Default Accordion attributes
   _attributes: {
+    /**
+     * Enable accessibility features.
+     *
+     * @type {Boolean}
+     */
     _a11y: true,
+
+    /**
+     * The class to give to the current active accordion item.
+     *
+     * @type {String}
+     */
     _accordionClassItemActive: 'active',
     _accordionItemSelector: '.accordion-item',
     _accordionItemToggleSelector: '.accordion-item-toggle',
@@ -47,21 +60,29 @@ const AccordionProperties = {
 }
 
 /**
- * LVL99.Accordion
+ * Accordion Class
  *
  * An {Accordion} manages the toggleable states of its children. Each child can be opened/closed, which may or may not
  * close the other children.
  *
- * @constructor
- * @extends {Component}
+ * @namespace lvl99.components.Accordion
+ * @class
  */
 export default class Accordion extends Component {
+  /**
+   * @constructor
+   */
   constructor (attributes) {
     // @debug
     // console.log('LVL99:Accordion:constructor')
     super(attributes)
   }
 
+  /**
+   * Extend the Accordion component. Used for composable object inheritance.
+   *
+   * @param {...Object} properties Extra properties to extend the Accordion's instance with
+   */
   extend () {
     // @debug
     // console.log('LVL99:Accordion:extend')
@@ -70,6 +91,9 @@ export default class Accordion extends Component {
     super.extend(AccordionProperties, ...arguments)
   }
 
+  /**
+   * Initialise the Accordion component.
+   */
   init () {
     // @debug
     // console.log('LVL99:Accordion:init', this.NS, this)
@@ -174,9 +198,10 @@ export default class Accordion extends Component {
 
   /**
    * Set an item within the accordion to be active.
-   * Note: This does not actually open the item! (unless the CSS class opens the item)
    *
-   * @param item
+   * ***Note:*** This does not actually open the item! (unless the configured CSS class opens the item)
+   *
+   * @param {String|HTMLElement|jQueryObject} item
    */
   setActiveItem (item) {
     let $item = $(item)
@@ -198,7 +223,7 @@ export default class Accordion extends Component {
   /**
    * Unset an item within the accordion to be active
    *
-   * @param item
+   * @param {String|HTMLElement|jQueryObject} item
    */
   unsetActiveItem (item) {
     let $item = $(item)

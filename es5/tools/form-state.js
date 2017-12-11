@@ -1,34 +1,35 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['module', 'exports', 'lodash.merge', '../common', '../utils/parse', './storage'], factory);
+    define(['exports', 'lodash.merge', '../common', '../utils/parse', './storage'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(module, exports, require('lodash.merge'), require('../common'), require('../utils/parse'), require('./storage'));
+    factory(exports, require('lodash.merge'), require('../common'), require('../utils/parse'), require('./storage'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod, mod.exports, global.lodash, global.common, global.parse, global.storage);
+    factory(mod.exports, global.lodash, global.common, global.parse, global.storage);
     global.formState = mod.exports;
   }
-})(this, function (module, exports) {
+})(this, function (exports) {
   (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-      define(['module', 'exports', 'lodash.merge', '../common', '../utils/parse', './storage'], factory);
+      define(['exports', 'lodash.merge', '../common', '../utils/parse', './storage'], factory);
     } else if (typeof exports !== "undefined") {
-      factory(module, exports);
+      factory(exports);
     } else {
       var mod = {
         exports: {}
       };
-      factory(mod, mod.exports, global.lodash, global.common, global.parse, global.storage);
+      factory(mod.exports, global.lodash, global.common, global.parse, global.storage);
       global.formState = mod.exports;
     }
-  })(this, function (module, exports, _lodash, _common, _parse, _storage) {
+  })(this, function (exports, _lodash, _common, _parse, _storage) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
       value: true
     });
+    exports.getFieldState = getFieldState;
 
     var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -66,6 +67,61 @@
 
     // Use the Storage tool to save the form's state
     var storage = new _storage2.default();
+
+    /**
+     * Get a field's current state.
+     *
+     * @param {String|HTMLElement|jQueryObject} targetField
+     * @returns {undefined|Object}
+     */
+    function getFieldState(targetField) {
+      var $field = (0, _common.$)(targetField);
+      var tagName = $field[0].tagName.toLowerCase();
+      var id = $field.attr('id');
+      var type = $field.attr('type');
+      var name = $field.attr('name');
+      var $relatedFields = $field.parents('form').find('[name="' + name + '"]');
+      var nameIndex = $relatedFields.index($field);
+      var value = $field.val();
+      var fieldState = {
+        snapshot: Date.now(),
+        tagName: tagName,
+        id: id,
+        type: type,
+        name: name,
+        nameIndex: nameIndex,
+        value: value
+
+        // Extra transforms on the value depending on the type of field and its state
+      };switch (type) {
+        // If a checkbox is not checked, it's state value should be ''
+        case 'checkbox':
+          if (!$field.is(':checked')) {
+            fieldState.value = '';
+          }
+          break;
+
+        // Ignore checkboxes which haven't been checked
+        case 'radio':
+          if (!$field.is(':checked')) {
+            return undefined;
+          }
+      }
+
+      /**
+       * Trigger a custom event on the field to allow other things to manipulate the field's returned state.
+       *
+       * @trigger FormState.getFieldState:after
+       * @param {Object} fieldState The generated field's state
+       * @param {Object} options Extra data used to generate the state
+       */
+      $field.trigger('FormState.getFieldState:after', [fieldState, {
+        $field: $field,
+        $relatedFields: $relatedFields
+      }]);
+
+      return fieldState;
+    }
 
     /**
      * FormState class
@@ -205,6 +261,11 @@
           .not('[type="password"], [type="file"]');
         }
       }, {
+        key: 'getField',
+        value: function getField(targetField) {
+          return getFieldState(targetField);
+        }
+      }, {
         key: 'getCurrentState',
         value: function getCurrentState() {
           var _this2 = this;
@@ -252,57 +313,6 @@
           }
 
           return savedFormState;
-        }
-      }, {
-        key: 'getField',
-        value: function getField(targetField) {
-          var $field = (0, _common.$)(targetField);
-          var tagName = $field[0].tagName.toLowerCase();
-          var id = $field.attr('id');
-          var type = $field.attr('type');
-          var name = $field.attr('name');
-          var $relatedFields = this.$target.find('[name="' + name + '"]');
-          var nameIndex = $relatedFields.index($field);
-          var value = $field.val();
-          var fieldState = {
-            snapshot: Date.now(),
-            tagName: tagName,
-            id: id,
-            type: type,
-            name: name,
-            nameIndex: nameIndex,
-            value: value
-
-            // Extra transforms on the value depending on the type of field and its state
-          };switch (type) {
-            // If a checkbox is not checked, it's state value should be ''
-            case 'checkbox':
-              if (!$field.is(':checked')) {
-                fieldState.value = '';
-              }
-              break;
-
-            // Ignore checkboxes which haven't been checked
-            case 'radio':
-              if (!$field.is(':checked')) {
-                return undefined;
-              }
-          }
-
-          /**
-           * Trigger a custom event on the field to allow other things to manipulate the field's returned state.
-           *
-           * @trigger FormState.getFieldState:after
-           * @param {Object} fieldState The generated field's state
-           * @param {Object} options Extra data used to generate the state
-           */
-          $field.trigger('FormState.getFieldState:after', [fieldState, {
-            FormState: this,
-            $field: $field,
-            $relatedFields: $relatedFields
-          }]);
-
-          return fieldState;
         }
       }, {
         key: 'save',
@@ -436,9 +446,9 @@
                 case 'checkbox':
                 case 'radio':
                   if (fieldState.value !== '' && fieldState.value !== undefined && fieldState.value !== null) {
-                    $field.attr('checked', 'checked');
+                    $field.prop('checked', true);
                   } else {
-                    $field.removeAttr('checked');
+                    $field.prop('checked', false);
                   }
                   break;
 
@@ -461,9 +471,9 @@
 
                 // Yes linter, I do want to use ==
                 if ($option.val() == fieldState.value) {
-                  $option.attr('selected', 'selected');
+                  $option.prop('selected', true);
                 } else {
-                  $option.removeAttr('selected');
+                  $option.prop('selected', false);
                 }
               });
               break;
@@ -523,6 +533,5 @@
     }();
 
     exports.default = FormState;
-    module.exports = exports['default'];
   });
 });

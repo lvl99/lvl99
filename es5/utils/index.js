@@ -43,11 +43,9 @@
     // import super from './super'
 
     /**
-     * LVL99 Utils
+     * # Utils
      *
-     * Utilities used throughout the framework
-     *
-     * @package lvl99
+     * Utilities used throughout the framework.
      */
 
     var utils = {

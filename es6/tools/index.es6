@@ -1,7 +1,9 @@
 /**
- * LVL99 Tools
+ * # Tools
  *
  * Standalone tools that don't require any dependencies within the framework, but work alongside
+ *
+ * @module lvl99/es6/tools
  */
 
 import Breakpoints from './breakpoints'
@@ -11,7 +13,10 @@ import TrackEvent from './trackevent'
 import SmoothScroll from './smooth-scroll'
 import Storage from './storage'
 
-const utils = {
+/**
+ * @namespace lvl99.tools
+ */
+const tools = {
   Breakpoints,
   Debug,
   Queue,

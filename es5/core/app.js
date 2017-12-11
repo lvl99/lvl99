@@ -187,10 +187,7 @@
       _componentInstances: {}
 
       /**
-       * App
-       *
-       * @class
-       * @extends Entity
+       * App Class.
        */
     };
     var App = function (_Entity) {

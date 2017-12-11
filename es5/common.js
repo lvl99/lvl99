@@ -43,13 +43,13 @@
 
     /**
      * Basic shorthand props to cache/reference common jQuery objects
+     *
+     * @type {jQueryObject}
      */
     /**
-     * LVL99 Common
+     * # Common
      *
-     * Common dependencies and other useful things
-     *
-     * @package lvl99
+     * Common dependencies and other useful things.
      */
 
     var $doc = exports.$doc = $(document);
@@ -59,6 +59,8 @@
 
     /**
      * Event name shorthands
+     *
+     * @type {Object}
      */
     var events = exports.events = {
       click: 'click touchend',

@@ -1,18 +1,18 @@
 /**
- * LVL99 Breakpoints
- * Detect via JS what the breakpoint is by keyword
+ * # Breakpoints
  *
- * @package lvl99
+ * Detect via JS what the breakpoint is by keyword
  */
 
+/**
+ * @class
+ * @namespace
+ * @property sizes The defined breakpoint names with min/max widths (in 72dpi pixels). Should coincide with CSS for optimum expected behaviour
+ */
 export default function Breakpoints (sizes) {
   return {
     /**
-     * The defined breakpoint names with min/max widths (in 72dpi pixels)
-     * Should coincide with CSS for optimum expected behaviour
-     *
-     * @property sizes
-     * @type {Object} => {Array} [0 = {Number} minWidth, 1 = {Number} maxWidth]
+     * @type {Object}
      */
     sizes: sizes || {
       'xs':       [0,    399],
@@ -30,17 +30,17 @@ export default function Breakpoints (sizes) {
     },
 
     /**
-     * Get a string of the currently active breakpoints
-     * @method getActive
-     * @returns {Array}
+     * Get an array of the currently active breakpoints.
+     *
+     * @return {Array}
      */
     getActive () {
       let width = window.innerWidth
       let bp = []
 
-      for (let x in this.sizes) {
-        if (this.sizes.hasOwnProperty(x) && width >= this.sizes[x][0] && width <= this.sizes[x][1]) {
-          bp.push(x)
+      for (let keyword in this.sizes) {
+        if (this.sizes.hasOwnProperty(keyword) && width >= this.sizes[keyword][0] && width <= this.sizes[keyword][1]) {
+          bp.push(keyword)
         }
       }
 
@@ -48,9 +48,10 @@ export default function Breakpoints (sizes) {
     },
 
     /**
-     * Check if a breakpoint keyword is currently active
-     * @method isActive
-     * @returns {Boolean}
+     * Check if a breakpoint keyword is currently active.
+     *
+     * @param {String|Array|RegExp} input The breakpoint keyword(s) (as {String} or {Array}) or a {RegExp} to check which are currently active.
+     * @return {Boolean}
      */
     isActive (input) {
       if (input instanceof Array) {
@@ -61,7 +62,7 @@ export default function Breakpoints (sizes) {
         input = new RegExp('\\b(?:' + input.replace(/[\s,]+/g, '|') + ')\\b', 'i')
       }
 
-      return input.test(this.getActive()+'')
+      return input.test(this.getActive() + '')
     }
   }
 }

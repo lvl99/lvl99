@@ -1,24 +1,54 @@
 /**
- * LVL99 Common
+ * # Common
  *
- * Common dependencies and other useful things
- *
- * @package lvl99
+ * Common dependencies and other useful things.
  */
 
 import jQuery from 'jquery'
+
+/**
+ * jQuery
+ *
+ * @type {jQueryObject}
+ */
 export const $ = jQuery
 
 /**
  * Basic shorthand props to cache/reference common jQuery objects
  */
-export const $doc = $(document)
+
+/**
+ * The window as a jQuery object.
+ *
+ * @type {jQueryObject}
+ */
 export const $win = $(window)
+
+/**
+ * The document as a jQuery object.
+ *
+ * @type {jQueryObject}
+ */
+export const $doc = $(document)
+
+/**
+ * The HTML DOM element as a jQuery object.
+ *
+ * @type {jQueryObject}
+ */
 export const $html = $('html')
+
+/**
+ * The body DOM element node as a jQuery object.
+ *
+ * @type {jQueryObject}
+ */
 export const $body = $('body')
 
 /**
- * Event name shorthands
+ * Common browser event names and their cross-browser versions
+ *
+ * @type {Object}
  */
 export const events = {
   click: 'click touchend',
@@ -32,7 +62,10 @@ export const events = {
   transitionend: 'transitionend webkitTransitionEnd webkittransitionend mozTransitionEnd MSTransitionEnd oTransitionEnd otransitionend'
 }
 
-const utils = {
+/**
+ * @namespace lvl99.common
+ */
+const common = {
   $,
   $doc,
   $win,
@@ -41,4 +74,4 @@ const utils = {
   events
 }
 
-export default utils
+export default common

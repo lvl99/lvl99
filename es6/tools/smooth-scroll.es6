@@ -1,5 +1,5 @@
 /**
- * LVL99 Smooth Scroll
+ * # Smooth Scroll
  *
  * Smoothly scroll to internal anchor links on a page.
  *
@@ -7,7 +7,7 @@
  *
  * Smooth Scroll needs to be instantiated with jQuery and any configured options before using.
  *
- * ```
+ * ```javascript
  *   let SmoothScroll = require('lvl99/es6/tools/smooth-scroll')(jQuery, { bufferTop: 0 })
  * ```
  *
@@ -16,14 +16,12 @@
  *
  * You can trigger the scrollTo event by using the custom event `SmoothScroll.scrollTo`, e.g.:
  *
- * ```
+ * ```javascript
  *   $(document).trigger('SmoothScroll.scrollTo', [ scrollToOptions ])
  * ```
  *
  * The `scrollTo` function emits a custom event `SmoothScroll.scrollTo:start` when the action is invoked and
  * `SmoothScroll.scrollTo:end` when it finishes.
- *
- * @package lvl99
  */
 
 export default function SmoothScroll ($, options) {

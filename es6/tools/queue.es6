@@ -1,10 +1,7 @@
 /**
- * LVL99 Queue
+ * # Queue
  *
- * Batch actions into a debounced queue
- * Useful to reduce amount of work computer/browser does
- *
- * @package lvl99
+ * Batch actions into a debounced queue. Useful to reduce amount of work computer/browser does.
  */
 
 import merge from 'lodash.merge'
@@ -12,7 +9,7 @@ import merge from 'lodash.merge'
 /**
  * Queue class
  *
- * @returns {Object}
+ * @return {Object}
  * @constructor
  */
 export default function Queue (options) {
@@ -406,7 +403,7 @@ export default function Queue (options) {
      *   0 = Paused
      *   1 = Playing
      *   2 = Running
-     * @returns {Number}
+     * @return {Number}
      */
     checkStatus () {
       return _status
@@ -415,7 +412,7 @@ export default function Queue (options) {
     /**
      * Get the timer delay
      *
-     * @returns {Number}
+     * @return {Number}
      */
     getTimerDelay () {
       return _timerDelay
@@ -426,7 +423,7 @@ export default function Queue (options) {
      *
      * @param timerDelay
      * @chainable
-     * @returns {Self}
+     * @return {Self}
      */
     setTimerDelay (timerDelay) {
       // Only set if timerDelay is greater than 0
@@ -451,7 +448,7 @@ export default function Queue (options) {
     /**
      * Backward compatible alias
      *
-     * @returns {Queue.length}
+     * @return {Queue.length}
      */
     getQueueLength() {
       return this.length
@@ -460,7 +457,7 @@ export default function Queue (options) {
     /**
      * Get the queue tasks
      *
-     * @returns {Object}
+     * @return {Object}
      */
     getTasks () {
       return _tasks

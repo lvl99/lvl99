@@ -1,15 +1,13 @@
 /**
- * LVL99 Debug
+ * # Debug
  *
  * A console-like replacement which creates a noop console object if you don't want to output stuff via the console
- *
- * @package lvl99
  */
 
 function noop () {}
 
 /**
- * Debug
+ * Debug class.
  *
  * @param {Boolean} silent Set to true to make the console behaviours silent
  * @constructor

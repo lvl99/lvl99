@@ -47,9 +47,7 @@
     /**
      * LVL99
      *
-     * The whole framework in one discrete package
-     *
-     * @package lvl99
+     * The whole framework in one discrete package.
      */
 
     var lvl99 = {

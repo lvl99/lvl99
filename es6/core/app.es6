@@ -1,7 +1,10 @@
 /**
- * LVL99 App
+ * # App
  *
- * @package lvl99
+ * Base class for an App.
+ *
+ * Apps don't need DOM elements. They essentially hold all the references to the available components and component
+ * instances.
  */
 
 import uuid from 'uuid'
@@ -16,8 +19,8 @@ import {
  * Get a component's namespace
  *
  * @private
- * @param {Component} component
- * @returns {undefined|String|Component}
+ * @param {lvl99.core.Component} component
+ * @return {undefined|String|lvl99.core.Component}
  */
 function getComponentNamespace (component) {
   let componentNS = component
@@ -87,14 +90,14 @@ const AppProperties = {
 }
 
 /**
- * App
+ * App Class.
  *
  * @class
- * @extends Entity
+ * @namespace lvl99.core.App
  */
 export default class App extends Entity {
   /**
-   * App constructor
+   * App instance constructor.
    *
    * @constructor
    * @param {Object} attributes
@@ -108,6 +111,8 @@ export default class App extends Entity {
 
   /**
    * Extend the App with any given {Object} arguments
+   *
+   * @param {...Object} properties
    */
   extend () {
     // @debug
@@ -120,7 +125,7 @@ export default class App extends Entity {
   /**
    * Register a component class in the app. You can also specify a separate namespace to register it under.
    *
-   * @param {Component} componentClass
+   * @param {lvl99.core.Component} componentClass
    * @param {String} componentClassNamespace
    */
   registerComponentClass (componentClass, componentClassNamespace) {
@@ -141,9 +146,9 @@ export default class App extends Entity {
   }
 
   /**
-   * Deregister a component class by namespace
+   * Deregister a component class by namespace.
    *
-   * @param {String|Component} componentClassNamespace
+   * @param {String|lvl99.core.Component} componentClassNamespace
    */
   deregisterComponentClass (componentClassNamespace) {
     let componentClassNS
@@ -164,10 +169,10 @@ export default class App extends Entity {
   }
 
   /**
-   * Get a component class by namespace
+   * Get a component class by namespace.
    *
    * @param {String} componentClassNamespace
-   * @return {undefined|Component}
+   * @return {undefined|lvl99.core.Component}
    */
   getComponentClass (componentClassNamespace) {
     let componentClassNS = componentClassNamespace
@@ -185,9 +190,9 @@ export default class App extends Entity {
   }
 
   /**
-   * Add component instance to app and initialise the component instance
+   * Add component instance to app and initialise the component instance.
    *
-   * @param {Component} componentInstance
+   * @param {lvl99.core.Component} componentInstance
    */
   addComponentInstance (componentInstance) {
     componentInstance._app = this
@@ -200,11 +205,11 @@ export default class App extends Entity {
   }
 
   /**
-   * Create component instance
+   * Create component instance.
    *
    * @param {String} componentClassNamespace
    * @param {Object} attributes
-   * @returns {Component}
+   * @return {lvl99.core.Component}
    */
   createComponentInstance (componentClassNamespace, attributes) {
     // @debug
@@ -229,10 +234,10 @@ export default class App extends Entity {
   }
 
   /**
-   * Get a component instance by UUID
+   * Get a component instance by UUID.
    *
    * @param {String} componentUUID
-   * @returns {undefined|Component}
+   * @return {undefined|lvl99.core.Component}
    */
   getComponentInstance (componentUUID) {
     // @debug
@@ -246,9 +251,9 @@ export default class App extends Entity {
   }
 
   /**
-   * Remove component instance by UUID
+   * Remove component instance by UUID.
    *
-   * @param {Component} componentUUID
+   * @param {lvl99.core.Component} componentUUID
    */
   removeComponentInstance (componentUUID) {
     // @debug
@@ -269,7 +274,25 @@ export default class App extends Entity {
   }
 
   /**
-   * Initialise any component which is marked in the DOM
+   * Initialise any components which have been marked in the DOM. DOM elements will need the `data-component` attribute
+   * set to the namespace of the component:
+   *
+   * ```
+   *   <div data-component="LVL99:Component"></div>
+   * ```
+   *
+   * This allows for automatic initialisation through the `initialiseComponents` method.
+   *
+   * You can also configure the component's options by using the `data-component-options` attribute. These options can
+   * be written in JSON, or using the CSS class style declaration syntax, e.g.
+   *
+   * ```
+   *   <!-- Using JSON -->
+   *   <div data-component="LVL99:Component" data-component-options='{"key":"value","example": 123}'></div>
+
+   *   <!-- Using CSS-like declarations -->
+   *   <div data-component="LVL99:Component" data-component-options="key: 'value'; example: 123;"></div>
+   * ```
    */
   initialiseComponents () {
     // Find any element marked with the `[data-component]` attribute

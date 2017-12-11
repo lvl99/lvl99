@@ -175,7 +175,7 @@
       }
 
       /**
-       * LVL99.Toggleable
+       * Toggleable Class
        *
        * Toggleable components can be opened using the {Toggleable} method `open`, or closed using the
        * {Toggleable} method `close`. You can toggle between the open/closed states using the method `toggle`.
@@ -184,9 +184,6 @@
        * return a {Boolean} value.
        *
        * To incorporate this behaviour with your component, simply import and extend the {Toggleable} class.
-       *
-       * @constructor
-       * @extends {Component}
        */
     };
     var Toggleable = function (_Component) {

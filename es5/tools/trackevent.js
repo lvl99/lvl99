@@ -31,27 +31,24 @@
     });
     exports.default = TrackEvent;
     /**
-     * LVL99 Track Event
-     * Caches tracked events until Google Analytics is loaded, then uploads to GA
+     * # Track Event
      *
-     * @package lvl99
+     * Caches tracked events until Google Analytics is loaded, then uploads to GA.
      */
 
     function TrackEvent(debug) {
       /**
-       * Collect tracked events before GA is loaded
+       * Collect tracked events before GA is loaded.
+       *
        * @type {Array}
        */
       var saved = [];
 
       /**
-       * Start checking to see if the GA object is loaded
-       */
-      /**
-       * Detect if GA is loaded and then send any stored GA events
+       * Detect if GA is loaded and then send any stored GA events.
        */
       this.gaLoadedTimer = setInterval(function (lvl99TrackEvent) {
-        var i = void 0;
+        var index = void 0;
 
         // Wait until GA object is available
         if (typeof window.ga !== 'undefined') {
@@ -64,8 +61,8 @@
             }
 
             for (i in lvl99TrackEvent.saved) {
-              if (lvl99TrackEvent.saved.hasOwnProperty(i)) {
-                window.ga('send', lvl99TrackEvent.saved[i]);
+              if (lvl99TrackEvent.saved.hasOwnProperty(index)) {
+                window.ga('send', lvl99TrackEvent.saved[index]);
               }
             }
             lvl99TrackEvent.saved = [];
@@ -74,11 +71,12 @@
       }(this), 5000);
 
       /**
-       * Track event magic
-       * @param eventCategory
-       * @param eventAction
-       * @param eventLabel
-       * @param eventValue
+       * Track an event.
+       *
+       * @param {String} eventCategory
+       * @param {String} eventAction
+       * @param {String} eventLabel
+       * @param {String} eventValue
        */
       return function track(eventCategory, eventAction, eventLabel, eventValue) {
         var trackedEvent = {

@@ -1,25 +1,29 @@
 /**
- * LVL99 Track Event
- * 
- * Caches tracked events until Google Analytics is loaded, then uploads to GA
+ * # Track Event
  *
- * @package lvl99
+ * Caches tracked events until Google Analytics is loaded, then uploads to GA.
  */
 
+/**
+ * TrackEvent
+ *
+ * @param {Boolean} debug
+ * @returns {Function}
+ * @constructor
+ */
 export default function TrackEvent (debug) {
   /**
-   * Collect tracked events before GA is loaded
+   * Collect tracked events before GA is loaded.
+   * 
+   * @private
    * @type {Array}
    */
   let saved = []
 
   /**
-   * Start checking to see if the GA object is loaded
+   * Detect if GA is loaded and then send any stored GA events.
    */
-  /**
-   * Detect if GA is loaded and then send any stored GA events
-   */
-  this.gaLoadedTimer = setInterval((function (lvl99TrackEvent) {
+  this.gaLoadedTimer = setInterval((function checkIfGAIsLoaded (lvl99TrackEvent) {
     let index
 
     // Wait until GA object is available
@@ -32,7 +36,7 @@ export default function TrackEvent (debug) {
           console.log(`Sending ${lvl99TrackEvent.saved.length} tracked events to ga`)
         }
 
-        for (i in lvl99TrackEvent.saved) {
+        for (index in lvl99TrackEvent.saved) {
           if (lvl99TrackEvent.saved.hasOwnProperty(index)) {
             window.ga('send', lvl99TrackEvent.saved[index])
           }
@@ -43,13 +47,14 @@ export default function TrackEvent (debug) {
   }(this)), 5000)
 
   /**
-   * Track event magic
-   * @param eventCategory
-   * @param eventAction
-   * @param eventLabel
-   * @param eventValue
+   * Track an event.
+   *
+   * @param {String} eventCategory
+   * @param {String} eventAction
+   * @param {String} [eventLabel]
+   * @param {Number} [eventValue]
    */
-  return function track (eventCategory, eventAction, eventLabel, eventValue) {
+  this.track = function (eventCategory, eventAction, eventLabel, eventValue) {
     let trackedEvent = {
       hitType: 'event',
       eventCategory: eventCategory,
@@ -58,8 +63,15 @@ export default function TrackEvent (debug) {
       eventValue: eventValue
     }
 
-    if (!eventCategory || !eventAction) return;
-    if (typeof eventValue === 'string') return;
+    // eventCategory and eventAction are required values
+    if (!eventCategory || !eventAction) {
+      return
+    }
+
+    // GA says eventValue cannot be a string
+    if (typeof eventValue === 'string') {
+      return
+    }
 
     // GA is loaded
     if (typeof window.ga !== 'undefined') {

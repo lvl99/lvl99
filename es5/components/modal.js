@@ -148,14 +148,11 @@
       }
 
       /**
-       * LVL99.Modal
+       * Modal Class
        *
        * Modal inherit {Toggleable} public behaviours.
        *
        * To incorporate this behaviour with your component, simply import and extend the {Modal} class.
-       *
-       * @constructor
-       * @extends {Toggleable}
        */
     };
     var Modal = function (_Toggleable) {

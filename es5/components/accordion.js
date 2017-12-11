@@ -150,13 +150,10 @@
       }
 
       /**
-       * LVL99.Accordion
+       * Accordion Class
        *
        * An {Accordion} manages the toggleable states of its children. Each child can be opened/closed, which may or may not
        * close the other children.
-       *
-       * @constructor
-       * @extends {Component}
        */
     };
     var Accordion = function (_Component) {

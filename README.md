@@ -1,11 +1,15 @@
-# LVL99
+# LVL99 Frontend Framework
 
-v1.4.3
+[![Github release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/lvl99/lvl99/tree/1.4.3)
+[![Package dependencies by David](https://img.shields.io/david/lvl99/lvl99.svg)](https://david-dm.org/lvl99/lvl99.svg)
+[![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
+[![Tested with Jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 My own personal frontend framework. Primarily uses jQuery, mildly inspired by Bootstrap and Ember.js and also has
 nothing to do with React. I also use it as a self-learning and development exercise experiment.
 
-* JavaScript is written in Node.js compatible ES6 (no features requiring `--harmony` switch)
+* JavaScript is written in Node.js compatible ES6
 * I use StandardJS for coding style
 * I like how simple LESS is; I dislike how bloated SCSS is
 
@@ -171,7 +175,7 @@ You can also require/import single files if you don't want the whole LESS framew
 
 ## Dependencies
 
-* **jQuery**: Browser events, cross-browser implementations, etc.
+* **jQuery**: Browser events, cross-browser implementations, standardized DOM traversing, etc.
 * **object-path**: Good for working with deep-nested objects
 * **lodash.merge**: Deep object extend
 * **uuid**: Unique ID generation
@@ -179,18 +183,18 @@ You can also require/import single files if you don't want the whole LESS framew
 
 ## Dev Dependencies
 
-* **Jest**: Unit testing
-* **Babel**: Transpile ES6 to ES5
-* **Browserify**: Create lvl99.js distribution bundle
 * **Gulp**: Task runner
+* **Babel**: Transpile ES6 to ES5
+* **Webpack**: Create lvl99.js distribution bundle
+* **Jest**: Unit testing
 
 
 ## TODO
 
-* Complete the README
-* Write more unit tests
-* Write more documentation throughout source
-* Create minified version of [`dist/lvl99.js`](dist/lvl99.js)
+[ ] Complete the README
+[ ] Write more unit tests
+[x] ~Write more documentation throughout source~
+[ ] Create minified version of [`dist/lvl99.js`](dist/lvl99.js)
 
 
 ## Contribute
@@ -199,6 +203,7 @@ What? Really? Are you sure? Aren't there other frameworks more worth your time?
 
 
 ## [Changelog](CHANGELOG.md)
+
 
 ## [License](LICENSE.md)
 

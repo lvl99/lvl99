@@ -1,8 +1,7 @@
 /**
- * LVL99.Toggleable
- * Extends {Component} to enable toggleability via CSS classes (open, close, toggle)
+ * # Toggleable Component
  *
- * @package lvl99
+ * Extends {Component} to enable toggleability via CSS classes (open, close, toggle).
  */
 
 import { $, $body, events } from '../common'
@@ -75,7 +74,7 @@ const ToggleableProperties = {
 }
 
 /**
- * LVL99.Toggleable
+ * Toggleable Class
  *
  * Toggleable components can be opened using the {Toggleable} method `open`, or closed using the
  * {Toggleable} method `close`. You can toggle between the open/closed states using the method `toggle`.
@@ -84,9 +83,6 @@ const ToggleableProperties = {
  * return a {Boolean} value.
  *
  * To incorporate this behaviour with your component, simply import and extend the {Toggleable} class.
- *
- * @constructor
- * @extends {Component}
  */
 export default class Toggleable extends Component {
   constructor (attributes) {

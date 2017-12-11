@@ -101,8 +101,11 @@
        * @type {Object}
        */
       _attributes: {}
-    };
 
+      /**
+       * Entity Class
+       */
+    };
     var Entity = function () {
       /**
        * Entity constructor
