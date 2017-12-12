@@ -7,7 +7,7 @@
  *
  * Smooth Scroll needs to be instantiated with jQuery and any configured options before using.
  *
- * ```javascript
+ * ```
  *   let SmoothScroll = require('lvl99/es6/tools/smooth-scroll')(jQuery, { bufferTop: 0 })
  * ```
  *
@@ -16,7 +16,7 @@
  *
  * You can trigger the scrollTo event by using the custom event `SmoothScroll.scrollTo`, e.g.:
  *
- * ```javascript
+ * ```
  *   $(document).trigger('SmoothScroll.scrollTo', [ scrollToOptions ])
  * ```
  *
