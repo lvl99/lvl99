@@ -4,6 +4,8 @@
   when using local/session storage.
 * Added tests for [`Storage`](__tests__/tools/storage.test.es6) and [`SmoothScroll`](__tests__/tools/smooth-scroll.test.es6)
   tools.
+* Refactored [`SmoothScroll`](es6/tools/smooth-scroll.es6)  to support scrolling to elements within nested scrollable
+  elements.
 * Refactored some of the configuration setup for Babel and Jest.
 
 
