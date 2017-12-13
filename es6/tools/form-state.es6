@@ -4,7 +4,12 @@
  * Use local or session storage to save a form's state. This means if a user navigates away that their data can be
  * stored and they can choose to resume or reset the form's state.
  *
- * @package lvl99
+ * @module lvl99/tools/FormState
+ * @requires module:jquery
+ * @requires module:lodash.merge
+ * @requires module:lvl99/utils/parse
+ * @requires module:lvl99/tools/Storage
+ * @namespace lvl99.tools.FormState
  */
 
 import merge from 'lodash.merge'
@@ -12,14 +17,29 @@ import { $ } from '../common'
 import { coerceToPrimitiveType } from '../utils/parse'
 import Storage, { LOCAL_STORAGE } from './storage'
 
+/**
+ * The various work states of the FormState instance.
+ *
+ * @typedef {Number} FormStateStatus
+ * @readonly
+ * @enum {FormStateStatus}
+ */
+const FORMSTATE_STATUS = {
+  /** Instance is currently idle. */
+  IDLE: 0,
+  /** Instance is processing. */
+  PROCESSING: 1
+}
+
 // Use the Storage tool to save the form's state
-const storage = new Storage()
+const STORAGE = new Storage()
 
 /**
  * Get a field's current state.
  *
+ * @static
  * @param {String|HTMLElement|jQueryObject} targetField
- * @returns {undefined|Object}
+ * @returns {undefined|FieldStateSnapshot}
  */
 export function getFieldState (targetField) {
   let $field = $(targetField)
@@ -30,6 +50,19 @@ export function getFieldState (targetField) {
   let $relatedFields = $field.parents('form').find(`[name="${name}"]`)
   let nameIndex = $relatedFields.index($field)
   let value = $field.val()
+
+  /**
+   * A field's state describing how to locate the field and its value at the time of saving.
+   *
+   * @typedef {Object} FieldStateSnapshot
+   * @prop {Number} snapshot - Unix time in milliseconds of when the snapshot was taken
+   * @prop {String} tagName - The field's HTML tag name
+   * @prop {undefined|String} [id=undefined] - The field's `id` attribute value
+   * @prop {undefined|String} [type=undefined] - The field's `type` attribute value
+   * @prop {undefined|String} [name=undefined] - The field's `name` attribute value
+   * @prop {Number} nameIndex - The field's numbered index for other fields that share the same name (e.g. radio buttons)
+   * @prop {*} value - The field's computed value
+   */
   let fieldState = {
     snapshot: Date.now(),
     tagName,
@@ -60,7 +93,7 @@ export function getFieldState (targetField) {
    * Trigger a custom event on the field to allow other things to manipulate the field's returned state.
    *
    * @trigger FormState.getFieldState:after
-   * @param {Object} fieldState The generated field's state
+   * @param {FieldStateSnapshot} fieldState The generated field's state
    * @param {Object} options Extra data used to generate the state
    */
   $field.trigger('FormState.getFieldState:after', [fieldState, {
@@ -72,59 +105,46 @@ export function getFieldState (targetField) {
 }
 
 /**
- * FormState class
+ * FormState class.
+ *
+ * @namespace FormState
+ * @class
  */
 export default class FormState {
   /**
-   * Create the FormState instance.
+   * FormState constructor.
    *
+   * @constructor
    * @param {String|HTMLElement|jQueryObject} target
    * @param {Object} options
+   * @throws Error
    */
   constructor (target, options) {
+    /**
+     * The options for the FormState instance.
+     *
+     * @typedef {Object} FormStateOptions
+     * @prop {String|HTMLElement|jQueryObject} target - The target form element.
+     * @prop {String} storageType - The default storage type to use
+     * @prop {Boolean} clearOnSubmit=true - Clear the form's state when submitted
+     * @prop {String} includeFields - Selector of fields to save state values of.
+     *
+     * Defaults to HTML elements `input`, `select` and `textarea` which have a name attribute set, and any element
+     * that returns a `jQuery.fn.val()` result with the attribute `data-form-state-include`.
+     *
+     * @prop {String} ignoreFields - Selector of fields to ignore values of when saving state.
+     *
+     * Defaults to ignoring input elements with type of button, submit, reset and image; any elements with the
+     * attribute `data-form-state-ignore`; and any hidden input elements which have a name that starts with an
+     * underscore (like WP nonce hidden inputs).
+     *
+     * Please note that password and file input elements will always be ignored.
+     */
     this.settings = merge({
-      /**
-       * The target form element.
-       *
-       * @type {String|HTMLElement|jQueryObject}
-       */
       target: target,
-
-      /**
-       * The default storage type to use
-       *
-       * @type {String}
-       */
       storageType: LOCAL_STORAGE,
-
-      /**
-       * Clear the form's state when submitted
-       *
-       * @type {Boolean}
-       */
       clearOnSubmit: true,
-
-      /**
-       * Selector of fields to save state values of.
-       *
-       * Defaults to HTML elements `input`, `select` and `textarea` which have a name attribute set, and any element
-       * that returns a `jQuery.fn.val()` result with the attribute `data-form-state-include`.
-       *
-       * @type {String}
-       */
       includeFields: 'input[name], select[name], textarea[name], [data-form-state-include]',
-
-      /**
-       * Selector of fields to ignore values of when saving state.
-       *
-       * Defaults to ignoring input elements with type of button, submit, reset and image; any elements with the
-       * attribute `data-form-state-ignore`; and any hidden input elements which have a name that starts with an
-       * underscore (like WP nonce hidden inputs).
-       *
-       * Please note that password and file input elements will always be ignored.
-       *
-       * @type {String}
-       */
       ignoreFields: 'input[type="submit"], input[type="reset"], input[type="button"], input[type="image"], input[type="hidden"][name^="_"], [data-form-state-ignore]'
     }, options)
 
@@ -134,9 +154,10 @@ export default class FormState {
     }
 
     /**
-     * The target element as a jQueryObject.
+     * The element which represents the target form.
      *
-     * @type {jQueryObject}
+     * @memberof FormState
+     * @prop {jQueryObject} $target
      */
     this.$target = $(this.settings.target).first()
 
@@ -151,12 +172,8 @@ export default class FormState {
     }
 
     /**
-     * The status of the FormState instance:
-     *
-     *  - 0: idle
-     *  - 1: doing something
-     *
-     * @type {number}
+     * @memberof FormState
+     * @prop {FormStateStatus} status - The current working status of the FormState instance.
      */
     this.status = 0
 
@@ -188,7 +205,7 @@ export default class FormState {
   /**
    * Get the target's supported fields as a jQuery object.
    *
-   * @returns {jQuery}
+   * @returns {jQueryObject}
    */
   getFields () {
     return this.$target
@@ -204,157 +221,18 @@ export default class FormState {
    * Get a field's current state.
    *
    * @param {String|HTMLElement|jQueryObject} targetField
-   * @returns {undefined|Object}
+   * @returns {undefined|FieldStateSnapshot}
    */
-  getField (targetField) {
+  getFieldState (targetField) {
     return getFieldState(targetField)
-  }
-
-  /**
-   * Get a snapshot of the form's current state.
-   *
-   * @returns {Object}
-   */
-  getCurrentState () {
-    let formState = {
-      snapshot: Date.now(),
-      targetId: this.$target.attr('id'),
-      fields: []
-    }
-
-    // Process all the form fields to extract the data
-    let $fields = this.getFields()
-    $fields.each((index, elem) => {
-      let fieldState = this.getField(elem)
-      if (fieldState) {
-        formState.fields.push(fieldState)
-      }
-    })
-
-    return formState
-  }
-
-  /**
-   * Get a previously saved snapshot of the form's state.
-   *
-   * @param {String} version
-   * @returns {Object}
-   */
-  getSavedState (version = '') {
-    // Set a version in the name that will be stored
-    if (version) {
-      version = `:${version}`
-    }
-
-    // Check for the saved form state
-    let targetId = this.$target.attr('id')
-    let savedFormState = storage.getItem(`FormState:${targetId}${version}`)
-
-    // If version set and formState is falsey, try without the version
-    if (version && !savedFormState) {
-      savedFormState = storage.getItem(`FormState:${targetId}`)
-    }
-
-    // Process the field values to ensure we have coerced types
-    if (savedFormState && savedFormState.hasOwnProperty('fields') && savedFormState.fields.length) {
-      savedFormState.fields.forEach((fieldState, index) => {
-        savedFormState.fields[index].value = coerceToPrimitiveType(savedFormState.fields[index].value)
-      })
-    }
-
-    return savedFormState
-  }
-
-  /**
-   * Save form state.
-   *
-   * @param {String} version Set a specific version value to save under
-   */
-  save (version = '') {
-    // Ensure not saving while already saving
-    if (this.status) {
-      return
-    }
-
-    // Track the status of the saving process
-    this.status = 1
-
-    // Set a version in the name that will be stored
-    if (version) {
-      version = `:${version}`
-    }
-
-    // Get the form state
-    let formState = this.getCurrentState()
-
-    storage.setItem(`FormState:${formState.targetId}${version}`, formState, this.settings.storageType)
-
-    // Turn off the status to allow other operations to work
-    this.status = 0
-  }
-
-  /**
-   * Restore form state.
-   *
-   * @param {String} version A specific version of the form's state to restore (only if it is available within the storage type)
-   */
-  restore (version = '') {
-    // Ensure not restoring while already working
-    if (this.status) {
-      return
-    }
-
-    // Track the status of the restoring process
-    this.status = 1
-
-    // Set a version in the name that will be stored
-    let formState = this.getSavedState(version)
-
-    // Silently fade out into the night...
-    if (!formState) {
-      this.status = 0
-      return
-    }
-
-    /**
-     * Trigger a custom event before restoring the form's state
-     *
-     * @trigger FormState.restore:before
-     * @param {Object} formState The form's state
-     * @param {Object} options Extra data used when restoring the state
-     */
-    this.$target.trigger('FormState.restore:before', [formState, {
-      FormState: this,
-      version
-    }])
-
-    // Restore the fields within the form
-    if (formState && formState.hasOwnProperty('fields')) {
-      formState.fields.forEach((fieldState) => this.restoreField(fieldState))
-    }
-
-    /**
-     * Trigger a custom event after restoring the form's state
-     *
-     * @trigger FormState.restore:after
-     * @param {Object} formState The form's state
-     * @param {Object} options Extra data used when restoring the state
-     */
-    this.$target.trigger('FormState.restore:after', [formState, {
-      FormState: this,
-      version
-    }])
-
-    // Turn off the status to allow other operations to work
-    this.status = 0
   }
 
   /**
    * Restore a single field's state.
    *
-   * @param {Object} fieldState
+   * @param {FormFieldState} fieldState
    */
-  restoreField (fieldState) {
+  restoreFieldState (fieldState) {
     let $field
 
     // Prioritise getting by ID
@@ -365,7 +243,7 @@ export default class FormState {
       if (fieldState.tagName === 'input') {
         $field = this.$target.find(`${fieldState.tagName}[type="${fieldState.type}"][name="${fieldState.name}"]`)
 
-      // Otherwise do what ya gotta do
+        // Otherwise do what ya gotta do
       } else {
         $field = this.$target.find(`${fieldState.tagName}[name="${fieldState.name}"]`)
       }
@@ -378,14 +256,14 @@ export default class FormState {
 
     // Warn if can't find the field
     if (!$field.length) {
-      console.warn('[LVL99 FormState] Field was not found in DOM to restore')
+      console.warn('[FormState] Field was not found in DOM to restore')
     }
 
     /**
      * Trigger a custom event before restoring the field's state
      *
      * @trigger FormState.restoreField:before
-     * @param {Object} fieldState
+     * @param {FieldStateSnapshot} fieldState
      */
     $field.trigger('FormState.restoreField:before', [fieldState])
 
@@ -437,7 +315,7 @@ export default class FormState {
      * Trigger a custom event after restoring the field's state
      *
      * @trigger FormState.restoreField:after
-     * @param {Object} fieldState
+     * @param {FieldStateSnapshot} fieldState
      */
     $field.trigger('FormState.restoreField:after', [fieldState])
 
@@ -446,9 +324,159 @@ export default class FormState {
   }
 
   /**
+   * Get a snapshot of the form's current state.
+   *
+   * @returns {FormStateSnapshot}
+   */
+  getCurrentState () {
+    /**
+     * The saved state of a form and its related fields.
+     *
+     * @typedef {Object} FormStateSnapshot
+     * @prop {Number} snapshot - The milliseconds representing the time the snapshot was taken.
+     * @prop {String} targetId - The form's ID attribute value.
+     * @prop {FieldStateSnapshot[]} fields - An array of the form's field snapshots.
+     */
+    let formState = {
+      snapshot: Date.now(),
+      targetId: this.$target.attr('id'),
+      fields: []
+    }
+
+    // Process all the form fields to extract the data
+    let $fields = this.getFields()
+    $fields.each((index, elem) => {
+      let fieldState = this.getField(elem)
+      if (fieldState) {
+        formState.fields.push(fieldState)
+      }
+    })
+
+    return formState
+  }
+
+  /**
+   * Get a previously saved snapshot of the form's state.
+   *
+   * @param {String} version
+   * @returns {FormStateSnapshot}
+   */
+  getSavedState (version = '') {
+    // Set a version in the name that will be stored
+    if (version) {
+      version = `:${version}`
+    }
+
+    // Check for the saved form state
+    let targetId = this.$target.attr('id')
+    let savedFormState = STORAGE.getItem(`FormState:${targetId}${version}`, this.settings.storageType)
+
+    // If version set and formState is falsey, try without the version
+    if (version && !savedFormState) {
+      savedFormState = STORAGE.getItem(`FormState:${targetId}`, this.settings.storageType)
+    }
+
+    // Process the field values to ensure we have coerced types
+    if (savedFormState && savedFormState.hasOwnProperty('fields') && savedFormState.fields.length) {
+      savedFormState.fields.forEach((fieldState, index) => {
+        savedFormState.fields[index].value = coerceToPrimitiveType(savedFormState.fields[index].value)
+      })
+    }
+
+    return savedFormState
+  }
+
+  /**
+   * Save form state.
+   *
+   * @param {String} [version] - Set a specific version to save to.
+   */
+  save (version = '') {
+    // Ensure not saving while already saving
+    if (this.status) {
+      return
+    }
+
+    // Track the status of the saving process
+    this.status = FORMSTATE_STATUS.PROCESSING
+
+    // Set a version in the name that will be stored
+    if (version) {
+      version = `:${version}`
+    }
+
+    // Get and save the form state
+    let formState = this.getCurrentState()
+    STORAGE.setItem(`FormState:${formState.targetId}${version}`, formState, this.settings.storageType)
+
+    // Turn off the status to allow other operations to work
+    this.status = FORMSTATE_STATUS.IDLE
+  }
+
+  /**
+   * Restore form state.
+   *
+   * @param {String} [version] - A specific version of the form's state to restore (only if it is available within the storage type).
+   */
+  restore (version = '') {
+    // Ensure not restoring while already working
+    if (this.status) {
+      return
+    }
+
+    // Track the status of the restoring process
+    this.status = FORMSTATE_STATUS.PROCESSING
+
+    // Set a version in the name that will be stored
+    let formState = this.getSavedState(version)
+
+    // Silently fade out into the night...
+    if (!formState) {
+      this.status = FORMSTATE_STATUS.IDLE
+      return
+    }
+
+    /**
+     * Trigger a custom event before restoring the form's state.
+     *
+     * @trigger FormState.restore:before
+     * @param {FormStateSnapshot} formState - The form's state to restore to.
+     * @param {Object} options - Extra data used when restoring the state.
+     * @param {FormState} options.FormState - The current FormState instance firing the event.
+     * @param {String} options.version - The version of the form's state being restored.
+     */
+    this.$target.trigger('FormState.restore:before', [formState, {
+      FormState: this,
+      version
+    }])
+
+    // Restore the fields within the form
+    if (formState && formState.hasOwnProperty('fields')) {
+      formState.fields.forEach((fieldState) => this.restoreField(fieldState))
+    }
+
+    /**
+     * Trigger a custom event after restoring the form's state.
+     *
+     * @trigger FormState.restore:after
+     * @param {FormStateSnapshot} formState - The form's state to restore to.
+     * @param {Object} options - Extra data used when restoring the state.
+     * @param {FormState} options.FormState - The current FormState instance firing the event.
+     * @param {String} options.version - The version of the form's state being restored.
+     */
+    this.$target.trigger('FormState.restore:after', [formState, {
+      FormState: this,
+      version
+    }])
+
+    // Turn off the status to allow other operations to work
+    this.status = FORMSTATE_STATUS.IDLE
+  }
+
+  /**
    * Clear form state from storage.
    *
-   * @param {String} version A specific version of the form's state to clear
+   * @param {String} [version] - A specific version of the form's state to clear.
    */
   clear (version = '') {
     // Ensure not clearing while something is happening
@@ -457,7 +485,7 @@ export default class FormState {
     }
 
     // Track the status of the process
-    this.status = 1
+    this.status = FORMSTATE_STATUS.PROCESSING
 
     // Set a version in the name that will be cleared
     if (version) {
@@ -466,21 +494,22 @@ export default class FormState {
 
     // Check for the saved form state
     let targetId = this.$target.attr('id')
-    storage.removeItem(`FormState:${targetId}${version}`)
+    storage.removeItem(`FormState:${targetId}${version}`, this.settings.storageType)
 
     /**
-     * Trigger a custom event after clearing the form's state
+     * Trigger a custom event after clearing the form's state.
      *
      * @trigger FormState.clear:after
-     * @param {Object} formState The form's state
-     * @param {Object} options Extra data used when clearing the state
+     * @param {Object} options - Extra data used when restoring the state.
+     * @param {FormState} options.FormState - The current FormState instance firing the event.
+     * @param {String} options.version - The version of the form's state being restored.
      */
-    this.$target.trigger('FormState.clear:after', [formState, {
+    this.$target.trigger('FormState.clear:after', [{
       FormState: this,
       version
     }])
 
     // Turn off the status to allow other operations to work
-    this.status = 0
+    this.status = FORMSTATE_STATUS.IDLE
   }
 }
