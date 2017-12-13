@@ -5,6 +5,11 @@
  *
  * Apps don't need DOM elements. They essentially hold all the references to the available components and component
  * instances.
+ *
+ * @module lvl99/core/app
+ * @requires module:jquery
+ * @requires module:uuid
+ * @requires module:lvl99/utils/parse
  */
 
 import uuid from 'uuid'
@@ -17,10 +22,10 @@ import {
 
 /**
  * Get a component's namespace
- *
  * @private
- * @param {lvl99.core.Component} component
- * @return {undefined|String|lvl99.core.Component}
+ *
+ * @param {Component} component
+ * @return {undefined|String|Component}
  */
 function getComponentNamespace (component) {
   let componentNS = component
@@ -40,51 +45,20 @@ function getComponentNamespace (component) {
 /**
  * The App's base properties
  *
- * @namespace lvl99.core.Component
+ * @typedef {Object} AppProperties
+ * @prop {String} _NS=LVL99:App - Namespace for custom events and error reporting
+ * @prop {String} _ns=lvl99-app - Namespace for CSS classes
+ * @prop {Object} _properties - The properties shared between all instances of this App
+ * @prop {Object} _attributes - The default attributes to load a created App instance with
+ * @prop {Object} _components - The collection of components that the app has access to
+ * @prop {Object} _componentInstances - The collection of components which have been instantiated within the app
  */
 const AppProperties = {
-  /**
-   * NAMESPACE
-   * This is used for custom events and error reporting
-   *
-   * @type {String}
-   */
   _NS: 'LVL99:App',
-
-  /**
-   * namespace
-   * This is used for CSS classes
-   *
-   * @type {String}
-   */
   _ns: 'lvl99-app',
-
-  /**
-   * The properties shared between all instances of this App
-   *
-   * @type {Object}
-   */
   _properties: {},
-
-  /**
-   * The default attributes to load a created App instance with.
-   *
-   * @type {Object}
-   */
   _attributes: {},
-
-  /**
-   * The library of components that the app has access to
-   *
-   * @type {Object}
-   */
   _components: {},
-
-  /**
-   * The collection of components which have been instantiated within the app
-   *
-   * @type {Object}
-   */
   _componentInstances: {}
 }
 
@@ -92,14 +66,14 @@ const AppProperties = {
  * App Class.
  *
  * @class
- * @namespace lvl99.core.App
+ * @extends Entity
  */
 export default class App extends Entity {
   /**
    * App instance constructor.
    *
    * @constructor
-   * @param {Object} attributes
+   * @param {Object} attributes - Any attributes to assign to the newly created App.
    */
   constructor (attributes) {
     // @debug
@@ -109,9 +83,9 @@ export default class App extends Entity {
   }
 
   /**
-   * Extend the App with any given {Object} arguments
+   * Extend the App with extra attributes, properties, methods, etc.
    *
-   * @param {...Object} properties
+   * @param {...AppProperties} appProperties
    */
   extend () {
     // @debug
@@ -124,7 +98,7 @@ export default class App extends Entity {
   /**
    * Register a component class in the app. You can also specify a separate namespace to register it under.
    *
-   * @param {lvl99.core.Component} componentClass
+   * @param {Component} componentClass
    * @param {String} componentClassNamespace
    */
   registerComponentClass (componentClass, componentClassNamespace) {
@@ -147,7 +121,7 @@ export default class App extends Entity {
   /**
    * Deregister a component class by namespace.
    *
-   * @param {String|lvl99.core.Component} componentClassNamespace
+   * @param {String|Component} componentClassNamespace
    */
   deregisterComponentClass (componentClassNamespace) {
     let componentClassNS
@@ -171,7 +145,7 @@ export default class App extends Entity {
    * Get a component class by namespace.
    *
    * @param {String} componentClassNamespace
-   * @return {undefined|lvl99.core.Component}
+   * @return {undefined|Component}
    */
   getComponentClass (componentClassNamespace) {
     let componentClassNS = componentClassNamespace
@@ -191,7 +165,7 @@ export default class App extends Entity {
   /**
    * Add component instance to app and initialise the component instance.
    *
-   * @param {lvl99.core.Component} componentInstance
+   * @param {Component} componentInstance
    */
   addComponentInstance (componentInstance) {
     componentInstance._app = this
@@ -208,7 +182,7 @@ export default class App extends Entity {
    *
    * @param {String} componentClassNamespace
    * @param {Object} attributes
-   * @return {lvl99.core.Component}
+   * @return {Component}
    */
   createComponentInstance (componentClassNamespace, attributes) {
     // @debug
@@ -236,7 +210,7 @@ export default class App extends Entity {
    * Get a component instance by UUID.
    *
    * @param {String} componentUUID
-   * @return {undefined|lvl99.core.Component}
+   * @return {undefined|Component}
    */
   getComponentInstance (componentUUID) {
     // @debug
@@ -252,7 +226,7 @@ export default class App extends Entity {
   /**
    * Remove component instance by UUID.
    *
-   * @param {lvl99.core.Component} componentUUID
+   * @param {Component} componentUUID
    */
   removeComponentInstance (componentUUID) {
     // @debug
@@ -273,8 +247,9 @@ export default class App extends Entity {
   }
 
   /**
-   * Initialise any components which have been marked in the DOM. DOM elements will need the `data-component` attribute
-   * set to the namespace of the component:
+   * Initialise any components which have been marked in the DOM.
+   *
+   * DOM elements will need the `data-component` attribute set to the namespace of the component:
    *
    * ```
    *   <div data-component="LVL99:Component"></div>

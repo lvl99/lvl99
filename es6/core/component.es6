@@ -1,41 +1,56 @@
 /**
  * # Component
  *
- * The base class for components. All components rely on a HTML DOM element and may output a warning if one isn't set.
+ * The base class for components which itself is extended from the {Entity} class.
+ *
+ * The main difference is that components rely on a HTML DOM element and may output a warning if one isn't set, as well
+ * as have event-based logic.
+ *
+ * It's important to take note of {Entity} lifecycle methods and how they must be incorporated within Components.
  *
  * ## Public Methods
  *
- * Components can have public methods configured which will automate creating event listeners to component methods.
+ * Components can have public methods configured in their properties which will automate creating event listeners that
+ * link to the component's internal methods.
  *
  * Each entry can be a string (which will then be a global event; be careful with global events being attached twice),
- * or can be an object where you specify the target (often 'self') and set what method to do on whatever event, e.g.:
+ * or can be an object where you specify the target (often 'self') and set the name of the method to do:
  *
  * ```
- *   // This will trigger the Component's `exampleMethod` when the Component's $elem is targeted/triggered
- *   // using the automatically generated custom event name:
- *   // `$elem.trigger('LVL99:Component:exampleMethod')`
- *   {
- *     target: 'self',
- *     do: 'exampleMethod'
- *   }
+ *  _publicMethods: [
  *
- *   // This will trigger the Component's `exampleMethod` when the document is targeted/triggered using a custom
- *   // event name:
- *   // `$(document).trigger('customEventName')`
- *   {
- *     target: 'document',
- *     do: 'exampleMethod',
- *     on: 'customEventName'
- *   }
+ *     // This will trigger the Component's `exampleMethod` when the Component's $elem is targeted/triggered
+ *     // using the automatically generated custom event name:
+ *     // `$elem.trigger('LVL99:Component:exampleMethod')`
+ *     {
+ *       target: 'self',
+ *       do: 'exampleMethod'
+ *     },
  *
- *   // This will trigger the Component's `exampleMethod` when the window is scrolled:
- *   // `$(window).scroll()`
- *   {
- *     target: 'window',
- *     do: 'exampleMethod',
- *     on: 'scroll'
- *   }
+ *     // This will trigger the Component's `exampleMethod` when the document is targeted/triggered using a custom
+ *     // event name:
+ *     // `$(document).trigger('customEventName')`
+ *     {
+ *       target: 'document',
+ *       do: 'exampleMethod',
+ *       on: 'customEventName'
+ *     },
+ *
+ *     // This will trigger the Component's `exampleMethod` when the window is scrolled:
+ *     // `$(window).scroll()`
+ *     {
+ *       target: 'window',
+ *       do: 'exampleMethod',
+ *       on: 'scroll'
+ *     }
+ *   ]
  * ```
+ *
+ * @module lvl99/core/component
+ * @requires module:jquery
+ * @requires module:object-path
+ * @requires module:lodash.merge
+ * @requires module:lvl99/utils/parse
  */
 
 import objectPath from 'object-path'
@@ -56,61 +71,23 @@ const trackComponents = {}
 /**
  * The Component's base properties.
  *
- * @namespace Component
- * @type {Object}
+ * @typedef {Object} ComponentProperties
+ * @prop {String} _NS=LVL99:Component - Namespace for custom events and error reporting
+ * @prop {String} _ns=lvl99-component - Namespace for CSS classes
+ * @prop {Object} _properties - The properties shared between all instances of this Component
+ * @prop {Array} _properties.publicMethods=[] - The names of Component methods to publicly expose in the DOM via custom events (attached during `init`).
+ * @prop {undefined|jQueryObject} [_properties.$classTarget] - The target to apply any CSS classes to
+ * @prop {Object} _attributes - The default attributes to load a created Component instance with
+ * @prop {undefined|jQueryObject} $elem - The main element that represents the Component in the DOM. Component events will be managed through this element.
  */
 const ComponentProperties = {
-  /**
-   * Used for custom events and error reporting
-   *
-   * @prop {String} _NS
-   * @default
-   */
   _NS: 'LVL99:Component',
-
-  /**
-   * Used for CSS classes
-   *
-   * @prop {String} _ns
-   * @default
-   */
   _ns: 'lvl99-component',
-
-  /**
-   * The properties shared between all instances of this Component
-   *
-   * @prop {Object} _properties
-   */
   _properties: {
-    /**
-     * The names of Component methods to publicly expose in the DOM via custom events (attached during `init`).
-     *
-     * @prop {Array} publicMethods
-     * @default
-     */
     publicMethods: [],
-
-    /**
-     * The target to apply any CSS classes to
-     *
-     * @prop {undefined|jQueryObject} $classTarget
-     * @default
-     */
     $classTarget: undefined
   },
-
-  /**
-   * The default attributes to load a created Component instance with.
-   *
-   * @prop {Object} _attributes
-   */
   _attributes: {
-    /**
-     * The main element that represents the Component in the DOM. Component events will be managed through this element.
-     *
-     * @prop {undefined|jQueryObject} $elem
-     * @default
-     */
     $elem: undefined
   }
 }
@@ -118,7 +95,6 @@ const ComponentProperties = {
 /**
  * Component Class.
  *
- * @namespace Component
  * @class
  * @extends Entity
  */
@@ -126,7 +102,7 @@ export default class Component extends Entity {
   /**
    * Create a new Component instance.
    *
-   * @param {Object} attributes
+   * @param {Object} attributes - Attributes to pass to the newly created Component instance.
    */
   constructor (attributes) {
     // @debug
@@ -140,7 +116,7 @@ export default class Component extends Entity {
   /**
    * Extend the Component's properties with any extra properties/methods.
    *
-   * @param {...Object} properties
+   * @param {...ComponentProperties} properties
    */
   extend () {
     // @debug
@@ -215,7 +191,7 @@ export default class Component extends Entity {
   }
 
   /**
-   * Get the target to apply the CSS state classes to
+   * Get the target to apply the CSS state classes to.
    *
    * @return {undefined|jQueryObject}
    */
@@ -240,7 +216,7 @@ export default class Component extends Entity {
   }
 
   /**
-   * Get the attributes from the DOM element and place into the Component instance
+   * Get the attributes from the DOM element and place into the Component instance.
    *
    * @return {Object}
    */
@@ -265,7 +241,9 @@ export default class Component extends Entity {
   }
 
   /**
-   * Initialise Component
+   * Initialise Component.
+   *
+   * All extended components will need to fire the `super(...arguments)` to ensure the inherited lifecycle operations are fired.
    */
   init () {
     super.init(...arguments)
@@ -377,13 +355,13 @@ export default class Component extends Entity {
     this.loadAttrs()
 
     /**
-     * @event NAMESPACE:init:end
+     * @event LVL99:Component:init:end
      */
     this.triggerEvent('init:end')
   }
 
   /**
-   * Destroy and tear down the component
+   * Destroy and tear down the component.
    */
   destroy () {
     // @TODO tear down the house!
@@ -391,7 +369,7 @@ export default class Component extends Entity {
     // @TODO other garbage collection/memory management
 
     /**
-     * @event NAMESPACE:destroy:beforeend
+     * @event LVL99:Component:destroy:beforeend
      */
     this.triggerEvent('destroy:beforeend')
 
@@ -478,7 +456,8 @@ export default class Component extends Entity {
 
   /**
    * Trigger a custom document event on the Component.
-   * The event triggered will be `NAMESPACE:eventName`.
+   *
+   * The event triggered will be `${this.NS}:eventName`.
    *
    * @param {String} eventName
    * @param {Any} ...args
@@ -493,7 +472,7 @@ export default class Component extends Entity {
 
   /**
    * Trigger a custom document event on an element on the Component.
-   * The event triggered will be `NAMESPACE:eventName`.
+   * The event triggered will be `${this.NS}:eventName`.
    *
    * @param {String} eventName
    * @param {String} selector

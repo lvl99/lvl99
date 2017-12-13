@@ -60,12 +60,36 @@ gulp.task('docs', () => {
     .build({
       // debug: 31,
       src: [
+        // Guides
         {
           readme: path.resolve(__dirname, 'README.md'),
           changelog: path.resolve(__dirname, 'CHANGELOG.md'),
           licence: path.resolve(__dirname, 'LICENSE.md'),
         },
-        './es6/**/*.es6'
+        // API
+        {
+          lvl99: [
+            './es6/**/*.es6'
+          ]
+        }
+        // {
+        //   lvl99: [
+        //     './es6/index.es6',
+        //     './es6/common.es6'
+        //   ],
+        //   'lvl99-core': [
+        //     './es6/core/**/*.es6'
+        //   ],
+        //   'lvl99-components': [
+        //     './es6/components/**/*.es6'
+        //   ],
+        //   'lvl99-tools': [
+        //     './es6/tools/**/*.es6'
+        //   ],
+        //   'lvl99-utils': [
+        //     './es6/utils/**/*.es6'
+        //   ]
+        // }
       ],
       dest: path.resolve(__dirname, 'docs'),
       jsdoc: {
@@ -106,6 +130,10 @@ gulp.task('docs', () => {
                 { "label": "Guide", "href": "./" },
                 { "separator": true },
                 { "label": "API", "href": "?api=lvl99" },
+                { "label": "Core", "href": "?api=lvl99-core" },
+                { "label": "Components", "href": "?api=lvl99-components" },
+                { "label": "Tools", "href": "?api=lvl99-tools" },
+                { "label": "Utils", "href": "?api=lvl99-utils" },
                 // { "label": "API", "href": "?api=lvl99" },
               ]
             },
