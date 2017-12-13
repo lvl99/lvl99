@@ -1,489 +1,462 @@
-(function (global, factory) {
-  if (typeof define === "function" && define.amd) {
-    define(['exports', 'object-path'], factory);
-  } else if (typeof exports !== "undefined") {
-    factory(exports, require('object-path'));
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory(mod.exports, global.objectPath);
-    global.parse = mod.exports;
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
+                                                                                                                                                                                                                                                                               * LVL99 Parse
+                                                                                                                                                                                                                                                                               *
+                                                                                                                                                                                                                                                                               * Parse strings or transform from one format to another
+                                                                                                                                                                                                                                                                               *
+                                                                                                                                                                                                                                                                               * @package lvl99
+                                                                                                                                                                                                                                                                               */
+
+exports.coerceToPrimitiveType = coerceToPrimitiveType;
+exports.convertToBoolean = convertToBoolean;
+exports.convertStringToJson = convertStringToJson;
+exports.convertStringToFloat = convertStringToFloat;
+exports.extractClassDetails = extractClassDetails;
+exports.extractTriggerDetails = extractTriggerDetails;
+exports.fixedEncodeURIComponent = fixedEncodeURIComponent;
+exports.getTargetBySelector = getTargetBySelector;
+exports.getTargetSelector = getTargetSelector;
+exports.extractTargetEventNames = extractTargetEventNames;
+
+var _objectPath = require('object-path');
+
+var _objectPath2 = _interopRequireDefault(_objectPath);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var __loggerPath = 'lvl99/utils/parse';
+
+/**
+ * Coerce a value to its primitive type
+ *
+ * @param {Mixed} input
+ * @returns {Mixed}
+ */
+function coerceToPrimitiveType(input) {
+  // Non-string or empty string? Just return it straight away
+  if (typeof input !== 'string' || input === '') {
+    return input;
   }
-})(this, function (exports) {
-  (function (global, factory) {
-    if (typeof define === "function" && define.amd) {
-      define(['exports', 'object-path'], factory);
-    } else if (typeof exports !== "undefined") {
-      factory(exports);
-    } else {
-      var mod = {
-        exports: {}
-      };
-      factory(mod.exports, global.objectPath);
-      global.parse = mod.exports;
+
+  // Trim any whitespace
+  var output = (input + '').trim();
+
+  // Number
+  if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
+    return parseFloat(input);
+
+    // Boolean: true
+  } else if (/^(true|1)$/.test(input)) {
+    return true;
+
+    // NaN
+  } else if (/^NaN$/.test(input)) {
+    return NaN;
+
+    // undefined
+  } else if (/^undefined$/.test(input)) {
+    return undefined;
+
+    // null
+  } else if (/^null$/.test(input)) {
+    return null;
+
+    // Boolean: false
+  } else if (/^(false|0)$/.test(input) || input === '') {
+    return false;
+
+    // JSON: starts with [ or { and ends with ] or }
+  } else if (/^[\[\{]/.test(input) && /[\]\}]$/.test(input)) {
+    return convertStringToJson(input);
+
+    // String marked with single/double quotation marks
+  } else if (/^['"]|["']$/) {
+    return input.replace(/^['"]|['"]$/g, '');
+  }
+
+  // Default to string
+  return input;
+}
+
+/**
+ * Convert value to an explicit boolean. Namely for processing string values.
+ *
+ * @param {Mixed} input
+ * @returns {Boolean}
+ */
+function convertToBoolean(input) {
+  // Already boolean
+  if (input === true || input === false) {
+    return input;
+  }
+
+  // Cases of truthy/falsey values
+  switch (input) {
+    case 1:
+    case '1':
+    case 'true':
+      return true;
+
+    case 0:
+    case '0':
+    case 'false':
+    case undefined:
+    case 'undefined':
+    case null:
+    case 'null':
+    case NaN:
+    case 'NaN':
+    case '':
+      return false;
+  }
+
+  // Otherwise...
+  return !!input;
+}
+
+/**
+ * Convert a string to JSON or just return the string if can't
+ *
+ * @param {String} input
+ * @returns {Object}
+ */
+function convertStringToJson(input) {
+  var output = input;
+
+  // Convert string data to JSON
+  if (typeof input === 'string') {
+    try {
+      output = JSON.parse(input);
+    } catch (e) {
+      console.error(__loggerPath + '.convertStringToJson: Error parsing string JSON data', input);
     }
-  })(this, function (exports, _objectPath) {
-    'use strict';
+  }
 
-    Object.defineProperty(exports, "__esModule", {
-      value: true
-    });
-    exports.coerceToPrimitiveType = coerceToPrimitiveType;
-    exports.convertToBoolean = convertToBoolean;
-    exports.convertStringToJson = convertStringToJson;
-    exports.convertStringToFloat = convertStringToFloat;
-    exports.extractClassDetails = extractClassDetails;
-    exports.extractTriggerDetails = extractTriggerDetails;
-    exports.fixedEncodeURIComponent = fixedEncodeURIComponent;
-    exports.getTargetBySelector = getTargetBySelector;
-    exports.getTargetSelector = getTargetSelector;
-    exports.extractTargetEventNames = extractTargetEventNames;
+  return output;
+}
 
-    var _objectPath2 = _interopRequireDefault(_objectPath);
+/**
+ * Convert a string to a float.
+ * This also converts number constants like Infinity and NaN to zero.
+ *
+ * @param input
+ * @returns {*}
+ */
+function convertStringToFloat(input) {
+  if (typeof input === 'number') {
+    return input;
+  }
 
-    function _interopRequireDefault(obj) {
-      return obj && obj.__esModule ? obj : {
-        default: obj
-      };
-    }
+  var output = parseFloat((input + '').replace(/[^\d\-\.]+/g, ''));
 
-    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-      return typeof obj;
-    } : function (obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
+  // Infinity / NaN
+  if (!isFinite(input) || isNaN(input) || isNaN(output)) {
+    output = 0;
+  }
 
-    var __loggerPath = 'lvl99/utils/parse';
+  return output;
+}
 
-    /**
-     * Coerce a value to its primitive type
-     *
-     * @param {Mixed} input
-     * @returns {Mixed}
-     */
-    function coerceToPrimitiveType(input) {
-      // Non-string or empty string? Just return it straight away
-      if (typeof input !== 'string' || input === '') {
-        return input;
-      }
+/**
+ * Extract key-values from a string which is like a CSS class declaration, e.g. `key: value; key: value`
+ *
+ * This is slightly more interesting as it can take a name with dots
+ *
+ * @param {String} input
+ * @return {Object}
+ */
+function extractClassDetails(input) {
+  var output = {};
+  var inputParts = [input];
 
-      // Trim any whitespace
-      var output = (input + '').trim();
+  // Check if it has semi-colons
+  if (/;/.test(input)) {
+    inputParts = input.split(';');
+  }
 
-      // Number
-      if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
-        return parseFloat(input);
+  // Process each input part
+  inputParts.forEach(function (part) {
+    part = part.trim();
+    if (part) {
+      var partParts = part.match(/([a-z0-9_.-]+):([^;]+);?/i);
+      var partName = partParts[1].trim();
+      var partValue = coerceToPrimitiveType(partParts[2].trim());
 
-        // Boolean: true
-      } else if (/^(true|1)$/.test(input)) {
-        return true;
+      // @debug
+      // console.log('parsed part', {
+      //   part,
+      //   partName,
+      //   partValue,
+      // })
 
-        // NaN
-      } else if (/^NaN$/.test(input)) {
-        return NaN;
+      // Ensure output object exists if using dot notation
+      if (/\./.test(partName)) {
+        var objParts = partName.split('.');
+        var objPartPath = '';
 
-        // undefined
-      } else if (/^undefined$/.test(input)) {
-        return undefined;
+        // @debug
+        // console.log('part has dot notation', {
+        //   output,
+        //   partName,
+        //   partValue,
+        //   objParts,
+        //   objPartPath
+        // })
 
-        // null
-      } else if (/^null$/.test(input)) {
-        return null;
-
-        // Boolean: false
-      } else if (/^(false|0)$/.test(input) || input === '') {
-        return false;
-
-        // JSON: starts with [ or { and ends with ] or }
-      } else if (/^[\[\{]/.test(input) && /[\]\}]$/.test(input)) {
-        return convertStringToJson(input);
-
-        // String marked with single/double quotation marks
-      } else if (/^['"]|["']$/) {
-        return input.replace(/^['"]|['"]$/g, '');
-      }
-
-      // Default to string
-      return input;
-    }
-
-    /**
-     * Convert value to an explicit boolean. Namely for processing string values.
-     *
-     * @param {Mixed} input
-     * @returns {Boolean}
-     */
-    function convertToBoolean(input) {
-      // Already boolean
-      if (input === true || input === false) {
-        return input;
-      }
-
-      // Cases of truthy/falsey values
-      switch (input) {
-        case 1:
-        case '1':
-        case 'true':
-          return true;
-
-        case 0:
-        case '0':
-        case 'false':
-        case undefined:
-        case 'undefined':
-        case null:
-        case 'null':
-        case NaN:
-        case 'NaN':
-        case '':
-          return false;
-      }
-
-      // Otherwise...
-      return !!input;
-    }
-
-    /**
-     * Convert a string to JSON or just return the string if can't
-     *
-     * @param {String} input
-     * @returns {Object}
-     */
-    function convertStringToJson(input) {
-      var output = input;
-
-      // Convert string data to JSON
-      if (typeof input === 'string') {
-        try {
-          output = JSON.parse(input);
-        } catch (e) {
-          console.error(__loggerPath + '.convertStringToJson: Error parsing string JSON data', input);
-        }
-      }
-
-      return output;
-    }
-
-    /**
-     * Convert a string to a float.
-     * This also converts number constants like Infinity and NaN to zero.
-     *
-     * @param input
-     * @returns {*}
-     */
-    function convertStringToFloat(input) {
-      if (typeof input === 'number') {
-        return input;
-      }
-
-      var output = parseFloat((input + '').replace(/[^\d\-\.]+/g, ''));
-
-      // Infinity / NaN
-      if (!isFinite(input) || isNaN(input) || isNaN(output)) {
-        output = 0;
-      }
-
-      return output;
-    }
-
-    /**
-     * Extract key-values from a string which is like a CSS class declaration, e.g. `key: value; key: value`
-     *
-     * This is slightly more interesting as it can take a name with dots
-     *
-     * @param {String} input
-     * @return {Object}
-     */
-    function extractClassDetails(input) {
-      var output = {};
-      var inputParts = [input];
-
-      // Check if it has semi-colons
-      if (/;/.test(input)) {
-        inputParts = input.split(';');
-      }
-
-      // Process each input part
-      inputParts.forEach(function (part) {
-        part = part.trim();
-        if (part) {
-          var partParts = part.match(/([a-z0-9_.-]+):([^;]+);?/i);
-          var partName = partParts[1].trim();
-          var partValue = coerceToPrimitiveType(partParts[2].trim());
+        for (var objPartIndex = 0; objPartIndex < objParts.length - 1; objPartIndex++) {
+          objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex];
 
           // @debug
-          // console.log('parsed part', {
-          //   part,
-          //   partName,
-          //   partValue,
-          // })
+          // console.log(objPartPath)
 
-          // Ensure output object exists if using dot notation
-          if (/\./.test(partName)) {
-            var objParts = partName.split('.');
-            var objPartPath = '';
-
+          if (!_objectPath2.default.has(output, objPartPath)) {
             // @debug
-            // console.log('part has dot notation', {
+            // console.log('setting object part path', {
             //   output,
             //   partName,
             //   partValue,
-            //   objParts,
+            //   objPartIndex,
             //   objPartPath
             // })
 
-            for (var objPartIndex = 0; objPartIndex < objParts.length - 1; objPartIndex++) {
-              objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex];
-
-              // @debug
-              // console.log(objPartPath)
-
-              if (!_objectPath2.default.has(output, objPartPath)) {
-                // @debug
-                // console.log('setting object part path', {
-                //   output,
-                //   partName,
-                //   partValue,
-                //   objPartIndex,
-                //   objPartPath
-                // })
-
-                _objectPath2.default.set(output, objPartPath, {});
-              }
-            }
+            _objectPath2.default.set(output, objPartPath, {});
           }
-
-          // Set via objectPath
-          _objectPath2.default.set(output, partName, partValue);
         }
-      });
+      }
 
-      return output;
+      // Set via objectPath
+      _objectPath2.default.set(output, partName, partValue);
     }
-
-    /**
-     * Extract the trigger's target details
-     *
-     * This allows you to extract the necessary data from the string and the global window/document available, to create
-     * dynamic event bindings.
-     *
-     * @param {String|Object} input
-     * @param {Object|Function} context Defaults to `window`. Where to find the `do` action
-     * @returns {Object} => { eventName: {String}, method: {Function}, selector: {String}, target: {Object} }
-     */
-    function extractTriggerDetails(input, context) {
-      var trigger = input;
-
-      if (!context) {
-        context = window;
-      }
-
-      // String input given
-      if (typeof input === 'string') {
-        // Try JSON first
-        if (/^{/.test(input)) {
-          trigger = convertStringToJson(input);
-
-          // Try class details
-        } else if (/^[a-z0-9_-]+:/.test(input)) {
-          trigger = extractClassDetails(input);
-
-          // String with no spaces
-        } else if (!/ /.test(input)) {
-          trigger = {
-            do: input
-          };
-        }
-      }
-
-      // No object found!
-      if ((typeof trigger === 'undefined' ? 'undefined' : _typeof(trigger)) !== 'object') {
-        throw new Error(__loggerPath + '.extractTriggerDetails: input was not valid JSON or CSS-style definition');
-      }
-
-      // Ensure it has `on` and `do` properties
-      // if (!objectPath.has(trigger, 'on')) {
-      //   throw new Error(`${__loggerPath}.extractTriggerDetails: trigger is missing required 'on' property`)
-      // }
-      if (!_objectPath2.default.has(trigger, 'do')) {
-        throw new Error(__loggerPath + '.extractTriggerDetails: trigger is missing required \'do\' property');
-      }
-
-      // If target is set, use real values for window and document
-      if (_objectPath2.default.has(trigger, 'target')) {
-        switch (trigger.target) {
-          case 'self':
-            // console.log('Targeting self', context)
-            trigger.target = context;
-            break;
-
-          case 'document':
-            trigger.target = document;
-            break;
-
-          case 'window':
-            trigger.target = window;
-            break;
-        }
-      }
-
-      // Do same as above if a context was set!
-      if (_objectPath2.default.has(trigger, 'context')) {
-        switch (trigger.context) {
-          case 'document':
-            trigger.context = document;
-            break;
-
-          case 'window':
-            trigger.context = window;
-            break;
-        }
-      } else {
-        trigger.context = context;
-      }
-
-      return trigger;
-    }
-
-    /**
-     * Encode string to URL, with spaces that are represented as `+`
-     * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
-     *
-     * @param {String} input
-     * @returns {String}
-     */
-    function fixedEncodeURIComponent(input) {
-      return encodeURIComponent(input).replace(/[!'()*]/g, function (c) {
-        return '%' + c.charCodeAt(0).toString(16);
-      });
-    }
-
-    /**
-     * Get the target object by a string selector
-     *
-     * @param {String} target
-     * @param {Object} context
-     * @return {Object}
-     */
-    function getTargetBySelector(target, context) {
-      // Default to document
-      if (!target) {
-        target = document;
-      }
-
-      if (typeof target === 'string') {
-        // Special string values to get the actual object
-        switch (target) {
-          case 'document':
-            target = document;
-            break;
-
-          case 'window':
-            target = window;
-            break;
-
-          case 'self':
-            target = context;
-            break;
-        }
-      }
-
-      return target;
-    }
-
-    /**
-     * Get the target object's string selector
-     *
-     * @param {Object} target
-     * @param {Object} context
-     * @return {undefined|String}
-     */
-    function getTargetSelector(target, context) {
-      if (typeof target === 'string') {
-        return target;
-      }
-
-      // Window
-      if ($.isWindow(target)) {
-        return 'window';
-
-        // Document
-      } else if (target === document) {
-        return 'document';
-
-        // Self
-      } else if (target.hasOwnProperty('uuid')) {
-        return '[data-component-id="' + target.uuid + '"]';
-
-        // HTML Elem
-      } else if ($(target).length) {
-        if ($(target).attr('data-component-id')) {
-          return '[data-component-id="' + $(target).attr('data-component-id') + '"]';
-        } else if ($(target).attr('id')) {
-          return '#' + $(target).attr('id');
-        } else {
-          return '' + target.tagName.toLowerCase();
-        }
-      }
-
-      return target;
-    }
-
-    /**
-     * Parse the target event names
-     *
-     * @param {Array|String} eventNames e.g. `Component:customEvent dom:mouseover`
-     * @param {String} namespace Optional namespace to assign each extracted custom (non-DOM) event name
-     * @returns {Array}
-     */
-    function extractTargetEventNames(inputEventNames, namespace) {
-      var targetEventNames = [];
-      var eventNames = inputEventNames;
-
-      if (typeof inputEventNames === 'string') {
-        // Split eventNames by spaces
-        if (/\s/.test(inputEventNames)) {
-          eventNames = inputEventNames.split(/\s+/);
-        } else {
-          eventNames = [inputEventNames];
-        }
-      }
-
-      if (eventNames instanceof Array) {
-        // Process each event name
-        eventNames.forEach(function (eventName) {
-          // Default to namespaced event name
-          var targetEventName = typeof namespace === 'string' && namespace !== '' ? namespace + ':' + eventName : eventName;
-
-          // Remove any reference to the native DOM event namespace
-          if (/^dom:/i.test(eventName)) {
-            targetEventName = eventName.replace(/^dom\:/gi, '', eventName);
-          }
-
-          // Add to the list
-          targetEventNames.push(targetEventName);
-        });
-
-        return targetEventNames;
-      }
-
-      return false;
-    }
-
-    var parse = {
-      coerceToPrimitiveType: coerceToPrimitiveType,
-      convertToBoolean: convertToBoolean,
-      convertStringToJson: convertStringToJson,
-      convertStringToFloat: convertStringToFloat,
-      extractClassDetails: extractClassDetails,
-      extractTriggerDetails: extractTriggerDetails,
-      fixedEncodeURIComponent: fixedEncodeURIComponent,
-      getTargetBySelector: getTargetBySelector,
-      getTargetSelector: getTargetSelector,
-      extractTargetEventNames: extractTargetEventNames
-    };
-
-    exports.default = parse;
   });
-});
+
+  return output;
+}
+
+/**
+ * Extract the trigger's target details
+ *
+ * This allows you to extract the necessary data from the string and the global window/document available, to create
+ * dynamic event bindings.
+ *
+ * @param {String|Object} input
+ * @param {Object|Function} context Defaults to `window`. Where to find the `do` action
+ * @returns {Object} => { eventName: {String}, method: {Function}, selector: {String}, target: {Object} }
+ */
+function extractTriggerDetails(input, context) {
+  var trigger = input;
+
+  if (!context) {
+    context = window;
+  }
+
+  // String input given
+  if (typeof input === 'string') {
+    // Try JSON first
+    if (/^{/.test(input)) {
+      trigger = convertStringToJson(input);
+
+      // Try class details
+    } else if (/^[a-z0-9_-]+:/.test(input)) {
+      trigger = extractClassDetails(input);
+
+      // String with no spaces
+    } else if (!/ /.test(input)) {
+      trigger = {
+        do: input
+      };
+    }
+  }
+
+  // No object found!
+  if ((typeof trigger === 'undefined' ? 'undefined' : _typeof(trigger)) !== 'object') {
+    throw new Error(__loggerPath + '.extractTriggerDetails: input was not valid JSON or CSS-style definition');
+  }
+
+  // Ensure it has `on` and `do` properties
+  // if (!objectPath.has(trigger, 'on')) {
+  //   throw new Error(`${__loggerPath}.extractTriggerDetails: trigger is missing required 'on' property`)
+  // }
+  if (!_objectPath2.default.has(trigger, 'do')) {
+    throw new Error(__loggerPath + '.extractTriggerDetails: trigger is missing required \'do\' property');
+  }
+
+  // If target is set, use real values for window and document
+  if (_objectPath2.default.has(trigger, 'target')) {
+    switch (trigger.target) {
+      case 'self':
+        // console.log('Targeting self', context)
+        trigger.target = context;
+        break;
+
+      case 'document':
+        trigger.target = document;
+        break;
+
+      case 'window':
+        trigger.target = window;
+        break;
+    }
+  }
+
+  // Do same as above if a context was set!
+  if (_objectPath2.default.has(trigger, 'context')) {
+    switch (trigger.context) {
+      case 'document':
+        trigger.context = document;
+        break;
+
+      case 'window':
+        trigger.context = window;
+        break;
+    }
+  } else {
+    trigger.context = context;
+  }
+
+  return trigger;
+}
+
+/**
+ * Encode string to URL, with spaces that are represented as `+`
+ * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+ *
+ * @param {String} input
+ * @returns {String}
+ */
+function fixedEncodeURIComponent(input) {
+  return encodeURIComponent(input).replace(/[!'()*]/g, function (c) {
+    return '%' + c.charCodeAt(0).toString(16);
+  });
+}
+
+/**
+ * Get the target object by a string selector
+ *
+ * @param {String} target
+ * @param {Object} context
+ * @return {Object}
+ */
+function getTargetBySelector(target, context) {
+  // Default to document
+  if (!target) {
+    target = document;
+  }
+
+  if (typeof target === 'string') {
+    // Special string values to get the actual object
+    switch (target) {
+      case 'document':
+        target = document;
+        break;
+
+      case 'window':
+        target = window;
+        break;
+
+      case 'self':
+        target = context;
+        break;
+    }
+  }
+
+  return target;
+}
+
+/**
+ * Get the target object's string selector
+ *
+ * @param {Object} target
+ * @param {Object} context
+ * @return {undefined|String}
+ */
+function getTargetSelector(target, context) {
+  if (typeof target === 'string') {
+    return target;
+  }
+
+  // Window
+  if ($.isWindow(target)) {
+    return 'window';
+
+    // Document
+  } else if (target === document) {
+    return 'document';
+
+    // Self
+  } else if (target.hasOwnProperty('uuid')) {
+    return '[data-component-id="' + target.uuid + '"]';
+
+    // HTML Elem
+  } else if ($(target).length) {
+    if ($(target).attr('data-component-id')) {
+      return '[data-component-id="' + $(target).attr('data-component-id') + '"]';
+    } else if ($(target).attr('id')) {
+      return '#' + $(target).attr('id');
+    } else {
+      return '' + target.tagName.toLowerCase();
+    }
+  }
+
+  return target;
+}
+
+/**
+ * Parse the target event names
+ *
+ * @param {Array|String} eventNames e.g. `Component:customEvent dom:mouseover`
+ * @param {String} namespace Optional namespace to assign each extracted custom (non-DOM) event name
+ * @returns {Array}
+ */
+function extractTargetEventNames(inputEventNames, namespace) {
+  var targetEventNames = [];
+  var eventNames = inputEventNames;
+
+  if (typeof inputEventNames === 'string') {
+    // Split eventNames by spaces
+    if (/\s/.test(inputEventNames)) {
+      eventNames = inputEventNames.split(/\s+/);
+    } else {
+      eventNames = [inputEventNames];
+    }
+  }
+
+  if (eventNames instanceof Array) {
+    // Process each event name
+    eventNames.forEach(function (eventName) {
+      // Default to namespaced event name
+      var targetEventName = typeof namespace === 'string' && namespace !== '' ? namespace + ':' + eventName : eventName;
+
+      // Remove any reference to the native DOM event namespace
+      if (/^dom:/i.test(eventName)) {
+        targetEventName = eventName.replace(/^dom\:/gi, '', eventName);
+      }
+
+      // Add to the list
+      targetEventNames.push(targetEventName);
+    });
+
+    return targetEventNames;
+  }
+
+  return false;
+}
+
+var parse = {
+  coerceToPrimitiveType: coerceToPrimitiveType,
+  convertToBoolean: convertToBoolean,
+  convertStringToJson: convertStringToJson,
+  convertStringToFloat: convertStringToFloat,
+  extractClassDetails: extractClassDetails,
+  extractTriggerDetails: extractTriggerDetails,
+  fixedEncodeURIComponent: fixedEncodeURIComponent,
+  getTargetBySelector: getTargetBySelector,
+  getTargetSelector: getTargetSelector,
+  extractTargetEventNames: extractTargetEventNames
+};
+
+exports.default = parse;

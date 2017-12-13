@@ -9,27 +9,49 @@ const jest = require('gulp-jest').default
 const extend = require('extend')
 const objectPath = require('object-path')
 const Docma = require('docma')
+const runSequence = require('run-sequence')
 require('./tasks/_gulpErrorHandling')
 
 // Gulp config
 let pkg = require('./package.json')
 let _gulpConfig = objectPath.get(pkg, 'gulpConfig') || {}
 let gulpConfig = extend({
-  _root: __dirname
+  _root: __dirname,
+  env: process.argv.NODE_ENV || 'production'
 }, _gulpConfig)
 
 // Define the bundles to generate
-// const taskBrowserify = require('./tasks/browserify')(gulpConfig)
+const taskJS = require('./tasks/js')(gulpConfig)
 const taskWebpack = require('./tasks/webpack')(gulpConfig)
+// const taskBrowserify = require('./tasks/browserify')(gulpConfig)
 
 // Build the dist and es5 versions
-gulp.task('build', ['es6-to-es5', 'generate-bundles'])
+gulp.task('build', function () {
+  return runSequence(['test'], ['es6-to-es5'], ['generate-bundles'], ['deploy-dist'])
+})
 
 // Test before building
 gulp.task('test', () => {
-  process.env.NODE_ENV = 'test'
-  gulp.src('__tests__')
+  gulpConfig.env = process.env.NODE_ENV = 'test'
+  gulp.src('./__tests__')
     .pipe(jest())
+})
+
+// Generate the Bundlers for
+gulp.task('generate-bundles', taskWebpack.tasks.compileBundles)
+
+// Convert from es6 to es5 js
+gulp.task('es6-to-es5', () => {
+  gulp.src(['./es6/**/*.es6'])
+    .pipe(babel())
+    .pipe(gulp.dest('./es5'))
+})
+
+// Deploy the dist versions
+gulp.task('deploy-dist', function () {
+  return gulp.src(['./dist/**/*.js', '!./dist/**/*.min.js'])
+    .pipe(taskJS.pipes.minifyJS())
+    .pipe(gulp.dest('./dist'))
 })
 
 // Test before building
@@ -118,14 +140,4 @@ gulp.task('docs', () => {
     .catch(function (error) {
       console.log(error)
     })
-})
-
-// Generate the Bundlers for
-gulp.task('generate-bundles', taskWebpack.tasks.compileBundles)
-
-// Convert from es6 to es5 js
-gulp.task('es6-to-es5', () => {
-  gulp.src(['es6/**/*.es6'])
-    .pipe(babel())
-    .pipe(gulp.dest('es5'))
 })

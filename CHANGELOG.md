@@ -1,3 +1,9 @@
+### 1.4.4
+
+* Added [minified version](dist/lvl99.min.js) of [`lvl99.js`](dist/lvl99.js)
+* Updated and generated [docs!](docs/index.html)
+
+
 ### 1.4.3
 
 * Added new tool [`Storage`](es6/tools/storage.es6) which acts as a convenience wrapper with some extra small features
@@ -6,6 +12,8 @@
   data for improved form UX when navigating between pages.
 * Added tests for [`Storage`](__tests__/tools/storage.test.es6), [`FormState`](__tests__/tools/form-state.test.es6),
   [`SmoothScroll`](__tests__/tools/smooth-scroll.test.es6) tools.
+* Refactored [`SmoothScroll`](es6/tools/smooth-scroll.es6)  to support scrolling to elements within nested scrollable
+  elements.
 * Refactored some of the configuration setup for Babel and Jest.
 * Other minor tweaks/improvements.
 

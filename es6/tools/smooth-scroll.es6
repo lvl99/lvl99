@@ -7,7 +7,7 @@
  *
  * Smooth Scroll needs to be instantiated with jQuery and any configured options before using.
  *
- * ```javascript
+ * ```
  *   let SmoothScroll = require('lvl99/es6/tools/smooth-scroll')(jQuery, { bufferTop: 0 })
  * ```
  *
@@ -16,142 +16,254 @@
  *
  * You can trigger the scrollTo event by using the custom event `SmoothScroll.scrollTo`, e.g.:
  *
- * ```javascript
+ * ```
  *   $(document).trigger('SmoothScroll.scrollTo', [ scrollToOptions ])
  * ```
  *
  * The `scrollTo` function emits a custom event `SmoothScroll.scrollTo:start` when the action is invoked and
  * `SmoothScroll.scrollTo:end` when it finishes.
+ *
+ * @namespace lvl99.tools.SmoothScroll
+ * @requires module:jquery
  */
 
-export default function SmoothScroll ($, options) {
-  /**
-   * Load in the settings
-   */
-  const settings = $.extend({
-    // The parent selector which will be scrolled. By default this is `html, body`
-    parent: 'html, body',
+import { $ } from '../common'
 
-    // The space between the top of the window and the top of the target
-    bufferTop: 0,
+/**
+ * Default scrollTo options.
+ *
+ * @typedef {Object} ScrollToOptions
+ *
+ * @param {String|HTMLElement|jQueryObject} parent="html, body"
+ * The selector to match on the parent to be scrolled.
+ *
+ * @param {Number} bufferTop=0
+ * The distance away from the the top of the parent to scroll to.
+ *
+ * @param {Number} scrollSpeed=1000
+ * The total time in milliseconds to smoothly scroll. This will be relative to the distance, i.e. it will take a shorter
+ * amount of time if the distance isn't that far.
+ *
+ * @param {Number} triggerDistance=200
+ * The distance from the top that the target element must be from the top of the parent element.
+ *
+ * @param {Boolean} ignoreScrollingParents=true
+ * Enable/disable scrolling parents to ensure the target is in view.
+ */
+export const DEFAULT_SCROLLTO_OPTIONS = {
+  // The space between the top of the window and the top of the target
+  bufferTop: 0,
 
-    // The speed to scroll the window
-    scrollSpeed: 1000,
+  // The speed to scroll the window
+  scrollSpeed: 1000,
 
-    // The distance from top of window to top of target element to trigger scrolling
-    triggerDistance: 200
-  }, options)
+  // The distance from top of window to top of target element to trigger scrolling
+  triggerDistance: 200,
 
-  /**
-   * Get any scrollable parents and ensure they scroll too
-   *
-   * @TODO needs testing!
-   */
-  function getScrollableParents (target) {
-    let $target = $(target)
-    let scrollable = []
+  // Ignore scrolling scrollable parent elements
+  ignoreScrollingParents: false
+}
 
-    console.log('[SmoothScroll] getScrollableParents', target)
+/**
+ * Check if an element is scrollable.
+ *
+ * @param {String|HTMLElement|jQueryObject} elem
+ * @return {Boolean}
+ */
+export function isScrollable (elem) {
+  let $elem = $(elem)
+  let hasLargerScrollableArea = ($elem.outerHeight() > $elem[0].scrollHeight)
+  let isOverflowScrollable = ($elem.css('overflow') === 'auto' ||
+    $elem.css('overflow') === 'scroll' ||
+    $elem.css('overflowX') === 'auto' ||
+    $elem.css('overflowX') === 'scroll' ||
+    $elem.css('overflowY') === 'auto' ||
+    $elem.css('overflowY') === 'scroll')
+  return ($elem.length && /* hasLargerScrollableArea && */ isOverflowScrollable)
+}
 
-    $target.parents().each(function getEachScrollableParent (elem) {
-      let $elem = $(elem)
-      let isVisibleAreaScrolled = elem.scrollHeight !== elem.scrollTop
-      let isOverflowScrollable = $elem.css('overflow') === 'auto' || $elem.css('overflow') === 'scroll' || $elem.css('overflow-y') === 'auto' || $elem.css('overflow-y') === 'scroll'
+/**
+ * Get any scrollable parents of the target.
+ *
+ * This will go up the DOM tree and detect if any parent elements have an `overflow` value of `auto` or `scroll`.
+ *
+ * @param {String|HTMLElement|jQueryObject} target - The target element to get the scrollable parents for
+ * @returns {Array}
+ */
+export function getScrollableParents (target) {
+  let $target = $(target)
+  let scrollable = []
 
-      // @debug
-      console.log('[SmoothScroll] getScrollableParents', {
-        elem,
-        scrollHeight: elem.scrollHeight,
-        scrollTop: elem.scrollTop,
-        isVisibleAreaScrolled,
-        isOverflowScrollable
-      })
+  // @debug
+  // console.log('[SmoothScroll] getScrollableParents', target)
 
-      if (isVisibleAreaScrolled && isOverflowScrollable) {
-        scrollable.push(elem)
-      }
-    })
+  $target.parents().not('html, body').each(function getEachScrollableParent  (index, elem) {
+    if (isScrollable(elem)) {
+      scrollable.push(elem)
+    }
+  })
 
-    return scrollable
+  // Ensure the window is added last
+  scrollable.push(window)
+
+  // @debug
+  // console.log('[SmoothScroll] getScrollableParents', {
+  //   scrollable
+  // })
+
+  return scrollable.reverse()
+}
+
+/**
+ * Get the parent's position to scroll to the intended target.
+ *
+ * @param {String|HTMLElement|jQueryObject} target
+ * @param {String|HTMLElement|jQueryObject} [parent] - Will detect its scrollable parents or use the window if not set/falsey
+ * @returns {{left: number, top: number}}
+ */
+export function getScrollToPosition (target, parent) {
+  let $target = $(target).first()
+  let $parent = $(parent || getScrollableParents(target) || window).first()
+  let targetPosition = $target.position()
+  let scrollTo = {
+    top: ($parent[0].scrollTop || 0) + targetPosition.top,
+    left: ($parent[0].scrollLeft || 0) + targetPosition.left
   }
+
+  return scrollTo
+}
+
+/**
+ * SmoothScroll class
+ *
+ * @namespace lvl99.tools.SmoothScroll
+ * @class
+ * @param {ScrollToOptions} [scrollToOptions] - The options to pass to the SmoothScroll instance
+ */
+export default function SmoothScroll (options) {
+  // Load in the settings
+  const settings = $.extend({}, DEFAULT_SCROLLTO_OPTIONS, options)
 
   /**
    * Smoothly scroll to a target
    *
+   * @memberof lvl99.tools.SmoothScroll
+   *
    * @param {String|HTMLElement|jQueryObject} target
+   * @param {ScrollToOptions} scrollToOptions - The options to affect how the smooth scroll behaves
    */
   function scrollTo (target, scrollToOptions) {
+    // Load in per-use settings
+    let scrollToSettings = $.extend({}, settings, scrollToOptions)
+    let scrollTargets = []
+
     // Figure out element to scroll to
     let $target = $(target).not('[data-disable-smooth-scroll]')
 
-    // More than one target, default to first
+    // More than one target, only use first
     $target = ($target.length > 1 ? $target.eq(0) : $target)
 
-    // @debug
+    // No valid target found
+    if (!$target.length) {
+      return
+    }
+
+    // The top buffer
+    let bufferTop = (typeof scrollToSettings.bufferTop === 'function'
+      ? scrollToSettings.bufferTop.apply(this, [target, scrollToOptions])
+      : scrollToSettings.bufferTop || 0)
+
+    // Ensure that the parents will be scrolled to show the target as well
     let scrollableParents = getScrollableParents($target)
+    if (!scrollToSettings.ignoreScrollableParents && scrollableParents && scrollableParents.length) {
+      scrollableParents.forEach((scrollableParent, index) => {
+        let $elem = $(scrollableParent)
+        let $nextTarget = $(index === (scrollableParents.length - 1) ? $target : scrollableParents[index + 1])
 
-    // Does a scroll target exist?
-    if ($target.length === 1) {
-      // Load in per-use settings
-      let scrollToSettings = $.extend({}, settings, scrollToOptions)
+        // @debug
+        // console.log('generate scrollTarget', scrollTarget)
 
-      // The parent is the element(s) which will be scrolled to show the target in place
-      let $parent = $(scrollToSettings.parent)
-
-      // Get the target's top offset
-      let targetOffsetTop = $target.offset().top
-
-      // Get parent scrollTop (default to window)
-      let parentScrollTop = $(window).scrollTop()
-      if (!$parent.is('html') && !$parent.is('body')) {
-        parentScrollTop = $parent.first().scrollTop()
-      }
-
-      // Support dynamic bufferTop if it is a function
-      let scrollTop = targetOffsetTop - (typeof scrollToSettings.bufferTop === 'function' ? scrollToSettings.bufferTop() : scrollToSettings.bufferTop)
-
-      // Don't trigger the scroll if the distance is within
-      let checkTriggerDistance = Math.abs(parentScrollTop - scrollTop)
-      if (checkTriggerDistance < scrollToSettings.triggerDistance) {
-        return
-      }
-
-      /**
-       * Emit start event
-       *
-       * @event SmoothScroll.scrollTo:start
-       * @param {jQueryObject} $target
-       * @param {Object}
-       */
-      $target.trigger('SmoothScroll.scrollTo:start', [ scrollToSettings ])
-
-      // Do the scroll thing
-      $parent.animate({
-        scrollTop
-      }, scrollToSettings.scrollSpeed, () => {
-        // Callback after animation
-        // Must change focus!
-        $target.focus()
-
-        /**
-         * Emit end event
-         *
-         * @event SmoothScroll.scrollTo:end
-         * @param {jQueryObject} $target
-         * @param {Object}
-         */
-        $target.trigger('SmoothScroll.scrollTo:end', [scrollToSettings])
-
-        // Checking if the target was focused
-        if ($target.is(':focus')) {
-          return false
+        let scrollTarget = {
+          // Use the 'html,body' parent if it's the window
+          elem: ($.isWindow(scrollableParent) ? $('html,body') : $elem),
+          target: $nextTarget,
+          scrollTo: getScrollToPosition($nextTarget, $elem)
         }
+
+        scrollTargets.push(scrollTarget)
+      })
+
+      // Scroll only the window ('html,body' for jQuery.animate to work)
+    } else {
+      scrollTargets.push({
+        elem: $('html,body'),
+        target: $target,
+        scrollTo: getScrollToPosition($target, window)
+      })
+    }
+
+    // @debug
+    // console.log('[SmoothScroll] scrollTo', scrollTargets)
+
+    // Do scroll targets exist?
+    if (scrollTargets && scrollTargets.length) {
+      /**
+       * Emit scrollTo:before event.
+       *
+       * Triggered on the target element being scrolled to.
+       *
+       * @event SmoothScroll#SmoothScroll.scrollTo:before
+       * @param {Array} scrollTargets
+       * @param {ScrollToOptions} scrollToSettings
+       */
+      $target.trigger('SmoothScroll.scrollTo:before', [scrollTargets, scrollToSettings])
+
+      // Scroll each target
+      scrollTargets.forEach((scrollTarget) => {
+        /**
+         * Emit scrollTo:start event.
+         *
+         * Triggered on the element which is being scrolled, not the target being scrolled to.
+         *
+         * @event SmoothScroll#SmoothScroll.scrollTo:start
+         * @param {Array} scrollTarget
+         * @param {ScrollToOptions} scrollToSettings
+         */
+        $(scrollTarget.elem).trigger('SmoothScroll.scrollTo:start', [scrollTarget, scrollToSettings])
+
+        // Doits!
+        $(scrollTarget.elem).animate({
+          scrollLeft: scrollTarget.scrollTo.left,
+          scrollTop: scrollTarget.scrollTo.top + bufferTop
+        }, scrollToSettings.scrollSpeed, () => {
+          // Callback after animation
+          // Must change focus!
+          $target.focus()
+
+          /**
+           * Emit scrollTo:end event.
+           *
+           * Triggered on the element which is being scrolled, not the target being scrolled to.
+           *
+           * @event SmoothScroll#SmoothScroll.scrollTo:end
+           * @param {Object} scrollTarget
+           * @param {ScrollToOptions} scrollToSettings
+           */
+          $(scrollTarget.elem).trigger('SmoothScroll.scrollTo:end', [scrollTarget, scrollToSettings])
+
+          // Checking if the target was focused
+          if ($target.is(':focus')) {
+            return false
+          }
+        })
       })
     }
   }
 
   /**
    * Initialise all links on the page with the smoothScroll functionality
+   *
+   * @memberof lvl99.tools.SmoothScroll
    */
   function init () {
     // Attach link behaviours
@@ -168,7 +280,16 @@ export default function SmoothScroll ($, options) {
         }
       })
 
-    // Attach custom event to trigger behaviour through DOM
+    /**
+     * Trigger the scrollTo behaviour through the DOM
+     *
+     * ```javascript
+     *   $('#target-element').trigger('SmoothScroll.scrollTo')
+     * ```
+     *
+     * @event SmoothScroll#SmoothScroll.scrollTo
+     * @param {ScrollToOptions} options
+     */
     $(document).on('SmoothScroll.scrollTo', function (event, ...options) {
       if (event.target) {
         scrollTo(event.target, options[0])
@@ -184,6 +305,7 @@ export default function SmoothScroll ($, options) {
   }
 
   return {
+    settings,
     init,
     scrollTo
   }
