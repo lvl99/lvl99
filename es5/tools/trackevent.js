@@ -32,6 +32,7 @@
     exports.default = TrackEvent;
     /**
      * LVL99 Track Event
+     * 
      * Caches tracked events until Google Analytics is loaded, then uploads to GA
      *
      * @package lvl99
@@ -51,7 +52,7 @@
        * Detect if GA is loaded and then send any stored GA events
        */
       this.gaLoadedTimer = setInterval(function (lvl99TrackEvent) {
-        var i = void 0;
+        var index = void 0;
 
         // Wait until GA object is available
         if (typeof window.ga !== 'undefined') {
@@ -64,8 +65,8 @@
             }
 
             for (i in lvl99TrackEvent.saved) {
-              if (lvl99TrackEvent.saved.hasOwnProperty(i)) {
-                window.ga('send', lvl99TrackEvent.saved[i]);
+              if (lvl99TrackEvent.saved.hasOwnProperty(index)) {
+                window.ga('send', lvl99TrackEvent.saved[index]);
               }
             }
             lvl99TrackEvent.saved = [];
