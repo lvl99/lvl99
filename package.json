@@ -1,12 +1,12 @@
 {
   "name": "lvl99",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Nothing to see here, just another frontend framework",
   "private": false,
   "main": "index.js",
   "scripts": {
     "test": "jest --no-cache",
-    "build": "npm run test && gulp build"
+    "build": "npm run test && gulp build:development"
   },
   "keywords": [
     "jaff",
@@ -48,8 +48,10 @@
     "extend": "^3.0.1",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.0",
+    "gulp-concat": "^2.6.1",
     "gulp-if": "^2.0.2",
     "gulp-jest": "^3.0.1",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
@@ -60,6 +62,7 @@
     "jsdom": "^11.5.1",
     "lazypipe": "^1.0.1",
     "lodash.escaperegexp": "^4.1.2",
+    "run-sequence": "^2.2.0",
     "uglifyjs-webpack-plugin": "^1.0.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
@@ -110,7 +113,6 @@
       "jsx"
     ],
     "setupFiles": [
-      "<rootDir>/__tests__/setup.js",
       "jest-localstorage-mock"
     ],
     "testMatch": [

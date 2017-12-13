@@ -1,3 +1,9 @@
+### 1.4.4
+
+* Added [minified version](dist/lvl99.min.js) of [`lvl99.js`](dist/lvl99.js)
+* Updated and generated [docs!](docs/index.html)
+
+
 ### 1.4.3
 
 * Added new tool [`Storage`](es6/tools/storage.es6) which acts as a convenience wrapper with some extra small features
