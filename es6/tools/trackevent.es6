@@ -1,6 +1,6 @@
 /**
  * LVL99 Track Event
- * 
+ *
  * Caches tracked events until Google Analytics is loaded, then uploads to GA
  *
  * @package lvl99
@@ -9,17 +9,15 @@
 export default function TrackEvent (debug) {
   /**
    * Collect tracked events before GA is loaded
+   * @private
    * @type {Array}
    */
-  let saved = []
+  this.saved = []
 
-  /**
-   * Start checking to see if the GA object is loaded
-   */
   /**
    * Detect if GA is loaded and then send any stored GA events
    */
-  this.gaLoadedTimer = setInterval((function (lvl99TrackEvent) {
+  this.gaLoadedTimer = setInterval((function checkGaLoaded (lvl99TrackEvent) {
     let index
 
     // Wait until GA object is available
@@ -32,7 +30,7 @@ export default function TrackEvent (debug) {
           console.log(`Sending ${lvl99TrackEvent.saved.length} tracked events to ga`)
         }
 
-        for (i in lvl99TrackEvent.saved) {
+        for (let index in lvl99TrackEvent.saved) {
           if (lvl99TrackEvent.saved.hasOwnProperty(index)) {
             window.ga('send', lvl99TrackEvent.saved[index])
           }
@@ -43,13 +41,14 @@ export default function TrackEvent (debug) {
   }(this)), 5000)
 
   /**
-   * Track event magic
-   * @param eventCategory
-   * @param eventAction
-   * @param eventLabel
-   * @param eventValue
+   * Track an event magic.
+   *
+   * @param {String} eventCategory
+   * @param {String} eventAction
+   * @param {String} eventLabel
+   * @param {Number} eventValue
    */
-  return function track (eventCategory, eventAction, eventLabel, eventValue) {
+  this.track = function (eventCategory, eventAction, eventLabel, eventValue) {
     let trackedEvent = {
       hitType: 'event',
       eventCategory: eventCategory,
@@ -64,14 +63,14 @@ export default function TrackEvent (debug) {
     // GA is loaded
     if (typeof window.ga !== 'undefined') {
       if (debug && window.console && window.console.log) {
-        console.log('Send trackedEvent to GA', trackedEvent)
+        console.log('Send tracked event to GA', trackedEvent)
       }
       window.ga('send', trackedEvent)
 
       // waiting for GA to load, use internal var to collect
     } else {
       if (debug && window.console && window.console.log) {
-        console.log('GA not loaded yet, store trackedEvent', trackedEvent)
+        console.log('GA not loaded yet, caching tracked event...', trackedEvent)
       }
       this.saved.push(trackedEvent)
     }

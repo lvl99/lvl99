@@ -35,6 +35,18 @@ const FORMSTATE_STATUS = {
 const STORAGE = new Storage()
 
 /**
+ * Check if a target element is hidden (as in, hidden in a way that would render its values not readable by JS).
+ * @private
+ *
+ * @param {String|HTMLElement|jQueryObject} target
+ * @return {Boolean}
+ */
+function checkIfHidden (target) {
+  let $target = $(target)
+  return ($target.css('display') === 'none')
+}
+
+/**
  * Get a field's current state.
  *
  * @static
@@ -139,13 +151,20 @@ export default class FormState {
      * underscore (like WP nonce hidden inputs).
      *
      * Please note that password and file input elements will always be ignored.
+     *
+     * @prop {Boolean} abortWhenHidden - Aborts saving/restoring state if the form is hidden.
+     *
+     * When forms and form fields are hidden it generally means we can't/shouldn't get the values to save to the state.
+     *
+     * By default getting the state for a form that is hidden will mean all its fields will return an empty value.
      */
     this.settings = merge({
       target: target,
       storageType: LOCAL_STORAGE,
       clearOnSubmit: true,
       includeFields: 'input[name], select[name], textarea[name], [data-form-state-include]',
-      ignoreFields: 'input[type="submit"], input[type="reset"], input[type="button"], input[type="image"], input[type="hidden"][name^="_"], [data-form-state-ignore]'
+      ignoreFields: 'input[type="submit"], input[type="reset"], input[type="button"], input[type="image"], input[type="hidden"][name^="_"], [data-form-state-ignore]',
+      abortWhenHidden: true
     }, options)
 
     // Error if falsey target given
@@ -172,10 +191,12 @@ export default class FormState {
     }
 
     /**
+     * The current working status of the FormState instance.
+     *
      * @memberof FormState
-     * @prop {FormStateStatus} status - The current working status of the FormState instance.
+     * @prop {FormStateStatus}
      */
-    this.status = 0
+    this.status = FORMSTATE_STATUS.IDLE
 
     //
     // Attach event listeners to the target form
@@ -230,7 +251,7 @@ export default class FormState {
   /**
    * Restore a single field's state.
    *
-   * @param {FormFieldState} fieldState
+   * @param {FieldStateSnapshot} fieldState
    */
   restoreFieldState (fieldState) {
     let $field
@@ -346,7 +367,7 @@ export default class FormState {
     // Process all the form fields to extract the data
     let $fields = this.getFields()
     $fields.each((index, elem) => {
-      let fieldState = this.getField(elem)
+      let fieldState = this.getFieldState(elem)
       if (fieldState) {
         formState.fields.push(fieldState)
       }
@@ -392,8 +413,8 @@ export default class FormState {
    * @param {String} [version] - Set a specific version to save to.
    */
   save (version = '') {
-    // Ensure not saving while already saving
-    if (this.status) {
+    // Ensure not saving while already saving or if it is hidden
+    if (this.status || (this.settings.abortWhenHidden && checkIfHidden(this.$target))) {
       return
     }
 
@@ -419,8 +440,8 @@ export default class FormState {
    * @param {String} [version] - A specific version of the form's state to restore (only if it is available within the storage type).
    */
   restore (version = '') {
-    // Ensure not restoring while already working
-    if (this.status) {
+    // Ensure not restoring while already working or if hidden
+    if (this.status || (this.settings.abortWhenHidden && checkIfHidden(this.$target))) {
       return
     }
 
@@ -452,7 +473,7 @@ export default class FormState {
 
     // Restore the fields within the form
     if (formState && formState.hasOwnProperty('fields')) {
-      formState.fields.forEach((fieldState) => this.restoreField(fieldState))
+      formState.fields.forEach((fieldState) => this.restoreFieldState(fieldState))
     }
 
     /**
@@ -479,8 +500,8 @@ export default class FormState {
    * @param {String} [version] - A specific version of the form's state to clear.
    */
   clear (version = '') {
-    // Ensure not clearing while something is happening
-    if (this.status) {
+    // Ensure not clearing while something is happening or if hidden
+    if (this.status || (this.settings.abortWhenHidden && checkIfHidden(this.$target))) {
       return
     }
 
@@ -494,7 +515,7 @@ export default class FormState {
 
     // Check for the saved form state
     let targetId = this.$target.attr('id')
-    storage.removeItem(`FormState:${targetId}${version}`, this.settings.storageType)
+    STORAGE.removeItem(`FormState:${targetId}${version}`, this.settings.storageType)
 
     /**
      * Trigger a custom event after clearing the form's state.
