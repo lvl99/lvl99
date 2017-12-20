@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.STORAGE_TYPES = exports.LOCAL_STORAGE = exports.SESSION_STORAGE = undefined;
+exports.ObjectStorage = exports.STORAGE_TYPES = exports.LOCAL_STORAGE = exports.SESSION_STORAGE = exports.OBJECT_STORAGE = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * LVL99 Storage
@@ -28,9 +28,102 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 // Types of storage
+var OBJECT_STORAGE = exports.OBJECT_STORAGE = 'objectStorage';
 var SESSION_STORAGE = exports.SESSION_STORAGE = 'sessionStorage';
 var LOCAL_STORAGE = exports.LOCAL_STORAGE = 'localStorage';
-var STORAGE_TYPES = exports.STORAGE_TYPES = [SESSION_STORAGE, LOCAL_STORAGE];
+var STORAGE_TYPES = exports.STORAGE_TYPES = [OBJECT_STORAGE, SESSION_STORAGE, LOCAL_STORAGE];
+
+/**
+ * Object Storage handler.
+ *
+ * This is a basic object-based fallback version of storage if local/session storage is not supported.
+ *
+ * It should work exactly the same as sessionStorage, however it is related only to the current window session --
+ * data here is not persistent.
+ *
+ * @class
+ */
+
+var ObjectStorage = exports.ObjectStorage = function () {
+  /**
+   * Create the object storage instance.
+   *
+   * @constructor
+   * @param {Object} data
+   */
+  function ObjectStorage() {
+    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, ObjectStorage);
+
+    this.data = data || {};
+  }
+
+  /**
+   * Clear all items in object storage.
+   *
+   * @returns {Object}
+   */
+
+
+  _createClass(ObjectStorage, [{
+    key: 'clear',
+    value: function clear() {
+      this.data = {};
+    }
+
+    /**
+     * Get item in object storage.
+     *
+     * @param {String} name
+     * @returns {*|null}
+     */
+
+  }, {
+    key: 'getItem',
+    value: function getItem(name) {
+      if (this.data.hasOwnProperty(name)) {
+        return this.data[name];
+      }
+      return null;
+    }
+
+    /**
+     * Set item in object storage.
+     *
+     * @param {String} name
+     * @param {*} value
+     */
+
+  }, {
+    key: 'setItem',
+    value: function setItem(name, value) {
+      this.data[name] = value;
+    }
+
+    /**
+     * Remove item in object storage.
+     *
+     * @param {String} name
+     */
+
+  }, {
+    key: 'removeItem',
+    value: function removeItem(name) {
+      if (this.data.hasOwnProperty(name)) {
+        this.data[name] = null;
+        delete this.data[name];
+      }
+    }
+  }]);
+
+  return ObjectStorage;
+}();
+
+// Create the objectStorage instance in the window
+
+
+window[OBJECT_STORAGE] = new ObjectStorage();
 
 /**
  * Test to see if a storage type works within the environment
@@ -99,6 +192,11 @@ var Storage = function () {
       storageType: LOCAL_STORAGE
     }, options);
 
+    // Test storageType to ensure it is supported. If not, default back to object storage
+    if (this.settings.storageType !== OBJECT_STORAGE && !testStorageType(this.settings.storageType)) {
+      this.settings.storageType = OBJECT_STORAGE;
+    }
+
     return this;
   }
 
@@ -117,6 +215,7 @@ var Storage = function () {
         storageType = this.settings.storageType;
       }
 
+      // Throw error
       if (!testStorageType(storageType)) {
         throw new Error('Storage type ' + storageType + ' not supported');
       }

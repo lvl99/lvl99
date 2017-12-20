@@ -2,6 +2,7 @@
 
 * Added [minified version](dist/lvl99.min.js) of [`lvl99.js`](dist/lvl99.js).
 * Minor update to the [`TrackEvent`](es6/tools/trackevent.es6) tool.
+* Added an `ObjectStorage` fallback handler if local/session storage is not supported in user's browser.
 
 
 ### 1.4.3

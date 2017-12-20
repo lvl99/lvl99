@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -75,7 +75,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.events = exports.$body = exports.$html = exports.$win = exports.$doc = exports.$ = undefined;
 
-var _jquery = __webpack_require__(11);
+var _jquery = __webpack_require__(12);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -2805,7 +2805,7 @@ function stubFalse() {
 
 module.exports = merge;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(14)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(15)(module)))
 
 /***/ }),
 /* 3 */
@@ -3552,8 +3552,8 @@ module.exports = g;
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var v1 = __webpack_require__(15);
-var v4 = __webpack_require__(16);
+var v1 = __webpack_require__(16);
+var v4 = __webpack_require__(17);
 
 var uuid = v4;
 uuid.v1 = v1;
@@ -3641,20 +3641,443 @@ module.exports = bytesToUuid;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.ObjectStorage = exports.STORAGE_TYPES = exports.LOCAL_STORAGE = exports.SESSION_STORAGE = exports.OBJECT_STORAGE = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * LVL99 Storage
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Utilise modern browser features like localStorage and sessionStorage (if available within the environment)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @package lvl99
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+exports.testStorageType = testStorageType;
+exports.getSupportedStorageTypes = getSupportedStorageTypes;
+exports.eachStorageType = eachStorageType;
+
+var _lodash = __webpack_require__(2);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _parse = __webpack_require__(1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// Types of storage
+var OBJECT_STORAGE = exports.OBJECT_STORAGE = 'objectStorage';
+var SESSION_STORAGE = exports.SESSION_STORAGE = 'sessionStorage';
+var LOCAL_STORAGE = exports.LOCAL_STORAGE = 'localStorage';
+var STORAGE_TYPES = exports.STORAGE_TYPES = [OBJECT_STORAGE, SESSION_STORAGE, LOCAL_STORAGE];
+
+/**
+ * Object Storage handler.
+ *
+ * This is a basic object-based fallback version of storage if local/session storage is not supported.
+ *
+ * It should work exactly the same as sessionStorage, however it is related only to the current window session --
+ * data here is not persistent.
+ *
+ * @class
+ */
+
+var ObjectStorage = exports.ObjectStorage = function () {
+  /**
+   * Create the object storage instance.
+   *
+   * @constructor
+   * @param {Object} data
+   */
+  function ObjectStorage() {
+    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, ObjectStorage);
+
+    this.data = data || {};
+  }
+
+  /**
+   * Clear all items in object storage.
+   *
+   * @returns {Object}
+   */
+
+
+  _createClass(ObjectStorage, [{
+    key: 'clear',
+    value: function clear() {
+      this.data = {};
+    }
+
+    /**
+     * Get item in object storage.
+     *
+     * @param {String} name
+     * @returns {*|null}
+     */
+
+  }, {
+    key: 'getItem',
+    value: function getItem(name) {
+      if (this.data.hasOwnProperty(name)) {
+        return this.data[name];
+      }
+      return null;
+    }
+
+    /**
+     * Set item in object storage.
+     *
+     * @param {String} name
+     * @param {*} value
+     */
+
+  }, {
+    key: 'setItem',
+    value: function setItem(name, value) {
+      this.data[name] = value;
+    }
+
+    /**
+     * Remove item in object storage.
+     *
+     * @param {String} name
+     */
+
+  }, {
+    key: 'removeItem',
+    value: function removeItem(name) {
+      if (this.data.hasOwnProperty(name)) {
+        this.data[name] = null;
+        delete this.data[name];
+      }
+    }
+  }]);
+
+  return ObjectStorage;
+}();
+
+// Create the objectStorage instance in the window
+
+
+window[OBJECT_STORAGE] = new ObjectStorage();
+
+/**
+ * Test to see if a storage type works within the environment
+ *
+ * @param {String} storageType
+ * @return {Boolean}
+ */
+function testStorageType(storageType) {
+  try {
+    var envStorage = window[storageType];
+    var x = '__test__storage__';
+    envStorage.setItem(x, storageType);
+    envStorage.removeItem(x);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Get the supported types of storage
+ *
+ * @returns {Object} with name of storage type as keys with {Boolean} value
+ */
+function getSupportedStorageTypes() {
+  var supports = {};
+
+  // Build the object from the constant's values
+  STORAGE_TYPES.forEach(function (storageType, index) {
+    supports[storageType] = testStorageType(storageType);
+  });
+
+  return supports;
+}
+
+/**
+ * Perform a callback on each supported (or not) storage type
+ *
+ * @param {Function} cb
+ */
+function eachStorageType(cb) {
+  var supported = getSupportedStorageTypes();
+
+  for (var storageType in supported) {
+    if (supported.hasOwnProperty(storageType)) {
+      cb.apply(this, [storageType, supported[storageType], supported]);
+    }
+  }
+}
+
+/**
+ * Storage class
+ */
+
+var Storage = function () {
+  /**
+   * Create the storage class
+   *
+   * @param options
+   */
+  function Storage(options) {
+    _classCallCheck(this, Storage);
+
+    this.settings = (0, _lodash2.default)({
+      // default to localStorage
+      storageType: LOCAL_STORAGE
+    }, options);
+
+    // Test storageType to ensure it is supported. If not, default back to object storage
+    if (this.settings.storageType !== OBJECT_STORAGE && !testStorageType(this.settings.storageType)) {
+      this.settings.storageType = OBJECT_STORAGE;
+    }
+
+    return this;
+  }
+
+  /**
+   * Reset a single storage type
+   *
+   * @param storageType
+   */
+
+
+  _createClass(Storage, [{
+    key: 'clear',
+    value: function clear(storageType) {
+      // Use default storage type
+      if (!storageType) {
+        storageType = this.settings.storageType;
+      }
+
+      // Throw error
+      if (!testStorageType(storageType)) {
+        throw new Error('Storage type ' + storageType + ' not supported');
+      }
+
+      window[storageType].clear();
+    }
+
+    /**
+     * Reset all the data within all supported storage types
+     */
+
+  }, {
+    key: 'clearAll',
+    value: function clearAll() {
+      eachStorageType(function (storageType, isSupported) {
+        if (isSupported) {
+          window[storageType].clear();
+        }
+      });
+    }
+
+    /**
+     * Clear local storage
+     */
+
+  }, {
+    key: 'clearLocal',
+    value: function clearLocal() {
+      this.clear(LOCAL_STORAGE);
+    }
+
+    /**
+     * Clear session storage
+     */
+
+  }, {
+    key: 'clearSession',
+    value: function clearSession() {
+      this.clear(SESSION_STORAGE);
+    }
+
+    /**
+     * Get stored item's value by key from a specified storage type
+     *
+     * @param {String} name The name of the data to retrieve from storage
+     * @param {String} storageType The name of the storage type to retrieve from
+     * @returns {Mixed}
+     * @throws {Error}
+     */
+
+  }, {
+    key: 'getItem',
+    value: function getItem(name, storageType) {
+      // Use default storage type
+      if (!storageType) {
+        storageType = this.settings.storageType;
+      }
+
+      // Check if storage type is available
+      if (!testStorageType(storageType)) {
+        throw new Error('Storage type ' + storageType + ' not supported');
+      }
+
+      // Ensure value is coerced since storage stores as JSON/string
+      return (0, _parse.coerceToPrimitiveType)(window[storageType].getItem(name));
+    }
+
+    /**
+     * Get stored item's value by key from local storage
+     *
+     * @param {String} name The name of the data to retrieve from storage
+     * @returns {Mixed}
+     */
+
+  }, {
+    key: 'getItemLocal',
+    value: function getItemLocal(name) {
+      return this.getItem(name, LOCAL_STORAGE);
+    }
+
+    /**
+     * Get stored item's value by key from session storage
+     *
+     * @param {String} name The name of the item to retrieve from storage
+     * @returns {Mixed}
+     */
+
+  }, {
+    key: 'getItemSession',
+    value: function getItemSession(name) {
+      return this.getItem(name, SESSION_STORAGE);
+    }
+
+    /**
+     * Set an item's value in a specified storage type
+     *
+     * @param {String} name The name of the item to set in storage
+     * @param {Mixed} value
+     * @param {String} storageType
+     * @throws {Error}
+     */
+
+  }, {
+    key: 'setItem',
+    value: function setItem(name, value, storageType) {
+      // Use default storage type
+      if (!storageType) {
+        storageType = this.settings.storageType;
+      }
+
+      // Check if storage type is available
+      if (!testStorageType(storageType)) {
+        throw new Error('Storage type ' + storageType + ' not supported');
+      }
+
+      window[storageType].setItem(name, JSON.stringify(value));
+    }
+
+    /**
+     * Set an item's value in the local storage
+     *
+     * @param {String} name The name of the item to set in local storage
+     * @param {Mixed} value
+     */
+
+  }, {
+    key: 'setItemLocal',
+    value: function setItemLocal(name, value) {
+      this.setItem(name, value, LOCAL_STORAGE);
+    }
+
+    /**
+     * Set an item's value in the session storage
+     *
+     * @param {String} name The name of the item to set in session storage
+     * @param {Mixed} value
+     */
+
+  }, {
+    key: 'setItemSession',
+    value: function setItemSession(name, value) {
+      this.setItem(name, value, SESSION_STORAGE);
+    }
+
+    /**
+     * Remove an item from the default storage type
+     *
+     * @param {String} name The name of the item to remove from the storage type
+     * @param {String} storageType
+     * @throws {Error}
+     */
+
+  }, {
+    key: 'removeItem',
+    value: function removeItem(name, storageType) {
+      // Use default storage type
+      if (!storageType) {
+        storageType = this.settings.storageType;
+      }
+
+      // Check if storage type is available
+      if (!testStorageType(storageType)) {
+        throw new Error('Storage type ' + storageType + ' not supported');
+      }
+
+      window[storageType].removeItem(name);
+    }
+
+    /**
+     * Remove an item from local storage type
+     *
+     * @param {String} name The name of the item to remove from local storage
+     * @throws {Error}
+     */
+
+  }, {
+    key: 'removeItemLocal',
+    value: function removeItemLocal(name) {
+      this.removeItem(name, LOCAL_STORAGE);
+    }
+
+    /**
+     * Remove an item from session storage
+     *
+     * @param {String} name The name of the item to remove from session storage
+     * @throws {Error}
+     */
+
+  }, {
+    key: 'removeItemSession',
+    value: function removeItemSession(name) {
+      this.removeItem(name, SESSION_STORAGE);
+    }
+  }]);
+
+  return Storage;
+}();
+
+exports.default = Storage;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _common = __webpack_require__(0);
 
 var _common2 = _interopRequireDefault(_common);
 
-var _utils = __webpack_require__(12);
+var _utils = __webpack_require__(13);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _core = __webpack_require__(13);
+var _core = __webpack_require__(14);
 
 var _core2 = _interopRequireDefault(_core);
 
-var _tools = __webpack_require__(19);
+var _tools = __webpack_require__(20);
 
 var _tools2 = _interopRequireDefault(_tools);
 
@@ -3678,13 +4101,13 @@ var lvl99 = {
 exports.default = lvl99;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = window.jQuery;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3722,7 +4145,7 @@ var utils = {
 exports.default = utils;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3736,11 +4159,11 @@ var _entity = __webpack_require__(4);
 
 var _entity2 = _interopRequireDefault(_entity);
 
-var _app = __webpack_require__(17);
+var _app = __webpack_require__(18);
 
 var _app2 = _interopRequireDefault(_app);
 
-var _component = __webpack_require__(18);
+var _component = __webpack_require__(19);
 
 var _component2 = _interopRequireDefault(_component);
 
@@ -3761,7 +4184,7 @@ var core = {
 exports.default = core;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -3789,7 +4212,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var rng = __webpack_require__(8);
@@ -3895,7 +4318,7 @@ module.exports = v1;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var rng = __webpack_require__(8);
@@ -3930,7 +4353,7 @@ module.exports = v4;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4332,7 +4755,7 @@ var App = function (_Entity) {
 exports.default = App;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4922,7 +5345,7 @@ var Component = function (_Entity) {
 exports.default = Component;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4932,27 +5355,27 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _breakpoints = __webpack_require__(20);
+var _breakpoints = __webpack_require__(21);
 
 var _breakpoints2 = _interopRequireDefault(_breakpoints);
 
-var _debug = __webpack_require__(21);
+var _debug = __webpack_require__(22);
 
 var _debug2 = _interopRequireDefault(_debug);
 
-var _queue = __webpack_require__(22);
+var _queue = __webpack_require__(23);
 
 var _queue2 = _interopRequireDefault(_queue);
 
-var _trackevent = __webpack_require__(23);
+var _trackevent = __webpack_require__(24);
 
 var _trackevent2 = _interopRequireDefault(_trackevent);
 
-var _smoothScroll = __webpack_require__(24);
+var _smoothScroll = __webpack_require__(25);
 
 var _smoothScroll2 = _interopRequireDefault(_smoothScroll);
 
-var _storage = __webpack_require__(25);
+var _storage = __webpack_require__(10);
 
 var _storage2 = _interopRequireDefault(_storage);
 
@@ -4976,7 +5399,7 @@ var utils = {
 exports.default = tools;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5056,7 +5479,7 @@ function Breakpoints(sizes) {
 }
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5106,7 +5529,7 @@ function Debug() {
 }
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5639,7 +6062,7 @@ function Queue(options) {
 }
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5649,88 +6072,135 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = TrackEvent;
+
+var _storage = __webpack_require__(10);
+
+var _storage2 = _interopRequireDefault(_storage);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 /**
  * LVL99 Track Event
- * 
+ *
  * Caches tracked events until Google Analytics is loaded, then uploads to GA
  *
- * @package lvl99
+ * @module lvl99/tools/trackevent
+ * @requires module:lvl99/tools/storage
  */
 
-function TrackEvent(debug) {
-  /**
-   * Collect tracked events before GA is loaded
-   * @type {Array}
-   */
-  var saved = [];
+var __loggerPath = 'LVL99:TrackEvent';
 
-  /**
-   * Start checking to see if the GA object is loaded
-   */
+
+// Save events locally if GA isn't online
+var STORAGE = new _storage2.default({
+  storageType: _storage.LOCAL_STORAGE
+});
+var STORAGE_KEY = 'LVL99:TrackedEvents';
+
+function TrackEvent(debug) {
+  var _this = this;
+
   /**
    * Detect if GA is loaded and then send any stored GA events
    */
-  this.gaLoadedTimer = setInterval(function (lvl99TrackEvent) {
-    var index = void 0;
+  var attempts = 0;
+  var checkGALoaded = function checkGALoaded() {
+    attempts++;
 
-    // Wait until GA object is available
-    if (typeof window.ga !== 'undefined') {
-      clearInterval(lvl99TrackEvent.gaLoadedTimer);
+    if (debug && window.console && window.console.log) {
+      console.log('[' + __loggerPath + '] Checking for GA loaded... (#' + attempts + ')');
+    }
 
-      // Send saved events
-      if (lvl99TrackEvent.saved.length > 0) {
+    // Check if GA object is available
+    if (window.hasOwnProperty('ga') && window.ga && typeof window.ga === 'function') {
+      if (debug && window.console && window.console.log) {
+        console.log('[' + __loggerPath + '] --> Found GA!');
+      }
+
+      // Send any saved events
+      var trackedEvents = STORAGE.getItem(STORAGE_KEY);
+      if (trackedEvents && trackedEvents.length > 0) {
         if (debug && window.console && window.console.log) {
-          console.log('Sending ' + lvl99TrackEvent.saved.length + ' tracked events to ga');
+          console.log('[' + __loggerPath + '] --> Sending ' + trackedEvents.length + ' tracked events to GA', { trackedEvents: trackedEvents });
         }
 
-        for (i in lvl99TrackEvent.saved) {
-          if (lvl99TrackEvent.saved.hasOwnProperty(index)) {
-            window.ga('send', lvl99TrackEvent.saved[index]);
+        for (var index in trackedEvents) {
+          if (trackedEvents.hasOwnProperty(index)) {
+            window.ga('send', trackedEvents[index]);
           }
         }
-        lvl99TrackEvent.saved = [];
+
+        // Clear the saved events
+        trackedEvents = [];
+        STORAGE.removeItem(STORAGE_KEY);
       }
+
+      return;
     }
-  }(this), 5000);
+
+    // Cap attempts to detect GA
+    if (attempts >= 5) {
+      if (debug && window.console && window.console.log) {
+        console.warn('[' + __loggerPath + '] --> Halted testing for GA to be loaded: maximum ' + attempts + ' attempts reached.');
+      }
+    } else {
+      if (debug && window.console && window.console.log) {
+        console.log('[' + __loggerPath + '] --> GA not found... will try again');
+      }
+
+      _this.gaLoadedTimer = setTimeout(checkGALoaded, 5000);
+    }
+  };
+  this.gaLoadedTimer = setTimeout(checkGALoaded, 5000);
 
   /**
-   * Track event magic
-   * @param eventCategory
-   * @param eventAction
-   * @param eventLabel
-   * @param eventValue
+   * Track an event magic.
+   *
+   * @param {String} eventCategory
+   * @param {String} eventAction
+   * @param {String} eventLabel
+   * @param {Number} [eventValue]
    */
-  return function track(eventCategory, eventAction, eventLabel, eventValue) {
+  this.track = function (eventCategory, eventAction, eventLabel, eventValue) {
     var trackedEvent = {
       hitType: 'event',
       eventCategory: eventCategory,
       eventAction: eventAction,
       eventLabel: eventLabel,
       eventValue: eventValue
-    };
 
-    if (!eventCategory || !eventAction) return;
-    if (typeof eventValue === 'string') return;
+      // Required fields
+    };if (!eventCategory || !eventAction) {
+      return;
+    }
+
+    // Event value must be string
+    if (typeof eventValue === 'string') {
+      return;
+    }
 
     // GA is loaded
     if (typeof window.ga !== 'undefined') {
       if (debug && window.console && window.console.log) {
-        console.log('Send trackedEvent to GA', trackedEvent);
+        console.log('Send tracked event to GA', trackedEvent);
       }
       window.ga('send', trackedEvent);
 
       // waiting for GA to load, use internal var to collect
     } else {
       if (debug && window.console && window.console.log) {
-        console.log('GA not loaded yet, store trackedEvent', trackedEvent);
+        console.log('GA not loaded yet, caching tracked event...', trackedEvent);
       }
-      this.saved.push(trackedEvent);
+
+      var trackedEvents = STORAGE.getItem(STORAGE_KEY) || [];
+      trackedEvents.push(trackedEvent);
+      STORAGE.setItem(STORAGE_KEY, trackedEvents);
     }
   };
 }
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6047,330 +6517,6 @@ function SmoothScroll(options) {
     scrollTo: scrollTo
   };
 }
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.STORAGE_TYPES = exports.LOCAL_STORAGE = exports.SESSION_STORAGE = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * LVL99 Storage
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Utilise modern browser features like localStorage and sessionStorage (if available within the environment)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @package lvl99
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-exports.testStorageType = testStorageType;
-exports.getSupportedStorageTypes = getSupportedStorageTypes;
-exports.eachStorageType = eachStorageType;
-
-var _lodash = __webpack_require__(2);
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
-var _parse = __webpack_require__(1);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// Types of storage
-var SESSION_STORAGE = exports.SESSION_STORAGE = 'sessionStorage';
-var LOCAL_STORAGE = exports.LOCAL_STORAGE = 'localStorage';
-var STORAGE_TYPES = exports.STORAGE_TYPES = [SESSION_STORAGE, LOCAL_STORAGE];
-
-/**
- * Test to see if a storage type works within the environment
- *
- * @param {String} storageType
- * @return {Boolean}
- */
-function testStorageType(storageType) {
-  try {
-    var envStorage = window[storageType];
-    var x = '__test__storage__';
-    envStorage.setItem(x, storageType);
-    envStorage.removeItem(x);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-/**
- * Get the supported types of storage
- *
- * @returns {Object} with name of storage type as keys with {Boolean} value
- */
-function getSupportedStorageTypes() {
-  var supports = {};
-
-  // Build the object from the constant's values
-  STORAGE_TYPES.forEach(function (storageType, index) {
-    supports[storageType] = testStorageType(storageType);
-  });
-
-  return supports;
-}
-
-/**
- * Perform a callback on each supported (or not) storage type
- *
- * @param {Function} cb
- */
-function eachStorageType(cb) {
-  var supported = getSupportedStorageTypes();
-
-  for (var storageType in supported) {
-    if (supported.hasOwnProperty(storageType)) {
-      cb.apply(this, [storageType, supported[storageType], supported]);
-    }
-  }
-}
-
-/**
- * Storage class
- */
-
-var Storage = function () {
-  /**
-   * Create the storage class
-   *
-   * @param options
-   */
-  function Storage(options) {
-    _classCallCheck(this, Storage);
-
-    this.settings = (0, _lodash2.default)({
-      // default to localStorage
-      storageType: LOCAL_STORAGE
-    }, options);
-
-    return this;
-  }
-
-  /**
-   * Reset a single storage type
-   *
-   * @param storageType
-   */
-
-
-  _createClass(Storage, [{
-    key: 'clear',
-    value: function clear(storageType) {
-      // Use default storage type
-      if (!storageType) {
-        storageType = this.settings.storageType;
-      }
-
-      if (!testStorageType(storageType)) {
-        throw new Error('Storage type ' + storageType + ' not supported');
-      }
-
-      window[storageType].clear();
-    }
-
-    /**
-     * Reset all the data within all supported storage types
-     */
-
-  }, {
-    key: 'clearAll',
-    value: function clearAll() {
-      eachStorageType(function (storageType, isSupported) {
-        if (isSupported) {
-          window[storageType].clear();
-        }
-      });
-    }
-
-    /**
-     * Clear local storage
-     */
-
-  }, {
-    key: 'clearLocal',
-    value: function clearLocal() {
-      this.clear(LOCAL_STORAGE);
-    }
-
-    /**
-     * Clear session storage
-     */
-
-  }, {
-    key: 'clearSession',
-    value: function clearSession() {
-      this.clear(SESSION_STORAGE);
-    }
-
-    /**
-     * Get stored item's value by key from a specified storage type
-     *
-     * @param {String} name The name of the data to retrieve from storage
-     * @param {String} storageType The name of the storage type to retrieve from
-     * @returns {Mixed}
-     * @throws {Error}
-     */
-
-  }, {
-    key: 'getItem',
-    value: function getItem(name, storageType) {
-      // Use default storage type
-      if (!storageType) {
-        storageType = this.settings.storageType;
-      }
-
-      // Check if storage type is available
-      if (!testStorageType(storageType)) {
-        throw new Error('Storage type ' + storageType + ' not supported');
-      }
-
-      // Ensure value is coerced since storage stores as JSON/string
-      return (0, _parse.coerceToPrimitiveType)(window[storageType].getItem(name));
-    }
-
-    /**
-     * Get stored item's value by key from local storage
-     *
-     * @param {String} name The name of the data to retrieve from storage
-     * @returns {Mixed}
-     */
-
-  }, {
-    key: 'getItemLocal',
-    value: function getItemLocal(name) {
-      return this.getItem(name, LOCAL_STORAGE);
-    }
-
-    /**
-     * Get stored item's value by key from session storage
-     *
-     * @param {String} name The name of the item to retrieve from storage
-     * @returns {Mixed}
-     */
-
-  }, {
-    key: 'getItemSession',
-    value: function getItemSession(name) {
-      return this.getItem(name, SESSION_STORAGE);
-    }
-
-    /**
-     * Set an item's value in a specified storage type
-     *
-     * @param {String} name The name of the item to set in storage
-     * @param {Mixed} value
-     * @param {String} storageType
-     * @throws {Error}
-     */
-
-  }, {
-    key: 'setItem',
-    value: function setItem(name, value, storageType) {
-      // Use default storage type
-      if (!storageType) {
-        storageType = this.settings.storageType;
-      }
-
-      // Check if storage type is available
-      if (!testStorageType(storageType)) {
-        throw new Error('Storage type ' + storageType + ' not supported');
-      }
-
-      window[storageType].setItem(name, JSON.stringify(value));
-    }
-
-    /**
-     * Set an item's value in the local storage
-     *
-     * @param {String} name The name of the item to set in local storage
-     * @param {Mixed} value
-     */
-
-  }, {
-    key: 'setItemLocal',
-    value: function setItemLocal(name, value) {
-      this.setItem(name, value, LOCAL_STORAGE);
-    }
-
-    /**
-     * Set an item's value in the session storage
-     *
-     * @param {String} name The name of the item to set in session storage
-     * @param {Mixed} value
-     */
-
-  }, {
-    key: 'setItemSession',
-    value: function setItemSession(name, value) {
-      this.setItem(name, value, SESSION_STORAGE);
-    }
-
-    /**
-     * Remove an item from the default storage type
-     *
-     * @param {String} name The name of the item to remove from the storage type
-     * @param {String} storageType
-     * @throws {Error}
-     */
-
-  }, {
-    key: 'removeItem',
-    value: function removeItem(name, storageType) {
-      // Use default storage type
-      if (!storageType) {
-        storageType = this.settings.storageType;
-      }
-
-      // Check if storage type is available
-      if (!testStorageType(storageType)) {
-        throw new Error('Storage type ' + storageType + ' not supported');
-      }
-
-      window[storageType].removeItem(name);
-    }
-
-    /**
-     * Remove an item from local storage type
-     *
-     * @param {String} name The name of the item to remove from local storage
-     * @throws {Error}
-     */
-
-  }, {
-    key: 'removeItemLocal',
-    value: function removeItemLocal(name) {
-      this.removeItem(name, LOCAL_STORAGE);
-    }
-
-    /**
-     * Remove an item from session storage
-     *
-     * @param {String} name The name of the item to remove from session storage
-     * @throws {Error}
-     */
-
-  }, {
-    key: 'removeItemSession',
-    value: function removeItemSession(name) {
-      this.removeItem(name, SESSION_STORAGE);
-    }
-  }]);
-
-  return Storage;
-}();
-
-exports.default = Storage;
 
 /***/ })
 /******/ ]);
