@@ -1,7 +1,7 @@
 ### 1.4.4
 
-* Added [minified version](dist/lvl99.min.js) of [`lvl99.js`](dist/lvl99.js)
-* Updated and generated [docs!](docs/index.html)
+* Added [minified version](dist/lvl99.min.js) of [`lvl99.js`](dist/lvl99.js).
+* Minor update to the [`TrackEvent`](es6/tools/trackevent.es6) tool.
 
 
 ### 1.4.3

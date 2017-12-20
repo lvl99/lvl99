@@ -21,7 +21,7 @@ export default function TrackEvent (debug) {
     let index
 
     // Wait until GA object is available
-    if (typeof window.ga !== 'undefined') {
+    if (window.hasOwnProperty('ga') && window.ga) {
       clearInterval(lvl99TrackEvent.gaLoadedTimer)
 
       // Send saved events
@@ -48,7 +48,7 @@ export default function TrackEvent (debug) {
    * @param {String} eventLabel
    * @param {Number} eventValue
    */
-  this.track = function (eventCategory, eventAction, eventLabel, eventValue) {
+  this.track = (eventCategory, eventAction, eventLabel, eventValue) => {
     let trackedEvent = {
       hitType: 'event',
       eventCategory: eventCategory,
@@ -57,8 +57,15 @@ export default function TrackEvent (debug) {
       eventValue: eventValue
     }
 
-    if (!eventCategory || !eventAction) return;
-    if (typeof eventValue === 'string') return;
+    // Required fields
+    if (!eventCategory || !eventAction) {
+      return
+    }
+
+    // Event value must be string
+    if (typeof eventValue === 'string') {
+      return
+    }
 
     // GA is loaded
     if (typeof window.ga !== 'undefined') {
