@@ -8,6 +8,7 @@
  */
 
 const __loggerPath = 'LVL99:TrackEvent'
+import merge from 'lodash.merge'
 import Storage, { LOCAL_STORAGE } from './storage'
 
 // Save events locally if GA isn't online
@@ -71,43 +72,34 @@ export default function TrackEvent (debug) {
   this.gaLoadedTimer = setTimeout(checkGALoaded, 5000)
 
   /**
-   * Track an event magic.
+   * Track an event.
    *
    * @param {String} eventCategory
    * @param {String} eventAction
    * @param {String} eventLabel
    * @param {Number} [eventValue]
+   * @param {Object} [fieldsObject]
    */
-  this.track = (eventCategory, eventAction, eventLabel, eventValue) => {
-    let trackedEvent = {
+  this.track = (eventCategory, eventAction, eventLabel, eventValue, fieldsObject) => {
+    let trackedEvent = merge({
       hitType: 'event',
       eventCategory,
       eventAction,
       eventLabel,
       eventValue
-    }
-
-    // Required fields
-    if (!eventCategory || !eventAction) {
-      return
-    }
-
-    // Event value must be string
-    if (typeof eventValue === 'string') {
-      return
-    }
+    }, fieldsObject)
 
     // GA is loaded
     if (typeof window.ga !== 'undefined') {
       if (debug && window.console && window.console.log) {
-        console.log('Send tracked event to GA', trackedEvent)
+        console.log(`[${__loggerPath}] Send tracked event to GA`, trackedEvent)
       }
-      window.ga('send', trackedEvent)
+      window.ga('send', ...trackedEvent)
 
       // waiting for GA to load, use internal var to collect
     } else {
       if (debug && window.console && window.console.log) {
-        console.log('GA not loaded yet, caching tracked event...', trackedEvent)
+        console.log(`[${__loggerPath}] GA not loaded yet, caching tracked event...`, trackedEvent)
       }
 
       let trackedEvents = STORAGE.getItem(STORAGE_KEY) || []
