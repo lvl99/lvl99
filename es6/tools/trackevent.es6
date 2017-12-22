@@ -4,6 +4,7 @@
  * Caches tracked events until Google Analytics is loaded, then uploads to GA
  *
  * @module lvl99/tools/trackevent
+ * @requires module:lodash.merge
  * @requires module:lvl99/tools/storage
  */
 
@@ -17,7 +18,7 @@ const STORAGE = new Storage({
 })
 const STORAGE_KEY = 'LVL99:TrackedEvents'
 
-export default function TrackEvent (debug) {
+export default function TrackEvent (debug, cb) {
   /**
    * Detect if GA is loaded and then send any stored GA events
    */
@@ -33,6 +34,11 @@ export default function TrackEvent (debug) {
     if (window.hasOwnProperty('ga') && window.ga && typeof window.ga === 'function') {
       if (debug && window.console && window.console.log) {
         console.log(`[${__loggerPath}] --> Found GA!`)
+      }
+
+      // Fire the callback when GA is loaded
+      if (typeof cb === 'function') {
+        cb.call(this)
       }
 
       // Send any saved events
@@ -80,7 +86,7 @@ export default function TrackEvent (debug) {
    * @param {Number} [eventValue]
    * @param {Object} [fieldsObject]
    */
-  this.track = (eventCategory, eventAction, eventLabel, eventValue, fieldsObject) => {
+  this.track = (eventCategory, eventAction, eventLabel, eventValue, fieldsObject = {}) => {
     let trackedEvent = merge({
       hitType: 'event',
       eventCategory,
@@ -94,7 +100,8 @@ export default function TrackEvent (debug) {
       if (debug && window.console && window.console.log) {
         console.log(`[${__loggerPath}] Send tracked event to GA`, trackedEvent)
       }
-      window.ga('send', ...trackedEvent)
+
+      window.ga('send', trackedEvent)
 
       // waiting for GA to load, use internal var to collect
     } else {
