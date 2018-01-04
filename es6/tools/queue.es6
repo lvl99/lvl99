@@ -276,17 +276,17 @@ export default function Queue (options) {
     /**
      * Play the queue timer (will run queue after timer delay)
      *
-     * @param {Number} delay The time in milliseconds before playing
+     * @param {Number} [delay] The time in milliseconds before playing
      * @return {Self}
      * @chainable
      */
-    play (delay, ...args) {
-      // Ensure delay is set property (if someone sets to null or undefined it should default back to regular delay time)
+    play (delay) {
+      // Ensure delay is set properly (if someone sets to null or undefined it should default back to regular delay time)
       let _delay = delay || _timerDelay
 
       // Currently already running
       if (_status === 2) {
-        _checkQueueFinished(this, 'play', ...args)
+        _checkQueueFinished(this, 'play', ...arguments)
         return
       }
 

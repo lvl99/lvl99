@@ -3,6 +3,7 @@
  */
 
 let _loggerPath = 'lvl99/tools/queue'
+
 import Queue from '../../es6/tools/queue'
 
 // Use fake timers because waiting is boring
@@ -78,12 +79,11 @@ test(`${_loggerPath} add to queue and play after default delay of 1000ms`, () =>
   testQueue.add('test2', callback)
   testQueue.add('test3', testQueuedFunction, 2)
 
-  // @TODO figure out why the callback is called before jest.runTimersToTime()
-  // expect(callback).not.toBeCalled()
-  // jest.runTimersToTime(1000)
+  expect(callback).not.toBeCalled()
+  jest.advanceTimersByTime(1000)
 
   expect(callback).toBeCalled()
-  expect(callback.mock.calls.length).toBe(1)
+  expect(callback).toHaveBeenCalledTimes(1)
   expect(testCounter).toBe(5)
 })
 
@@ -92,8 +92,11 @@ test(`${_loggerPath} add to queue and play after 2 delays of 2000ms each`, () =>
   testQueue.delayAdd(2000, 'test4', callback)
   testQueue.delayAdd(2000, 'test5', testQueuedFunction, 10)
 
+  expect(callback).not.toBeCalled()
+  jest.advanceTimersByTime(2000)
+
   expect(callback).toBeCalled()
-  expect(callback.mock.calls.length).toBe(1)
+  expect(callback).toHaveBeenCalledTimes(1)
   expect(testCounter).toBe(15)
 })
 
@@ -113,6 +116,9 @@ test(`${_loggerPath} add to paused queue should not run`, () => {
 
   testQueue.add('test6', callback)
   testQueue.add('test7', testQueuedFunction, 10)
+
+  expect(callback).not.toBeCalled()
+  jest.advanceTimersByTime(1000)
 
   expect(testQueue.checkStatus()).toBe(0)
   expect(callback).not.toBeCalled()

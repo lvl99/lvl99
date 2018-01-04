@@ -4,6 +4,7 @@
 * Minor update to the [`TrackEvent`](es6/tools/trackevent.es6) tool. It now supports the `fieldsObject` for extra
   event options.
 * Added an `ObjectStorage` fallback handler if local/session storage is not supported in user's browser.
+* Attempting to fix some stuff to do with Queue tests and mocked timer functions.
 
 
 ### 1.4.3
