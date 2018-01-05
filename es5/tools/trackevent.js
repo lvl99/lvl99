@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = TrackEvent;
 
+var _lodash = require('lodash.merge');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _storage = require('./storage');
 
 var _storage2 = _interopRequireDefault(_storage);
@@ -17,6 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Caches tracked events until Google Analytics is loaded, then uploads to GA
  *
  * @module lvl99/tools/trackevent
+ * @requires module:lodash.merge
  * @requires module:lvl99/tools/storage
  */
 
@@ -29,7 +34,7 @@ var STORAGE = new _storage2.default({
 });
 var STORAGE_KEY = 'LVL99:TrackedEvents';
 
-function TrackEvent(debug) {
+function TrackEvent(debug, cb) {
   var _this = this;
 
   /**
@@ -47,6 +52,11 @@ function TrackEvent(debug) {
     if (window.hasOwnProperty('ga') && window.ga && typeof window.ga === 'function') {
       if (debug && window.console && window.console.log) {
         console.log('[' + __loggerPath + '] --> Found GA!');
+      }
+
+      // Fire the callback when GA is loaded
+      if (typeof cb === 'function') {
+        cb.call(_this);
       }
 
       // Send any saved events
@@ -86,42 +96,37 @@ function TrackEvent(debug) {
   this.gaLoadedTimer = setTimeout(checkGALoaded, 5000);
 
   /**
-   * Track an event magic.
+   * Track an event.
    *
    * @param {String} eventCategory
    * @param {String} eventAction
    * @param {String} eventLabel
    * @param {Number} [eventValue]
+   * @param {Object} [fieldsObject]
    */
   this.track = function (eventCategory, eventAction, eventLabel, eventValue) {
-    var trackedEvent = {
+    var fieldsObject = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+
+    var trackedEvent = (0, _lodash2.default)({
       hitType: 'event',
       eventCategory: eventCategory,
       eventAction: eventAction,
       eventLabel: eventLabel,
       eventValue: eventValue
-
-      // Required fields
-    };if (!eventCategory || !eventAction) {
-      return;
-    }
-
-    // Event value must be string
-    if (typeof eventValue === 'string') {
-      return;
-    }
+    }, fieldsObject);
 
     // GA is loaded
     if (typeof window.ga !== 'undefined') {
       if (debug && window.console && window.console.log) {
-        console.log('Send tracked event to GA', trackedEvent);
+        console.log('[' + __loggerPath + '] Send tracked event to GA', trackedEvent);
       }
+
       window.ga('send', trackedEvent);
 
       // waiting for GA to load, use internal var to collect
     } else {
       if (debug && window.console && window.console.log) {
-        console.log('GA not loaded yet, caching tracked event...', trackedEvent);
+        console.log('[' + __loggerPath + '] GA not loaded yet, caching tracked event...', trackedEvent);
       }
 
       var trackedEvents = STORAGE.getItem(STORAGE_KEY) || [];

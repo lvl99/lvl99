@@ -173,6 +173,9 @@ function SmoothScroll(options) {
       return;
     }
 
+    // Set the original target
+    scrollToSettings.originalTarget = $target[0];
+
     // The top buffer
     var bufferTop = typeof scrollToSettings.bufferTop === 'function' ? scrollToSettings.bufferTop.apply(this, [target, scrollToOptions]) : scrollToSettings.bufferTop || 0;
 
@@ -223,6 +226,8 @@ function SmoothScroll(options) {
 
       // Scroll each target
       scrollTargets.forEach(function (scrollTarget) {
+        var $scrollTarget = (0, _common.$)(scrollTarget.elem);
+
         /**
          * Emit scrollTo:start event.
          *
@@ -232,31 +237,34 @@ function SmoothScroll(options) {
          * @param {Array} scrollTarget
          * @param {ScrollToOptions} scrollToSettings
          */
-        (0, _common.$)(scrollTarget.elem).trigger('SmoothScroll.scrollTo:start', [scrollTarget, scrollToSettings]);
+        $scrollTarget.trigger('SmoothScroll.scrollTo:start', [scrollTarget, scrollToSettings]);
 
         // Doits!
-        (0, _common.$)(scrollTarget.elem).animate({
+        $scrollTarget.animate({
           scrollLeft: scrollTarget.scrollTo.left,
           scrollTop: scrollTarget.scrollTo.top + bufferTop
         }, scrollToSettings.scrollSpeed, function () {
-          // Callback after animation
-          // Must change focus!
-          $target.focus();
+          // Only perform the following if pointing to the original target
+          if (scrollTarget.elem === scrollToSettings.originalTarget) {
+            // Callback after animation
+            // Must change focus!
+            $target.focus();
 
-          /**
-           * Emit scrollTo:end event.
-           *
-           * Triggered on the element which is being scrolled, not the target being scrolled to.
-           *
-           * @event SmoothScroll#SmoothScroll.scrollTo:end
-           * @param {Object} scrollTarget
-           * @param {ScrollToOptions} scrollToSettings
-           */
-          (0, _common.$)(scrollTarget.elem).trigger('SmoothScroll.scrollTo:end', [scrollTarget, scrollToSettings]);
+            /**
+             * Emit `SmoothScroll.scrollTo:end` event.
+             *
+             * Triggered on the element which is being scrolled (not the target).
+             *
+             * @event SmoothScroll#SmoothScroll.scrollTo:end
+             * @param {Object} scrollTarget
+             * @param {ScrollToOptions} scrollToSettings
+             */
+            $scrollTarget.trigger('SmoothScroll.scrollTo:end', [scrollTarget, scrollToSettings]);
 
-          // Checking if the target was focused
-          if ($target.is(':focus')) {
-            return false;
+            // Checking if the target was focused
+            if ($target.is(':focus')) {
+              return false;
+            }
           }
         });
       });

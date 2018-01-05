@@ -506,23 +506,23 @@ export default function Queue (options) {
      */
     getTasks () {
       return _tasks
-    }//,
+    },
 
-    // /**
-    //  * Debug queue settings to the console
-    //  */
-    // debug () {
-    //   console.log({
-    //     _options,
-    //     _tasks,
-    //     _timer,
-    //     _timerDelay,
-    //     _replayTimer,
-    //     _replayTimerDelay,
-    //     _status,
-    //     Queue: this
-    //   })
-    // }
+    /**
+     * Debug queue settings to the console
+     */
+    debug () {
+      console.log({
+        _options,
+        _tasks,
+        _timer,
+        _timerDelay,
+        _replayTimer,
+        _replayTimerDelay,
+        _status,
+        Queue: this
+      })
+    }
   }
 
   return Queue

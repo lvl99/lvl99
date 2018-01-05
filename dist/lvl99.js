@@ -67,536 +67,6 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.events = exports.$body = exports.$html = exports.$win = exports.$doc = exports.$ = undefined;
-
-var _jquery = __webpack_require__(12);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var $ = exports.$ = _jquery2.default;
-
-/**
- * Basic shorthand props to cache/reference common jQuery objects
- */
-/**
- * LVL99 Common
- *
- * Common dependencies and other useful things
- *
- * @package lvl99
- */
-
-var $doc = exports.$doc = $(document);
-var $win = exports.$win = $(window);
-var $html = exports.$html = $('html');
-var $body = exports.$body = $('body');
-
-/**
- * Event name shorthands
- */
-var events = exports.events = {
-  click: 'click touchend',
-  inputstart: 'mousedown touchstart keydown',
-  inputend: 'mouseup touchend keyup',
-  animationrun: 'animationrun webkitAnimationRun webkitanimationrun mozAnimationRun MSAnimationRun oAnimationRun oanimationrun',
-  animationstart: 'animationstart webkitAnimationStart webkitanimationstart mozAnimationStart MSAnimationStart oAnimationStart oanimationstart',
-  animationend: 'animationend webkitAnimationEnd webkitanimationend mozAnimationEnd MSAnimationEnd oAnimationEnd oanimationend',
-  transitionrun: 'transitionrun webkitTransitionRun webkittransitionrun mozTransitionRun MSTransitionRun oTransitionRun otransitionrun',
-  transitionstart: 'transitionstart webkitTransitionStart webkittransitionstart mozTransitionStart MSTransitionStart oTransitionStart otransitionstart',
-  transitionend: 'transitionend webkitTransitionEnd webkittransitionend mozTransitionEnd MSTransitionEnd oTransitionEnd otransitionend'
-};
-
-var utils = {
-  $: $,
-  $doc: $doc,
-  $win: $win,
-  $html: $html,
-  $body: $body,
-  events: events
-};
-
-exports.default = utils;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
-                                                                                                                                                                                                                                                                               * LVL99 Parse
-                                                                                                                                                                                                                                                                               *
-                                                                                                                                                                                                                                                                               * Parse strings or transform from one format to another
-                                                                                                                                                                                                                                                                               *
-                                                                                                                                                                                                                                                                               * @package lvl99
-                                                                                                                                                                                                                                                                               */
-
-exports.coerceToPrimitiveType = coerceToPrimitiveType;
-exports.convertToBoolean = convertToBoolean;
-exports.convertStringToJson = convertStringToJson;
-exports.convertStringToFloat = convertStringToFloat;
-exports.extractClassDetails = extractClassDetails;
-exports.extractTriggerDetails = extractTriggerDetails;
-exports.fixedEncodeURIComponent = fixedEncodeURIComponent;
-exports.getTargetBySelector = getTargetBySelector;
-exports.getTargetSelector = getTargetSelector;
-exports.extractTargetEventNames = extractTargetEventNames;
-
-var _objectPath = __webpack_require__(3);
-
-var _objectPath2 = _interopRequireDefault(_objectPath);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var __loggerPath = 'lvl99/utils/parse';
-
-/**
- * Coerce a value to its primitive type
- *
- * @param {Mixed} input
- * @returns {Mixed}
- */
-function coerceToPrimitiveType(input) {
-  // Non-string or empty string? Just return it straight away
-  if (typeof input !== 'string' || input === '') {
-    return input;
-  }
-
-  // Trim any whitespace
-  var output = (input + '').trim();
-
-  // Number
-  if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
-    return parseFloat(input);
-
-    // Boolean: true
-  } else if (/^(true|1)$/.test(input)) {
-    return true;
-
-    // NaN
-  } else if (/^NaN$/.test(input)) {
-    return NaN;
-
-    // undefined
-  } else if (/^undefined$/.test(input)) {
-    return undefined;
-
-    // null
-  } else if (/^null$/.test(input)) {
-    return null;
-
-    // Boolean: false
-  } else if (/^(false|0)$/.test(input) || input === '') {
-    return false;
-
-    // JSON: starts with [ or { and ends with ] or }
-  } else if (/^[\[\{]/.test(input) && /[\]\}]$/.test(input)) {
-    return convertStringToJson(input);
-
-    // String marked with single/double quotation marks
-  } else if (/^['"]|["']$/) {
-    return input.replace(/^['"]|['"]$/g, '');
-  }
-
-  // Default to string
-  return input;
-}
-
-/**
- * Convert value to an explicit boolean. Namely for processing string values.
- *
- * @param {Mixed} input
- * @returns {Boolean}
- */
-function convertToBoolean(input) {
-  // Already boolean
-  if (input === true || input === false) {
-    return input;
-  }
-
-  // Cases of truthy/falsey values
-  switch (input) {
-    case 1:
-    case '1':
-    case 'true':
-      return true;
-
-    case 0:
-    case '0':
-    case 'false':
-    case undefined:
-    case 'undefined':
-    case null:
-    case 'null':
-    case NaN:
-    case 'NaN':
-    case '':
-      return false;
-  }
-
-  // Otherwise...
-  return !!input;
-}
-
-/**
- * Convert a string to JSON or just return the string if can't
- *
- * @param {String} input
- * @returns {Object}
- */
-function convertStringToJson(input) {
-  var output = input;
-
-  // Convert string data to JSON
-  if (typeof input === 'string') {
-    try {
-      output = JSON.parse(input);
-    } catch (e) {
-      console.error(__loggerPath + '.convertStringToJson: Error parsing string JSON data', input);
-    }
-  }
-
-  return output;
-}
-
-/**
- * Convert a string to a float.
- * This also converts number constants like Infinity and NaN to zero.
- *
- * @param input
- * @returns {*}
- */
-function convertStringToFloat(input) {
-  if (typeof input === 'number') {
-    return input;
-  }
-
-  var output = parseFloat((input + '').replace(/[^\d\-\.]+/g, ''));
-
-  // Infinity / NaN
-  if (!isFinite(input) || isNaN(input) || isNaN(output)) {
-    output = 0;
-  }
-
-  return output;
-}
-
-/**
- * Extract key-values from a string which is like a CSS class declaration, e.g. `key: value; key: value`
- *
- * This is slightly more interesting as it can take a name with dots
- *
- * @param {String} input
- * @return {Object}
- */
-function extractClassDetails(input) {
-  var output = {};
-  var inputParts = [input];
-
-  // Check if it has semi-colons
-  if (/;/.test(input)) {
-    inputParts = input.split(';');
-  }
-
-  // Process each input part
-  inputParts.forEach(function (part) {
-    part = part.trim();
-    if (part) {
-      var partParts = part.match(/([a-z0-9_.-]+):([^;]+);?/i);
-      var partName = partParts[1].trim();
-      var partValue = coerceToPrimitiveType(partParts[2].trim());
-
-      // @debug
-      // console.log('parsed part', {
-      //   part,
-      //   partName,
-      //   partValue,
-      // })
-
-      // Ensure output object exists if using dot notation
-      if (/\./.test(partName)) {
-        var objParts = partName.split('.');
-        var objPartPath = '';
-
-        // @debug
-        // console.log('part has dot notation', {
-        //   output,
-        //   partName,
-        //   partValue,
-        //   objParts,
-        //   objPartPath
-        // })
-
-        for (var objPartIndex = 0; objPartIndex < objParts.length - 1; objPartIndex++) {
-          objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex];
-
-          // @debug
-          // console.log(objPartPath)
-
-          if (!_objectPath2.default.has(output, objPartPath)) {
-            // @debug
-            // console.log('setting object part path', {
-            //   output,
-            //   partName,
-            //   partValue,
-            //   objPartIndex,
-            //   objPartPath
-            // })
-
-            _objectPath2.default.set(output, objPartPath, {});
-          }
-        }
-      }
-
-      // Set via objectPath
-      _objectPath2.default.set(output, partName, partValue);
-    }
-  });
-
-  return output;
-}
-
-/**
- * Extract the trigger's target details
- *
- * This allows you to extract the necessary data from the string and the global window/document available, to create
- * dynamic event bindings.
- *
- * @param {String|Object} input
- * @param {Object|Function} context Defaults to `window`. Where to find the `do` action
- * @returns {Object} => { eventName: {String}, method: {Function}, selector: {String}, target: {Object} }
- */
-function extractTriggerDetails(input, context) {
-  var trigger = input;
-
-  if (!context) {
-    context = window;
-  }
-
-  // String input given
-  if (typeof input === 'string') {
-    // Try JSON first
-    if (/^{/.test(input)) {
-      trigger = convertStringToJson(input);
-
-      // Try class details
-    } else if (/^[a-z0-9_-]+:/.test(input)) {
-      trigger = extractClassDetails(input);
-
-      // String with no spaces
-    } else if (!/ /.test(input)) {
-      trigger = {
-        do: input
-      };
-    }
-  }
-
-  // No object found!
-  if ((typeof trigger === 'undefined' ? 'undefined' : _typeof(trigger)) !== 'object') {
-    throw new Error(__loggerPath + '.extractTriggerDetails: input was not valid JSON or CSS-style definition');
-  }
-
-  // Ensure it has `on` and `do` properties
-  // if (!objectPath.has(trigger, 'on')) {
-  //   throw new Error(`${__loggerPath}.extractTriggerDetails: trigger is missing required 'on' property`)
-  // }
-  if (!_objectPath2.default.has(trigger, 'do')) {
-    throw new Error(__loggerPath + '.extractTriggerDetails: trigger is missing required \'do\' property');
-  }
-
-  // If target is set, use real values for window and document
-  if (_objectPath2.default.has(trigger, 'target')) {
-    switch (trigger.target) {
-      case 'self':
-        // console.log('Targeting self', context)
-        trigger.target = context;
-        break;
-
-      case 'document':
-        trigger.target = document;
-        break;
-
-      case 'window':
-        trigger.target = window;
-        break;
-    }
-  }
-
-  // Do same as above if a context was set!
-  if (_objectPath2.default.has(trigger, 'context')) {
-    switch (trigger.context) {
-      case 'document':
-        trigger.context = document;
-        break;
-
-      case 'window':
-        trigger.context = window;
-        break;
-    }
-  } else {
-    trigger.context = context;
-  }
-
-  return trigger;
-}
-
-/**
- * Encode string to URL, with spaces that are represented as `+`
- * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
- *
- * @param {String} input
- * @returns {String}
- */
-function fixedEncodeURIComponent(input) {
-  return encodeURIComponent(input).replace(/[!'()*]/g, function (c) {
-    return '%' + c.charCodeAt(0).toString(16);
-  });
-}
-
-/**
- * Get the target object by a string selector
- *
- * @param {String} target
- * @param {Object} context
- * @return {Object}
- */
-function getTargetBySelector(target, context) {
-  // Default to document
-  if (!target) {
-    target = document;
-  }
-
-  if (typeof target === 'string') {
-    // Special string values to get the actual object
-    switch (target) {
-      case 'document':
-        target = document;
-        break;
-
-      case 'window':
-        target = window;
-        break;
-
-      case 'self':
-        target = context;
-        break;
-    }
-  }
-
-  return target;
-}
-
-/**
- * Get the target object's string selector
- *
- * @param {Object} target
- * @param {Object} context
- * @return {undefined|String}
- */
-function getTargetSelector(target, context) {
-  if (typeof target === 'string') {
-    return target;
-  }
-
-  // Window
-  if (jquery.isWindow(target)) {
-    return 'window';
-
-    // Document
-  } else if (target === document) {
-    return 'document';
-
-    // Self
-  } else if (target.hasOwnProperty('uuid')) {
-    return '[data-component-id="' + target.uuid + '"]';
-
-    // HTML Elem
-  } else if (jquery(target).length) {
-    if (jquery(target).attr('data-component-id')) {
-      return '[data-component-id="' + jquery(target).attr('data-component-id') + '"]';
-    } else if (jquery(target).attr('id')) {
-      return '#' + jquery(target).attr('id');
-    } else {
-      return '' + target.tagName.toLowerCase();
-    }
-  }
-
-  return target;
-}
-
-/**
- * Parse the target event names
- *
- * @param {Array|String} eventNames e.g. `Component:customEvent dom:mouseover`
- * @param {String} namespace Optional namespace to assign each extracted custom (non-DOM) event name
- * @returns {Array}
- */
-function extractTargetEventNames(inputEventNames, namespace) {
-  var targetEventNames = [];
-  var eventNames = inputEventNames;
-
-  if (typeof inputEventNames === 'string') {
-    // Split eventNames by spaces
-    if (/\s/.test(inputEventNames)) {
-      eventNames = inputEventNames.split(/\s+/);
-    } else {
-      eventNames = [inputEventNames];
-    }
-  }
-
-  if (eventNames instanceof Array) {
-    // Process each event name
-    eventNames.forEach(function (eventName) {
-      // Default to namespaced event name
-      var targetEventName = typeof namespace === 'string' && namespace !== '' ? namespace + ':' + eventName : eventName;
-
-      // Remove any reference to the native DOM event namespace
-      if (/^dom:/i.test(eventName)) {
-        targetEventName = eventName.replace(/^dom\:/gi, '', eventName);
-      }
-
-      // Add to the list
-      targetEventNames.push(targetEventName);
-    });
-
-    return targetEventNames;
-  }
-
-  return false;
-}
-
-var parse = {
-  coerceToPrimitiveType: coerceToPrimitiveType,
-  convertToBoolean: convertToBoolean,
-  convertStringToJson: convertStringToJson,
-  convertStringToFloat: convertStringToFloat,
-  extractClassDetails: extractClassDetails,
-  extractTriggerDetails: extractTriggerDetails,
-  fixedEncodeURIComponent: fixedEncodeURIComponent,
-  getTargetBySelector: getTargetBySelector,
-  getTargetSelector: getTargetSelector,
-  extractTargetEventNames: extractTargetEventNames
-};
-
-exports.default = parse;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
 /* WEBPACK VAR INJECTION */(function(global, module) {/**
  * lodash (Custom Build) <https://lodash.com/>
  * Build: `lodash modularize exports="npm" -o ./`
@@ -2808,6 +2278,536 @@ module.exports = merge;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(15)(module)))
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.events = exports.$body = exports.$html = exports.$win = exports.$doc = exports.$ = undefined;
+
+var _jquery = __webpack_require__(12);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var $ = exports.$ = _jquery2.default;
+
+/**
+ * Basic shorthand props to cache/reference common jQuery objects
+ */
+/**
+ * LVL99 Common
+ *
+ * Common dependencies and other useful things
+ *
+ * @package lvl99
+ */
+
+var $doc = exports.$doc = $(document);
+var $win = exports.$win = $(window);
+var $html = exports.$html = $('html');
+var $body = exports.$body = $('body');
+
+/**
+ * Event name shorthands
+ */
+var events = exports.events = {
+  click: 'click touchend',
+  inputstart: 'mousedown touchstart keydown',
+  inputend: 'mouseup touchend keyup',
+  animationrun: 'animationrun webkitAnimationRun webkitanimationrun mozAnimationRun MSAnimationRun oAnimationRun oanimationrun',
+  animationstart: 'animationstart webkitAnimationStart webkitanimationstart mozAnimationStart MSAnimationStart oAnimationStart oanimationstart',
+  animationend: 'animationend webkitAnimationEnd webkitanimationend mozAnimationEnd MSAnimationEnd oAnimationEnd oanimationend',
+  transitionrun: 'transitionrun webkitTransitionRun webkittransitionrun mozTransitionRun MSTransitionRun oTransitionRun otransitionrun',
+  transitionstart: 'transitionstart webkitTransitionStart webkittransitionstart mozTransitionStart MSTransitionStart oTransitionStart otransitionstart',
+  transitionend: 'transitionend webkitTransitionEnd webkittransitionend mozTransitionEnd MSTransitionEnd oTransitionEnd otransitionend'
+};
+
+var utils = {
+  $: $,
+  $doc: $doc,
+  $win: $win,
+  $html: $html,
+  $body: $body,
+  events: events
+};
+
+exports.default = utils;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
+                                                                                                                                                                                                                                                                               * LVL99 Parse
+                                                                                                                                                                                                                                                                               *
+                                                                                                                                                                                                                                                                               * Parse strings or transform from one format to another
+                                                                                                                                                                                                                                                                               *
+                                                                                                                                                                                                                                                                               * @package lvl99
+                                                                                                                                                                                                                                                                               */
+
+exports.coerceToPrimitiveType = coerceToPrimitiveType;
+exports.convertToBoolean = convertToBoolean;
+exports.convertStringToJson = convertStringToJson;
+exports.convertStringToFloat = convertStringToFloat;
+exports.extractClassDetails = extractClassDetails;
+exports.extractTriggerDetails = extractTriggerDetails;
+exports.fixedEncodeURIComponent = fixedEncodeURIComponent;
+exports.getTargetBySelector = getTargetBySelector;
+exports.getTargetSelector = getTargetSelector;
+exports.extractTargetEventNames = extractTargetEventNames;
+
+var _objectPath = __webpack_require__(3);
+
+var _objectPath2 = _interopRequireDefault(_objectPath);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var __loggerPath = 'lvl99/utils/parse';
+
+/**
+ * Coerce a value to its primitive type
+ *
+ * @param {Mixed} input
+ * @returns {Mixed}
+ */
+function coerceToPrimitiveType(input) {
+  // Non-string or empty string? Just return it straight away
+  if (typeof input !== 'string' || input === '') {
+    return input;
+  }
+
+  // Trim any whitespace
+  var output = (input + '').trim();
+
+  // Number
+  if (/^\-?(?:\d*[\.\,])*\d*(?:[eE](?:\-?\d+)?)?$/.test(input)) {
+    return parseFloat(input);
+
+    // Boolean: true
+  } else if (/^(true|1)$/.test(input)) {
+    return true;
+
+    // NaN
+  } else if (/^NaN$/.test(input)) {
+    return NaN;
+
+    // undefined
+  } else if (/^undefined$/.test(input)) {
+    return undefined;
+
+    // null
+  } else if (/^null$/.test(input)) {
+    return null;
+
+    // Boolean: false
+  } else if (/^(false|0)$/.test(input) || input === '') {
+    return false;
+
+    // JSON: starts with [ or { and ends with ] or }
+  } else if (/^[\[\{]/.test(input) && /[\]\}]$/.test(input)) {
+    return convertStringToJson(input);
+
+    // String marked with single/double quotation marks
+  } else if (/^['"]|["']$/) {
+    return input.replace(/^['"]|['"]$/g, '');
+  }
+
+  // Default to string
+  return input;
+}
+
+/**
+ * Convert value to an explicit boolean. Namely for processing string values.
+ *
+ * @param {Mixed} input
+ * @returns {Boolean}
+ */
+function convertToBoolean(input) {
+  // Already boolean
+  if (input === true || input === false) {
+    return input;
+  }
+
+  // Cases of truthy/falsey values
+  switch (input) {
+    case 1:
+    case '1':
+    case 'true':
+      return true;
+
+    case 0:
+    case '0':
+    case 'false':
+    case undefined:
+    case 'undefined':
+    case null:
+    case 'null':
+    case NaN:
+    case 'NaN':
+    case '':
+      return false;
+  }
+
+  // Otherwise...
+  return !!input;
+}
+
+/**
+ * Convert a string to JSON or just return the string if can't
+ *
+ * @param {String} input
+ * @returns {Object}
+ */
+function convertStringToJson(input) {
+  var output = input;
+
+  // Convert string data to JSON
+  if (typeof input === 'string') {
+    try {
+      output = JSON.parse(input);
+    } catch (e) {
+      console.error(__loggerPath + '.convertStringToJson: Error parsing string JSON data', input);
+    }
+  }
+
+  return output;
+}
+
+/**
+ * Convert a string to a float.
+ * This also converts number constants like Infinity and NaN to zero.
+ *
+ * @param input
+ * @returns {*}
+ */
+function convertStringToFloat(input) {
+  if (typeof input === 'number') {
+    return input;
+  }
+
+  var output = parseFloat((input + '').replace(/[^\d\-\.]+/g, ''));
+
+  // Infinity / NaN
+  if (!isFinite(input) || isNaN(input) || isNaN(output)) {
+    output = 0;
+  }
+
+  return output;
+}
+
+/**
+ * Extract key-values from a string which is like a CSS class declaration, e.g. `key: value; key: value`
+ *
+ * This is slightly more interesting as it can take a name with dots
+ *
+ * @param {String} input
+ * @return {Object}
+ */
+function extractClassDetails(input) {
+  var output = {};
+  var inputParts = [input];
+
+  // Check if it has semi-colons
+  if (/;/.test(input)) {
+    inputParts = input.split(';');
+  }
+
+  // Process each input part
+  inputParts.forEach(function (part) {
+    part = part.trim();
+    if (part) {
+      var partParts = part.match(/([a-z0-9_.-]+):([^;]+);?/i);
+      var partName = partParts[1].trim();
+      var partValue = coerceToPrimitiveType(partParts[2].trim());
+
+      // @debug
+      // console.log('parsed part', {
+      //   part,
+      //   partName,
+      //   partValue,
+      // })
+
+      // Ensure output object exists if using dot notation
+      if (/\./.test(partName)) {
+        var objParts = partName.split('.');
+        var objPartPath = '';
+
+        // @debug
+        // console.log('part has dot notation', {
+        //   output,
+        //   partName,
+        //   partValue,
+        //   objParts,
+        //   objPartPath
+        // })
+
+        for (var objPartIndex = 0; objPartIndex < objParts.length - 1; objPartIndex++) {
+          objPartPath += (objPartIndex > 0 ? '.' : '') + objParts[objPartIndex];
+
+          // @debug
+          // console.log(objPartPath)
+
+          if (!_objectPath2.default.has(output, objPartPath)) {
+            // @debug
+            // console.log('setting object part path', {
+            //   output,
+            //   partName,
+            //   partValue,
+            //   objPartIndex,
+            //   objPartPath
+            // })
+
+            _objectPath2.default.set(output, objPartPath, {});
+          }
+        }
+      }
+
+      // Set via objectPath
+      _objectPath2.default.set(output, partName, partValue);
+    }
+  });
+
+  return output;
+}
+
+/**
+ * Extract the trigger's target details
+ *
+ * This allows you to extract the necessary data from the string and the global window/document available, to create
+ * dynamic event bindings.
+ *
+ * @param {String|Object} input
+ * @param {Object|Function} context Defaults to `window`. Where to find the `do` action
+ * @returns {Object} => { eventName: {String}, method: {Function}, selector: {String}, target: {Object} }
+ */
+function extractTriggerDetails(input, context) {
+  var trigger = input;
+
+  if (!context) {
+    context = window;
+  }
+
+  // String input given
+  if (typeof input === 'string') {
+    // Try JSON first
+    if (/^{/.test(input)) {
+      trigger = convertStringToJson(input);
+
+      // Try class details
+    } else if (/^[a-z0-9_-]+:/.test(input)) {
+      trigger = extractClassDetails(input);
+
+      // String with no spaces
+    } else if (!/ /.test(input)) {
+      trigger = {
+        do: input
+      };
+    }
+  }
+
+  // No object found!
+  if ((typeof trigger === 'undefined' ? 'undefined' : _typeof(trigger)) !== 'object') {
+    throw new Error(__loggerPath + '.extractTriggerDetails: input was not valid JSON or CSS-style definition');
+  }
+
+  // Ensure it has `on` and `do` properties
+  // if (!objectPath.has(trigger, 'on')) {
+  //   throw new Error(`${__loggerPath}.extractTriggerDetails: trigger is missing required 'on' property`)
+  // }
+  if (!_objectPath2.default.has(trigger, 'do')) {
+    throw new Error(__loggerPath + '.extractTriggerDetails: trigger is missing required \'do\' property');
+  }
+
+  // If target is set, use real values for window and document
+  if (_objectPath2.default.has(trigger, 'target')) {
+    switch (trigger.target) {
+      case 'self':
+        // console.log('Targeting self', context)
+        trigger.target = context;
+        break;
+
+      case 'document':
+        trigger.target = document;
+        break;
+
+      case 'window':
+        trigger.target = window;
+        break;
+    }
+  }
+
+  // Do same as above if a context was set!
+  if (_objectPath2.default.has(trigger, 'context')) {
+    switch (trigger.context) {
+      case 'document':
+        trigger.context = document;
+        break;
+
+      case 'window':
+        trigger.context = window;
+        break;
+    }
+  } else {
+    trigger.context = context;
+  }
+
+  return trigger;
+}
+
+/**
+ * Encode string to URL, with spaces that are represented as `+`
+ * See: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+ *
+ * @param {String} input
+ * @returns {String}
+ */
+function fixedEncodeURIComponent(input) {
+  return encodeURIComponent(input).replace(/[!'()*]/g, function (c) {
+    return '%' + c.charCodeAt(0).toString(16);
+  });
+}
+
+/**
+ * Get the target object by a string selector
+ *
+ * @param {String} target
+ * @param {Object} context
+ * @return {Object}
+ */
+function getTargetBySelector(target, context) {
+  // Default to document
+  if (!target) {
+    target = document;
+  }
+
+  if (typeof target === 'string') {
+    // Special string values to get the actual object
+    switch (target) {
+      case 'document':
+        target = document;
+        break;
+
+      case 'window':
+        target = window;
+        break;
+
+      case 'self':
+        target = context;
+        break;
+    }
+  }
+
+  return target;
+}
+
+/**
+ * Get the target object's string selector
+ *
+ * @param {Object} target
+ * @param {Object} context
+ * @return {undefined|String}
+ */
+function getTargetSelector(target, context) {
+  if (typeof target === 'string') {
+    return target;
+  }
+
+  // Window
+  if (jquery.isWindow(target)) {
+    return 'window';
+
+    // Document
+  } else if (target === document) {
+    return 'document';
+
+    // Self
+  } else if (target.hasOwnProperty('uuid')) {
+    return '[data-component-id="' + target.uuid + '"]';
+
+    // HTML Elem
+  } else if (jquery(target).length) {
+    if (jquery(target).attr('data-component-id')) {
+      return '[data-component-id="' + jquery(target).attr('data-component-id') + '"]';
+    } else if (jquery(target).attr('id')) {
+      return '#' + jquery(target).attr('id');
+    } else {
+      return '' + target.tagName.toLowerCase();
+    }
+  }
+
+  return target;
+}
+
+/**
+ * Parse the target event names
+ *
+ * @param {Array|String} eventNames e.g. `Component:customEvent dom:mouseover`
+ * @param {String} namespace Optional namespace to assign each extracted custom (non-DOM) event name
+ * @returns {Array}
+ */
+function extractTargetEventNames(inputEventNames, namespace) {
+  var targetEventNames = [];
+  var eventNames = inputEventNames;
+
+  if (typeof inputEventNames === 'string') {
+    // Split eventNames by spaces
+    if (/\s/.test(inputEventNames)) {
+      eventNames = inputEventNames.split(/\s+/);
+    } else {
+      eventNames = [inputEventNames];
+    }
+  }
+
+  if (eventNames instanceof Array) {
+    // Process each event name
+    eventNames.forEach(function (eventName) {
+      // Default to namespaced event name
+      var targetEventName = typeof namespace === 'string' && namespace !== '' ? namespace + ':' + eventName : eventName;
+
+      // Remove any reference to the native DOM event namespace
+      if (/^dom:/i.test(eventName)) {
+        targetEventName = eventName.replace(/^dom\:/gi, '', eventName);
+      }
+
+      // Add to the list
+      targetEventNames.push(targetEventName);
+    });
+
+    return targetEventNames;
+  }
+
+  return false;
+}
+
+var parse = {
+  coerceToPrimitiveType: coerceToPrimitiveType,
+  convertToBoolean: convertToBoolean,
+  convertStringToJson: convertStringToJson,
+  convertStringToFloat: convertStringToFloat,
+  extractClassDetails: extractClassDetails,
+  extractTriggerDetails: extractTriggerDetails,
+  fixedEncodeURIComponent: fixedEncodeURIComponent,
+  getTargetBySelector: getTargetBySelector,
+  getTargetSelector: getTargetSelector,
+  extractTargetEventNames: extractTargetEventNames
+};
+
+exports.default = parse;
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3128,7 +3128,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * @package lvl99
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
 
-var _lodash = __webpack_require__(2);
+var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -3655,11 +3655,11 @@ exports.testStorageType = testStorageType;
 exports.getSupportedStorageTypes = getSupportedStorageTypes;
 exports.eachStorageType = eachStorageType;
 
-var _lodash = __webpack_require__(2);
+var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _parse = __webpack_require__(1);
+var _parse = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4065,7 +4065,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _common = __webpack_require__(0);
+var _common = __webpack_require__(1);
 
 var _common2 = _interopRequireDefault(_common);
 
@@ -4117,7 +4117,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _parse = __webpack_require__(1);
+var _parse = __webpack_require__(2);
 
 var _parse2 = _interopRequireDefault(_parse);
 
@@ -4375,9 +4375,9 @@ var _entity = __webpack_require__(4);
 
 var _entity2 = _interopRequireDefault(_entity);
 
-var _common = __webpack_require__(0);
+var _common = __webpack_require__(1);
 
-var _parse = __webpack_require__(1);
+var _parse = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4775,7 +4775,7 @@ var _objectPath = __webpack_require__(3);
 
 var _objectPath2 = _interopRequireDefault(_objectPath);
 
-var _lodash = __webpack_require__(2);
+var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -4783,9 +4783,9 @@ var _entity = __webpack_require__(4);
 
 var _entity2 = _interopRequireDefault(_entity);
 
-var _common = __webpack_require__(0);
+var _common = __webpack_require__(1);
 
-var _parse = __webpack_require__(1);
+var _parse = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5540,25 +5540,27 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = Queue;
 
-var _lodash = __webpack_require__(2);
+var _lodash = __webpack_require__(0);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /**
-                                                                                                                                                                                                     * LVL99 Queue
-                                                                                                                                                                                                     *
-                                                                                                                                                                                                     * Batch actions into a debounced queue
-                                                                                                                                                                                                     * Useful to reduce amount of work computer/browser does
-                                                                                                                                                                                                     *
-                                                                                                                                                                                                     * @package lvl99
-                                                                                                                                                                                                     */
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+/**
+ * # Queue
+ *
+ * Batch actions into a debounced queue. Useful to reduce amount of work computer/browser does.
+ */
+
+var __loggerPath = 'Queue';
+
 
 /**
  * Queue class
  *
- * @returns {Object}
+ * @return {Object}
  * @constructor
  */
 function Queue(options) {
@@ -5571,7 +5573,9 @@ function Queue(options) {
   var _options = (0, _lodash2.default)({
     queue: {},
     timer: 0,
-    timerDelay: 100
+    timerDelay: 100,
+    replayTimer: 0,
+    replayTimerDelay: 100
   }, options);
 
   /**
@@ -5638,29 +5642,40 @@ function Queue(options) {
    * @private
    */
   function _checkQueueFinished(Q) {
-    var actionName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'run';
-
-    clearTimeout(_replayTimer);
-
     for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
       args[_key - 2] = arguments[_key];
     }
 
-    _replayTimer = setTimeout(function checkQueueIsFinishedThenPerformAction(q, aN, a) {
-      if (q.checkStatus === 1 && q.getTasksLength() && q.hasOwnProperty(aN)) {
+    var actionName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'run';
+
+    // @debug
+    // console.log(`${__loggerPath} _checkQueueFinished`, {
+    //   actionName,
+    //   queue: Q
+    // })
+
+    clearTimeout(_replayTimer);
+
+    var checkQueueIsFinishedThenPerformAction = function checkQueueIsFinishedThenPerformAction() {
+      if (Q.checkStatus === 1 && Q.length() && Q.hasOwnProperty(actionName)) {
         // @debug
-        // console.log('Replaying queue...', {
-        //   Queue: q,
-        //   actionName: aN,
-        //   args: a
+        // console.log(`[${__loggerPath}] Replaying queue...`, {
+        //   Queue: Q,
+        //   actionName,
+        //   args
         // })
 
         // Each action will either perform the action or replay itself if necessary
-        q[aN].apply(q, _toConsumableArray(a));
+        Q[actionName].apply(Q, args);
       }
-    }(Q, actionName, args), _replayTimerDelay);
+    };
+
+    _replayTimer = setTimeout(checkQueueIsFinishedThenPerformAction, _replayTimerDelay);
   }
 
+  /**
+   * @typedef {Object} Queue
+   */
   var Queue = {
     /**
      * Queue an action
@@ -5683,7 +5698,7 @@ function Queue(options) {
       }
 
       // Assign the function to the queue
-      if (actionLabel && action && typeof action === 'function') {
+      if (actionLabel && typeof action === 'function') {
         _tasks[actionLabel] = {
           action: action,
           args: args
@@ -5711,7 +5726,7 @@ function Queue(options) {
       }
 
       // @debug
-      // console.log('Queue.add', {
+      // console.log(`[${__loggerPath}] add`, {
       //   actionLabel,
       //   action
       // })
@@ -5725,7 +5740,7 @@ function Queue(options) {
       }
       // } else {
       //   // @debug
-      //   console.log('queue is currently paused')
+      //   console.log(`[${__loggerPath}] add: queue is currently paused`)
       // }
 
       // @chainable
@@ -5734,24 +5749,27 @@ function Queue(options) {
 
 
     /**
-     * Same as `add` except you can affect the delay time that the queue will play
+     * Same as `add` except you can affect the delay time that the queue will play after adding the task.
      *
-     * @param {Number} delay The milliseconds to delay before running
+     * @param {Number} delay The milliseconds to delay before running the queue
      * @param {String} actionLabel A unique label for the action in the queue.
      *                             Can be set to {undefined} (which means the action can't be removed)
      * @param {Function} action The function to handle the action
-     * @param {Mixed} ...args The arguments to pass to the action handler
+     * @param {Mixed} [...args] The arguments to pass to the action handler
      * @return {Self}
      * @chainable
      */
     delayAdd: function delayAdd(delay, actionLabel, action) {
-      // @debug
-      // console.log('Queue.delayAdd', {
-      //   actionLabel,
-      //   action
-      // })
-
       var _delay = delay || _timerDelay;
+
+      // @debug
+      // console.log(`[${__loggerPath}] delayAdd`, {
+      //   delay,
+      //   actionLabel,
+      //   action,
+      //   _delay,
+      //   _status
+      // })
 
       // Queue the action
 
@@ -5761,7 +5779,7 @@ function Queue(options) {
 
       this.queue.apply(this, [actionLabel, action].concat(_toConsumableArray(args)));
 
-      // Play the timer to get the queue to run after a delay (only when playing)
+      // Play the timer to get the queue to run after a delay (only if already playing/running)
       if (_status) {
         this.play(_delay);
       }
@@ -5772,7 +5790,7 @@ function Queue(options) {
 
 
     /**
-     * Add action and then run the queue immediately
+     * Add action and then run the queue immediately.
      *
      * @param {String} actionLabel
      * @param {Function} action
@@ -5782,7 +5800,7 @@ function Queue(options) {
      */
     sync: function sync(actionLabel, action) {
       // @debug
-      // console.log('Queue.sync', {
+      // console.log(`[${__loggerPath}] sync`, {
       //   actionLabel,
       //   action
       // })
@@ -5830,6 +5848,11 @@ function Queue(options) {
      */
     remove: function remove(actionLabel) {
       if (_tasks.hasOwnProperty(actionLabel)) {
+        // // @debug
+        // console.log(`[${__loggerPath}] task removed`, {
+        //   actionLabel
+        // })
+
         _tasks[actionLabel] = undefined;
         delete _tasks[actionLabel];
       }
@@ -5842,40 +5865,56 @@ function Queue(options) {
     /**
      * Play the queue timer (will run queue after timer delay)
      *
-     * @param {Number} delay The time in milliseconds before playing
+     * @param {Number} [delay] The time in milliseconds before playing
      * @return {Self}
      * @chainable
      */
-    play: function play() {
-      var delay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _timerDelay;
+    play: function play(delay) {
+      var _this = this;
+
+      // Ensure delay is set properly (if someone sets to null or undefined it should default back to regular delay time)
+      var _delay = delay || _timerDelay;
 
       // @debug
-      // console.log('Queue.play', {
-      //   _status
-      // })
-
-      // Ensure delay is really set property (if someone sets to null or undefined it should default back to regular delay time)
-      var _delay = delay || _timerDelay;
+      // if (delay) {
+      //   console.log(`[${__loggerPath}] play (with specified delay)`, {
+      //     delay,
+      //     _delay,
+      //     _status,
+      //     time
+      //   })
+      // }
 
       // Currently already running
       if (_status === 2) {
-        for (var _len6 = arguments.length, args = Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
-          args[_key6 - 1] = arguments[_key6];
-        }
+        // @debug
+        // console.log(`[${__loggerPath}] queue is currently running, will perform 'play' next cycle`)
 
-        _checkQueueFinished.apply(undefined, [this, 'play'].concat(_toConsumableArray(args)));
+        _checkQueueFinished.apply(undefined, [this, 'play'].concat(Array.prototype.slice.call(arguments)));
+        return;
       }
 
-      // Only play if already paused
+      // @debug
+      // console.log(`[${__loggerPath}] play`, {
+      //   delay,
+      //   _delay,
+      //   _status,
+      //   time
+      // })
+
       clearTimeout(_timer);
 
       // Set to playing
       _status = 1;
 
       // Reset timer to run the queue
-      _timer = setTimeout(function runQueueProcessAfterDelay(q) {
-        q.run();
-      }(this), _delay);
+      var runQueueProcessAfterDelay = function runQueueProcessAfterDelay() {
+        // @debug
+        // console.log(`[${__loggerPath}] running queue after delay of ${_delay} (${delay}) ${time}`)
+
+        _this.run();
+      };
+      _timer = setTimeout(runQueueProcessAfterDelay, _delay);
 
       // @chainable
       return this;
@@ -5889,15 +5928,16 @@ function Queue(options) {
      * @chainable
      */
     pause: function pause() {
-      // @debug
-      // console.log('Queue.pause', {
-      //   _status
-      // })
-
       // Queue is already running
       if (_status === 2) {
         _checkQueueFinished(this, 'pause');
+        return;
       }
+
+      // @debug
+      // console.log(`[${__loggerPath}] pause`, {
+      //   _status
+      // })
 
       // Only pause if already playing
       clearTimeout(_timer);
@@ -5917,16 +5957,17 @@ function Queue(options) {
      * @chainable
      */
     run: function run() {
-      // @debug
-      // console.log('Queue.run...', {
-      //   _status,
-      //   _tasks
-      // })
-
       // Currently already running, so run again later
       if (_status === 2) {
         _checkQueueFinished(this, 'run');
+        return;
       }
+
+      // @debug
+      // console.log(`[${__loggerPath}] run`, {
+      //   _status,
+      //   _tasks
+      // })
 
       clearTimeout(_timer);
       clearTimeout(_replayTimer);
@@ -5944,7 +5985,7 @@ function Queue(options) {
       _status = 2;
 
       // @debug
-      // console.log('Queue.running...', {
+      // console.log(`[${__loggerPath}] run: processing...`, {
       //   _previousStatus,
       //   _status
       // })
@@ -5955,7 +5996,7 @@ function Queue(options) {
           var queuedItem = _tasks[actionLabel];
 
           // @debug
-          // console.log(` --> ${actionLabel}`, queuedItem)
+          // console.log(`[${__loggerPath}] run --> ${actionLabel}`, queuedItem)
 
           // Function
           if (queuedItem && typeof queuedItem === 'function') {
@@ -5992,7 +6033,7 @@ function Queue(options) {
      *   0 = Paused
      *   1 = Playing
      *   2 = Running
-     * @returns {Number}
+     * @return {Number}
      */
     checkStatus: function checkStatus() {
       return _status;
@@ -6002,7 +6043,7 @@ function Queue(options) {
     /**
      * Get the timer delay
      *
-     * @returns {Number}
+     * @return {Number}
      */
     getTimerDelay: function getTimerDelay() {
       return _timerDelay;
@@ -6014,7 +6055,7 @@ function Queue(options) {
      *
      * @param timerDelay
      * @chainable
-     * @returns {Self}
+     * @return {Self}
      */
     setTimerDelay: function setTimerDelay(timerDelay) {
       // Only set if timerDelay is greater than 0
@@ -6041,7 +6082,7 @@ function Queue(options) {
     /**
      * Backward compatible alias
      *
-     * @returns {Queue.length}
+     * @return {Queue.length}
      */
     getQueueLength: function getQueueLength() {
       return this.length;
@@ -6051,10 +6092,27 @@ function Queue(options) {
     /**
      * Get the queue tasks
      *
-     * @returns {Object}
+     * @return {Object}
      */
     getTasks: function getTasks() {
       return _tasks;
+    },
+
+
+    /**
+     * Debug queue settings to the console
+     */
+    debug: function debug() {
+      console.log({
+        _options: _options,
+        _tasks: _tasks,
+        _timer: _timer,
+        _timerDelay: _timerDelay,
+        _replayTimer: _replayTimer,
+        _replayTimerDelay: _replayTimerDelay,
+        _status: _status,
+        Queue: this
+      });
     }
   };
 
@@ -6073,6 +6131,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = TrackEvent;
 
+var _lodash = __webpack_require__(0);
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _storage = __webpack_require__(10);
 
 var _storage2 = _interopRequireDefault(_storage);
@@ -6085,6 +6147,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Caches tracked events until Google Analytics is loaded, then uploads to GA
  *
  * @module lvl99/tools/trackevent
+ * @requires module:lodash.merge
  * @requires module:lvl99/tools/storage
  */
 
@@ -6097,7 +6160,7 @@ var STORAGE = new _storage2.default({
 });
 var STORAGE_KEY = 'LVL99:TrackedEvents';
 
-function TrackEvent(debug) {
+function TrackEvent(debug, cb) {
   var _this = this;
 
   /**
@@ -6115,6 +6178,11 @@ function TrackEvent(debug) {
     if (window.hasOwnProperty('ga') && window.ga && typeof window.ga === 'function') {
       if (debug && window.console && window.console.log) {
         console.log('[' + __loggerPath + '] --> Found GA!');
+      }
+
+      // Fire the callback when GA is loaded
+      if (typeof cb === 'function') {
+        cb.call(_this);
       }
 
       // Send any saved events
@@ -6154,42 +6222,37 @@ function TrackEvent(debug) {
   this.gaLoadedTimer = setTimeout(checkGALoaded, 5000);
 
   /**
-   * Track an event magic.
+   * Track an event.
    *
    * @param {String} eventCategory
    * @param {String} eventAction
    * @param {String} eventLabel
    * @param {Number} [eventValue]
+   * @param {Object} [fieldsObject]
    */
   this.track = function (eventCategory, eventAction, eventLabel, eventValue) {
-    var trackedEvent = {
+    var fieldsObject = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+
+    var trackedEvent = (0, _lodash2.default)({
       hitType: 'event',
       eventCategory: eventCategory,
       eventAction: eventAction,
       eventLabel: eventLabel,
       eventValue: eventValue
-
-      // Required fields
-    };if (!eventCategory || !eventAction) {
-      return;
-    }
-
-    // Event value must be string
-    if (typeof eventValue === 'string') {
-      return;
-    }
+    }, fieldsObject);
 
     // GA is loaded
     if (typeof window.ga !== 'undefined') {
       if (debug && window.console && window.console.log) {
-        console.log('Send tracked event to GA', trackedEvent);
+        console.log('[' + __loggerPath + '] Send tracked event to GA', trackedEvent);
       }
+
       window.ga('send', trackedEvent);
 
       // waiting for GA to load, use internal var to collect
     } else {
       if (debug && window.console && window.console.log) {
-        console.log('GA not loaded yet, caching tracked event...', trackedEvent);
+        console.log('[' + __loggerPath + '] GA not loaded yet, caching tracked event...', trackedEvent);
       }
 
       var trackedEvents = STORAGE.getItem(STORAGE_KEY) || [];
@@ -6215,7 +6278,7 @@ exports.getScrollableParents = getScrollableParents;
 exports.getScrollToPosition = getScrollToPosition;
 exports.default = SmoothScroll;
 
-var _common = __webpack_require__(0);
+var _common = __webpack_require__(1);
 
 /**
  * Default scrollTo options.
@@ -6379,6 +6442,9 @@ function SmoothScroll(options) {
       return;
     }
 
+    // Set the original target
+    scrollToSettings.originalTarget = $target[0];
+
     // The top buffer
     var bufferTop = typeof scrollToSettings.bufferTop === 'function' ? scrollToSettings.bufferTop.apply(this, [target, scrollToOptions]) : scrollToSettings.bufferTop || 0;
 
@@ -6429,6 +6495,8 @@ function SmoothScroll(options) {
 
       // Scroll each target
       scrollTargets.forEach(function (scrollTarget) {
+        var $scrollTarget = (0, _common.$)(scrollTarget.elem);
+
         /**
          * Emit scrollTo:start event.
          *
@@ -6438,31 +6506,34 @@ function SmoothScroll(options) {
          * @param {Array} scrollTarget
          * @param {ScrollToOptions} scrollToSettings
          */
-        (0, _common.$)(scrollTarget.elem).trigger('SmoothScroll.scrollTo:start', [scrollTarget, scrollToSettings]);
+        $scrollTarget.trigger('SmoothScroll.scrollTo:start', [scrollTarget, scrollToSettings]);
 
         // Doits!
-        (0, _common.$)(scrollTarget.elem).animate({
+        $scrollTarget.animate({
           scrollLeft: scrollTarget.scrollTo.left,
           scrollTop: scrollTarget.scrollTo.top + bufferTop
         }, scrollToSettings.scrollSpeed, function () {
-          // Callback after animation
-          // Must change focus!
-          $target.focus();
+          // Only perform the following if pointing to the original target
+          if (scrollTarget.elem === scrollToSettings.originalTarget) {
+            // Callback after animation
+            // Must change focus!
+            $target.focus();
 
-          /**
-           * Emit scrollTo:end event.
-           *
-           * Triggered on the element which is being scrolled, not the target being scrolled to.
-           *
-           * @event SmoothScroll#SmoothScroll.scrollTo:end
-           * @param {Object} scrollTarget
-           * @param {ScrollToOptions} scrollToSettings
-           */
-          (0, _common.$)(scrollTarget.elem).trigger('SmoothScroll.scrollTo:end', [scrollTarget, scrollToSettings]);
+            /**
+             * Emit `SmoothScroll.scrollTo:end` event.
+             *
+             * Triggered on the element which is being scrolled (not the target).
+             *
+             * @event SmoothScroll#SmoothScroll.scrollTo:end
+             * @param {Object} scrollTarget
+             * @param {ScrollToOptions} scrollToSettings
+             */
+            $scrollTarget.trigger('SmoothScroll.scrollTo:end', [scrollTarget, scrollToSettings]);
 
-          // Checking if the target was focused
-          if ($target.is(':focus')) {
-            return false;
+            // Checking if the target was focused
+            if ($target.is(':focus')) {
+              return false;
+            }
           }
         });
       });

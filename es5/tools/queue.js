@@ -11,19 +11,21 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /**
-                                                                                                                                                                                                     * LVL99 Queue
-                                                                                                                                                                                                     *
-                                                                                                                                                                                                     * Batch actions into a debounced queue
-                                                                                                                                                                                                     * Useful to reduce amount of work computer/browser does
-                                                                                                                                                                                                     *
-                                                                                                                                                                                                     * @package lvl99
-                                                                                                                                                                                                     */
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+/**
+ * # Queue
+ *
+ * Batch actions into a debounced queue. Useful to reduce amount of work computer/browser does.
+ */
+
+var __loggerPath = 'Queue';
+
 
 /**
  * Queue class
  *
- * @returns {Object}
+ * @return {Object}
  * @constructor
  */
 function Queue(options) {
@@ -36,7 +38,9 @@ function Queue(options) {
   var _options = (0, _lodash2.default)({
     queue: {},
     timer: 0,
-    timerDelay: 100
+    timerDelay: 100,
+    replayTimer: 0,
+    replayTimerDelay: 100
   }, options);
 
   /**
@@ -103,29 +107,40 @@ function Queue(options) {
    * @private
    */
   function _checkQueueFinished(Q) {
-    var actionName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'run';
-
-    clearTimeout(_replayTimer);
-
     for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
       args[_key - 2] = arguments[_key];
     }
 
-    _replayTimer = setTimeout(function checkQueueIsFinishedThenPerformAction(q, aN, a) {
-      if (q.checkStatus === 1 && q.getTasksLength() && q.hasOwnProperty(aN)) {
+    var actionName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'run';
+
+    // @debug
+    // console.log(`${__loggerPath} _checkQueueFinished`, {
+    //   actionName,
+    //   queue: Q
+    // })
+
+    clearTimeout(_replayTimer);
+
+    var checkQueueIsFinishedThenPerformAction = function checkQueueIsFinishedThenPerformAction() {
+      if (Q.checkStatus === 1 && Q.length() && Q.hasOwnProperty(actionName)) {
         // @debug
-        // console.log('Replaying queue...', {
-        //   Queue: q,
-        //   actionName: aN,
-        //   args: a
+        // console.log(`[${__loggerPath}] Replaying queue...`, {
+        //   Queue: Q,
+        //   actionName,
+        //   args
         // })
 
         // Each action will either perform the action or replay itself if necessary
-        q[aN].apply(q, _toConsumableArray(a));
+        Q[actionName].apply(Q, args);
       }
-    }(Q, actionName, args), _replayTimerDelay);
+    };
+
+    _replayTimer = setTimeout(checkQueueIsFinishedThenPerformAction, _replayTimerDelay);
   }
 
+  /**
+   * @typedef {Object} Queue
+   */
   var Queue = {
     /**
      * Queue an action
@@ -148,7 +163,7 @@ function Queue(options) {
       }
 
       // Assign the function to the queue
-      if (actionLabel && action && typeof action === 'function') {
+      if (actionLabel && typeof action === 'function') {
         _tasks[actionLabel] = {
           action: action,
           args: args
@@ -176,7 +191,7 @@ function Queue(options) {
       }
 
       // @debug
-      // console.log('Queue.add', {
+      // console.log(`[${__loggerPath}] add`, {
       //   actionLabel,
       //   action
       // })
@@ -190,7 +205,7 @@ function Queue(options) {
       }
       // } else {
       //   // @debug
-      //   console.log('queue is currently paused')
+      //   console.log(`[${__loggerPath}] add: queue is currently paused`)
       // }
 
       // @chainable
@@ -199,24 +214,27 @@ function Queue(options) {
 
 
     /**
-     * Same as `add` except you can affect the delay time that the queue will play
+     * Same as `add` except you can affect the delay time that the queue will play after adding the task.
      *
-     * @param {Number} delay The milliseconds to delay before running
+     * @param {Number} delay The milliseconds to delay before running the queue
      * @param {String} actionLabel A unique label for the action in the queue.
      *                             Can be set to {undefined} (which means the action can't be removed)
      * @param {Function} action The function to handle the action
-     * @param {Mixed} ...args The arguments to pass to the action handler
+     * @param {Mixed} [...args] The arguments to pass to the action handler
      * @return {Self}
      * @chainable
      */
     delayAdd: function delayAdd(delay, actionLabel, action) {
-      // @debug
-      // console.log('Queue.delayAdd', {
-      //   actionLabel,
-      //   action
-      // })
-
       var _delay = delay || _timerDelay;
+
+      // @debug
+      // console.log(`[${__loggerPath}] delayAdd`, {
+      //   delay,
+      //   actionLabel,
+      //   action,
+      //   _delay,
+      //   _status
+      // })
 
       // Queue the action
 
@@ -226,7 +244,7 @@ function Queue(options) {
 
       this.queue.apply(this, [actionLabel, action].concat(_toConsumableArray(args)));
 
-      // Play the timer to get the queue to run after a delay (only when playing)
+      // Play the timer to get the queue to run after a delay (only if already playing/running)
       if (_status) {
         this.play(_delay);
       }
@@ -237,7 +255,7 @@ function Queue(options) {
 
 
     /**
-     * Add action and then run the queue immediately
+     * Add action and then run the queue immediately.
      *
      * @param {String} actionLabel
      * @param {Function} action
@@ -247,7 +265,7 @@ function Queue(options) {
      */
     sync: function sync(actionLabel, action) {
       // @debug
-      // console.log('Queue.sync', {
+      // console.log(`[${__loggerPath}] sync`, {
       //   actionLabel,
       //   action
       // })
@@ -295,6 +313,11 @@ function Queue(options) {
      */
     remove: function remove(actionLabel) {
       if (_tasks.hasOwnProperty(actionLabel)) {
+        // // @debug
+        // console.log(`[${__loggerPath}] task removed`, {
+        //   actionLabel
+        // })
+
         _tasks[actionLabel] = undefined;
         delete _tasks[actionLabel];
       }
@@ -307,40 +330,56 @@ function Queue(options) {
     /**
      * Play the queue timer (will run queue after timer delay)
      *
-     * @param {Number} delay The time in milliseconds before playing
+     * @param {Number} [delay] The time in milliseconds before playing
      * @return {Self}
      * @chainable
      */
-    play: function play() {
-      var delay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _timerDelay;
+    play: function play(delay) {
+      var _this = this;
+
+      // Ensure delay is set properly (if someone sets to null or undefined it should default back to regular delay time)
+      var _delay = delay || _timerDelay;
 
       // @debug
-      // console.log('Queue.play', {
-      //   _status
-      // })
-
-      // Ensure delay is really set property (if someone sets to null or undefined it should default back to regular delay time)
-      var _delay = delay || _timerDelay;
+      // if (delay) {
+      //   console.log(`[${__loggerPath}] play (with specified delay)`, {
+      //     delay,
+      //     _delay,
+      //     _status,
+      //     time
+      //   })
+      // }
 
       // Currently already running
       if (_status === 2) {
-        for (var _len6 = arguments.length, args = Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
-          args[_key6 - 1] = arguments[_key6];
-        }
+        // @debug
+        // console.log(`[${__loggerPath}] queue is currently running, will perform 'play' next cycle`)
 
-        _checkQueueFinished.apply(undefined, [this, 'play'].concat(_toConsumableArray(args)));
+        _checkQueueFinished.apply(undefined, [this, 'play'].concat(Array.prototype.slice.call(arguments)));
+        return;
       }
 
-      // Only play if already paused
+      // @debug
+      // console.log(`[${__loggerPath}] play`, {
+      //   delay,
+      //   _delay,
+      //   _status,
+      //   time
+      // })
+
       clearTimeout(_timer);
 
       // Set to playing
       _status = 1;
 
       // Reset timer to run the queue
-      _timer = setTimeout(function runQueueProcessAfterDelay(q) {
-        q.run();
-      }(this), _delay);
+      var runQueueProcessAfterDelay = function runQueueProcessAfterDelay() {
+        // @debug
+        // console.log(`[${__loggerPath}] running queue after delay of ${_delay} (${delay}) ${time}`)
+
+        _this.run();
+      };
+      _timer = setTimeout(runQueueProcessAfterDelay, _delay);
 
       // @chainable
       return this;
@@ -354,15 +393,16 @@ function Queue(options) {
      * @chainable
      */
     pause: function pause() {
-      // @debug
-      // console.log('Queue.pause', {
-      //   _status
-      // })
-
       // Queue is already running
       if (_status === 2) {
         _checkQueueFinished(this, 'pause');
+        return;
       }
+
+      // @debug
+      // console.log(`[${__loggerPath}] pause`, {
+      //   _status
+      // })
 
       // Only pause if already playing
       clearTimeout(_timer);
@@ -382,16 +422,17 @@ function Queue(options) {
      * @chainable
      */
     run: function run() {
-      // @debug
-      // console.log('Queue.run...', {
-      //   _status,
-      //   _tasks
-      // })
-
       // Currently already running, so run again later
       if (_status === 2) {
         _checkQueueFinished(this, 'run');
+        return;
       }
+
+      // @debug
+      // console.log(`[${__loggerPath}] run`, {
+      //   _status,
+      //   _tasks
+      // })
 
       clearTimeout(_timer);
       clearTimeout(_replayTimer);
@@ -409,7 +450,7 @@ function Queue(options) {
       _status = 2;
 
       // @debug
-      // console.log('Queue.running...', {
+      // console.log(`[${__loggerPath}] run: processing...`, {
       //   _previousStatus,
       //   _status
       // })
@@ -420,7 +461,7 @@ function Queue(options) {
           var queuedItem = _tasks[actionLabel];
 
           // @debug
-          // console.log(` --> ${actionLabel}`, queuedItem)
+          // console.log(`[${__loggerPath}] run --> ${actionLabel}`, queuedItem)
 
           // Function
           if (queuedItem && typeof queuedItem === 'function') {
@@ -457,7 +498,7 @@ function Queue(options) {
      *   0 = Paused
      *   1 = Playing
      *   2 = Running
-     * @returns {Number}
+     * @return {Number}
      */
     checkStatus: function checkStatus() {
       return _status;
@@ -467,7 +508,7 @@ function Queue(options) {
     /**
      * Get the timer delay
      *
-     * @returns {Number}
+     * @return {Number}
      */
     getTimerDelay: function getTimerDelay() {
       return _timerDelay;
@@ -479,7 +520,7 @@ function Queue(options) {
      *
      * @param timerDelay
      * @chainable
-     * @returns {Self}
+     * @return {Self}
      */
     setTimerDelay: function setTimerDelay(timerDelay) {
       // Only set if timerDelay is greater than 0
@@ -506,7 +547,7 @@ function Queue(options) {
     /**
      * Backward compatible alias
      *
-     * @returns {Queue.length}
+     * @return {Queue.length}
      */
     getQueueLength: function getQueueLength() {
       return this.length;
@@ -516,10 +557,27 @@ function Queue(options) {
     /**
      * Get the queue tasks
      *
-     * @returns {Object}
+     * @return {Object}
      */
     getTasks: function getTasks() {
       return _tasks;
+    },
+
+
+    /**
+     * Debug queue settings to the console
+     */
+    debug: function debug() {
+      console.log({
+        _options: _options,
+        _tasks: _tasks,
+        _timer: _timer,
+        _timerDelay: _timerDelay,
+        _replayTimer: _replayTimer,
+        _replayTimerDelay: _replayTimerDelay,
+        _status: _status,
+        Queue: this
+      });
     }
   };
 
