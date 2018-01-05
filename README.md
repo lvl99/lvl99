@@ -185,7 +185,7 @@ You can also require/import single files if you don't want the whole LESS framew
 
 * **Jest**: Unit testing
 * **Babel**: Transpile ES6 to ES5
-* **Browserify**: Create lvl99.js distribution bundle
+* **Webpack**: Create lvl99.js distribution
 * **Gulp**: Task runner
 
 
