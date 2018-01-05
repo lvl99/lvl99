@@ -10,9 +10,79 @@ import merge from 'lodash.merge'
 import { coerceToPrimitiveType } from '../utils/parse'
 
 // Types of storage
+export const OBJECT_STORAGE = 'objectStorage'
 export const SESSION_STORAGE = 'sessionStorage'
 export const LOCAL_STORAGE = 'localStorage'
-export const STORAGE_TYPES = [SESSION_STORAGE, LOCAL_STORAGE]
+export const STORAGE_TYPES = [OBJECT_STORAGE, SESSION_STORAGE, LOCAL_STORAGE]
+
+/**
+ * Object Storage handler.
+ *
+ * This is a basic object-based fallback version of storage if local/session storage is not supported.
+ *
+ * It should work exactly the same as sessionStorage, however it is related only to the current window session --
+ * data here is not persistent.
+ *
+ * @class
+ */
+export class ObjectStorage {
+  /**
+   * Create the object storage instance.
+   *
+   * @constructor
+   * @param {Object} data
+   */
+  constructor (data = {}) {
+    this.data = data || {}
+  }
+
+  /**
+   * Clear all items in object storage.
+   *
+   * @returns {Object}
+   */
+  clear () {
+    this.data = {}
+  }
+
+  /**
+   * Get item in object storage.
+   *
+   * @param {String} name
+   * @returns {*|null}
+   */
+  getItem (name) {
+    if (this.data.hasOwnProperty(name)) {
+      return this.data[name]
+    }
+    return null
+  }
+
+  /**
+   * Set item in object storage.
+   *
+   * @param {String} name
+   * @param {*} value
+   */
+  setItem (name, value) {
+    this.data[name] = value
+  }
+
+  /**
+   * Remove item in object storage.
+   *
+   * @param {String} name
+   */
+  removeItem (name) {
+    if (this.data.hasOwnProperty(name)) {
+      this.data[name] = null
+      delete this.data[name]
+    }
+  }
+}
+
+// Create the objectStorage instance in the window
+window[OBJECT_STORAGE] = new ObjectStorage()
 
 /**
  * Test to see if a storage type works within the environment
@@ -78,6 +148,11 @@ export default class Storage {
       storageType: LOCAL_STORAGE
     }, options)
 
+    // Test storageType to ensure it is supported. If not, default back to object storage
+    if (this.settings.storageType !== OBJECT_STORAGE && !testStorageType(this.settings.storageType)) {
+      this.settings.storageType = OBJECT_STORAGE
+    }
+
     return this
   }
 
@@ -92,6 +167,7 @@ export default class Storage {
       storageType = this.settings.storageType
     }
 
+    // Throw error
     if (!testStorageType(storageType)) {
       throw new Error(`Storage type ${storageType} not supported`)
     }

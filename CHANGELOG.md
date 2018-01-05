@@ -1,3 +1,13 @@
+### 1.4.4
+
+* Added [minified version](dist/lvl99.min.js) of [`lvl99.js`](dist/lvl99.js).
+* Added an `ObjectStorage` fallback handler if local/session storage is not supported in user's browser.
+* Minor update to the [`TrackEvent`](es6/tools/trackevent.es6) tool. It now supports the `fieldsObject` for extra
+  event options.
+* Minor updates to the [`Queue`](es6/tools/queue.es6) tool.
+* Fixed Queue's tests to work with mocked timer functions.
+
+
 ### 1.4.3
 
 * Added new tool [`Storage`](es6/tools/storage.es6) which acts as a convenience wrapper with some extra small features

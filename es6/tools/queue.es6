@@ -1,18 +1,16 @@
 /**
- * LVL99 Queue
+ * # Queue
  *
- * Batch actions into a debounced queue
- * Useful to reduce amount of work computer/browser does
- *
- * @package lvl99
+ * Batch actions into a debounced queue. Useful to reduce amount of work computer/browser does.
  */
 
+const __loggerPath = 'Queue'
 import merge from 'lodash.merge'
 
 /**
  * Queue class
  *
- * @returns {Object}
+ * @return {Object}
  * @constructor
  */
 export default function Queue (options) {
@@ -25,7 +23,9 @@ export default function Queue (options) {
   let _options = merge({
     queue: {},
     timer: 0,
-    timerDelay: 100
+    timerDelay: 100,
+    replayTimer: 0,
+    replayTimerDelay: 100
   }, options)
 
   /**
@@ -92,22 +92,34 @@ export default function Queue (options) {
    * @private
    */
   function _checkQueueFinished (Q, actionName = 'run', ...args) {
+    // @debug
+    // console.log(`${__loggerPath} _checkQueueFinished`, {
+    //   actionName,
+    //   queue: Q
+    // })
+
     clearTimeout(_replayTimer)
-    _replayTimer = setTimeout(function checkQueueIsFinishedThenPerformAction(q, aN, a) {
-      if (q.checkStatus === 1 && q.getTasksLength() && q.hasOwnProperty(aN)) {
+
+    let checkQueueIsFinishedThenPerformAction = () => {
+      if (Q.checkStatus === 1 && Q.length() && Q.hasOwnProperty(actionName)) {
         // @debug
-        // console.log('Replaying queue...', {
-        //   Queue: q,
-        //   actionName: aN,
-        //   args: a
+        // console.log(`[${__loggerPath}] Replaying queue...`, {
+        //   Queue: Q,
+        //   actionName,
+        //   args
         // })
 
         // Each action will either perform the action or replay itself if necessary
-        q[aN](...a)
+        Q[actionName](...args)
       }
-    }(Q, actionName, args), _replayTimerDelay)
+    }
+
+    _replayTimer = setTimeout(checkQueueIsFinishedThenPerformAction, _replayTimerDelay)
   }
 
+  /**
+   * @typedef {Object} Queue
+   */
   const Queue = {
     /**
      * Queue an action
@@ -126,7 +138,7 @@ export default function Queue (options) {
       }
 
       // Assign the function to the queue
-      if (actionLabel && action && typeof action === 'function') {
+      if (actionLabel && typeof action === 'function') {
         _tasks[actionLabel] = {
           action,
           args: args
@@ -149,7 +161,7 @@ export default function Queue (options) {
      */
     add (actionLabel, action, ...args) {
       // @debug
-      // console.log('Queue.add', {
+      // console.log(`[${__loggerPath}] add`, {
       //   actionLabel,
       //   action
       // })
@@ -163,7 +175,7 @@ export default function Queue (options) {
       }
       // } else {
       //   // @debug
-      //   console.log('queue is currently paused')
+      //   console.log(`[${__loggerPath}] add: queue is currently paused`)
       // }
 
       // @chainable
@@ -171,29 +183,32 @@ export default function Queue (options) {
     },
 
     /**
-     * Same as `add` except you can affect the delay time that the queue will play
+     * Same as `add` except you can affect the delay time that the queue will play after adding the task.
      *
-     * @param {Number} delay The milliseconds to delay before running
+     * @param {Number} delay The milliseconds to delay before running the queue
      * @param {String} actionLabel A unique label for the action in the queue.
      *                             Can be set to {undefined} (which means the action can't be removed)
      * @param {Function} action The function to handle the action
-     * @param {Mixed} ...args The arguments to pass to the action handler
+     * @param {Mixed} [...args] The arguments to pass to the action handler
      * @return {Self}
      * @chainable
      */
     delayAdd (delay, actionLabel, action, ...args) {
-      // @debug
-      // console.log('Queue.delayAdd', {
-      //   actionLabel,
-      //   action
-      // })
-
       let _delay = delay || _timerDelay
+
+      // @debug
+      // console.log(`[${__loggerPath}] delayAdd`, {
+      //   delay,
+      //   actionLabel,
+      //   action,
+      //   _delay,
+      //   _status
+      // })
 
       // Queue the action
       this.queue(actionLabel, action, ...args)
 
-      // Play the timer to get the queue to run after a delay (only when playing)
+      // Play the timer to get the queue to run after a delay (only if already playing/running)
       if (_status) {
         this.play(_delay)
       }
@@ -203,7 +218,7 @@ export default function Queue (options) {
     },
 
     /**
-     * Add action and then run the queue immediately
+     * Add action and then run the queue immediately.
      *
      * @param {String} actionLabel
      * @param {Function} action
@@ -213,7 +228,7 @@ export default function Queue (options) {
      */
     sync (actionLabel, action, ...args) {
       // @debug
-      // console.log('Queue.sync', {
+      // console.log(`[${__loggerPath}] sync`, {
       //   actionLabel,
       //   action
       // })
@@ -254,6 +269,11 @@ export default function Queue (options) {
      */
     remove (actionLabel) {
       if (_tasks.hasOwnProperty(actionLabel)) {
+        // // @debug
+        // console.log(`[${__loggerPath}] task removed`, {
+        //   actionLabel
+        // })
+
         _tasks[actionLabel] = undefined
         delete _tasks[actionLabel]
       }
@@ -265,34 +285,54 @@ export default function Queue (options) {
     /**
      * Play the queue timer (will run queue after timer delay)
      *
-     * @param {Number} delay The time in milliseconds before playing
+     * @param {Number} [delay] The time in milliseconds before playing
      * @return {Self}
      * @chainable
      */
-    play (delay = _timerDelay, ...args) {
-      // @debug
-      // console.log('Queue.play', {
-      //   _status
-      // })
-
-      // Ensure delay is really set property (if someone sets to null or undefined it should default back to regular delay time)
+    play (delay) {
+      // Ensure delay is set properly (if someone sets to null or undefined it should default back to regular delay time)
       let _delay = delay || _timerDelay
+
+      // @debug
+      // if (delay) {
+      //   console.log(`[${__loggerPath}] play (with specified delay)`, {
+      //     delay,
+      //     _delay,
+      //     _status,
+      //     time
+      //   })
+      // }
 
       // Currently already running
       if (_status === 2) {
-        _checkQueueFinished(this, 'play', ...args)
+        // @debug
+        // console.log(`[${__loggerPath}] queue is currently running, will perform 'play' next cycle`)
+
+        _checkQueueFinished(this, 'play', ...arguments)
+        return
       }
 
-      // Only play if already paused
+      // @debug
+      // console.log(`[${__loggerPath}] play`, {
+      //   delay,
+      //   _delay,
+      //   _status,
+      //   time
+      // })
+
       clearTimeout(_timer)
 
       // Set to playing
       _status = 1
 
       // Reset timer to run the queue
-      _timer = setTimeout(function runQueueProcessAfterDelay (q) {
-        q.run()
-      }(this), _delay)
+      let runQueueProcessAfterDelay = () => {
+        // @debug
+        // console.log(`[${__loggerPath}] running queue after delay of ${_delay} (${delay}) ${time}`)
+
+        this.run()
+      }
+      _timer = setTimeout(runQueueProcessAfterDelay, _delay)
 
       // @chainable
       return this
@@ -305,15 +345,16 @@ export default function Queue (options) {
      * @chainable
      */
     pause () {
-      // @debug
-      // console.log('Queue.pause', {
-      //   _status
-      // })
-
       // Queue is already running
       if (_status === 2) {
         _checkQueueFinished(this, 'pause')
+        return
       }
+
+      // @debug
+      // console.log(`[${__loggerPath}] pause`, {
+      //   _status
+      // })
 
       // Only pause if already playing
       clearTimeout(_timer)
@@ -332,16 +373,17 @@ export default function Queue (options) {
      * @chainable
      */
     run () {
-      // @debug
-      // console.log('Queue.run...', {
-      //   _status,
-      //   _tasks
-      // })
-
       // Currently already running, so run again later
       if (_status === 2) {
         _checkQueueFinished(this, 'run')
+        return
       }
+
+      // @debug
+      // console.log(`[${__loggerPath}] run`, {
+      //   _status,
+      //   _tasks
+      // })
 
       clearTimeout(_timer)
       clearTimeout(_replayTimer)
@@ -359,7 +401,7 @@ export default function Queue (options) {
       _status = 2
 
       // @debug
-      // console.log('Queue.running...', {
+      // console.log(`[${__loggerPath}] run: processing...`, {
       //   _previousStatus,
       //   _status
       // })
@@ -370,7 +412,7 @@ export default function Queue (options) {
           let queuedItem = _tasks[actionLabel]
 
           // @debug
-          // console.log(` --> ${actionLabel}`, queuedItem)
+          // console.log(`[${__loggerPath}] run --> ${actionLabel}`, queuedItem)
 
           // Function
           if (queuedItem && typeof queuedItem === 'function') {
@@ -406,7 +448,7 @@ export default function Queue (options) {
      *   0 = Paused
      *   1 = Playing
      *   2 = Running
-     * @returns {Number}
+     * @return {Number}
      */
     checkStatus () {
       return _status
@@ -415,7 +457,7 @@ export default function Queue (options) {
     /**
      * Get the timer delay
      *
-     * @returns {Number}
+     * @return {Number}
      */
     getTimerDelay () {
       return _timerDelay
@@ -426,7 +468,7 @@ export default function Queue (options) {
      *
      * @param timerDelay
      * @chainable
-     * @returns {Self}
+     * @return {Self}
      */
     setTimerDelay (timerDelay) {
       // Only set if timerDelay is greater than 0
@@ -451,7 +493,7 @@ export default function Queue (options) {
     /**
      * Backward compatible alias
      *
-     * @returns {Queue.length}
+     * @return {Queue.length}
      */
     getQueueLength() {
       return this.length
@@ -460,10 +502,26 @@ export default function Queue (options) {
     /**
      * Get the queue tasks
      *
-     * @returns {Object}
+     * @return {Object}
      */
     getTasks () {
       return _tasks
+    },
+
+    /**
+     * Debug queue settings to the console
+     */
+    debug () {
+      console.log({
+        _options,
+        _tasks,
+        _timer,
+        _timerDelay,
+        _replayTimer,
+        _replayTimerDelay,
+        _status,
+        Queue: this
+      })
     }
   }
 
