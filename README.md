@@ -1,11 +1,15 @@
 # LVL99
 
-v1.4.4
+[![Github release: v1.4.4](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/lvl99/lvl99/tree/1.4.4)
+[![Package dependencies by David](https://img.shields.io/david/lvl99/lvl99.svg)](https://david-dm.org/lvl99/lvl99.svg)
+[![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
+[![Tested with Jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 My own personal frontend framework. Primarily uses jQuery, mildly inspired by Bootstrap and Ember.js and also has
 nothing to do with React. I also use it as a self-learning and development exercise experiment.
 
-* JavaScript is written in Node.js compatible ES6 (no features requiring `--harmony` switch)
+* JavaScript is written in Node.js compatible ES6
 * I use StandardJS for coding style
 * I like how simple LESS is; I dislike how bloated SCSS is
 
