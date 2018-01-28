@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("jquery"));
+	else if(typeof define === 'function' && define.amd)
+		define(["jquery"], factory);
+	else if(typeof exports === 'object')
+		exports["lvl99"] = factory(require("jquery"));
+	else
+		root["lvl99"] = factory(root["window.jQuery"]);
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_12__) {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -4104,7 +4114,7 @@ exports.default = lvl99;
 /* 12 */
 /***/ (function(module, exports) {
 
-module.exports = window.jQuery;
+module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
 
 /***/ }),
 /* 13 */
@@ -6591,3 +6601,4 @@ function SmoothScroll(options) {
 
 /***/ })
 /******/ ]);
+});

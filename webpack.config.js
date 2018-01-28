@@ -11,8 +11,10 @@ module.exports = {
     lvl99: './es6/index.es6'
   },
   output: {
+    path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
-    path: path.resolve(__dirname, 'dist')
+    library: 'lvl99',
+    libraryTarget: 'umd'
   },
   resolve: {
     extensions: ['.es6', '.js', '.json'],
@@ -34,7 +36,12 @@ module.exports = {
     ]
   },
   externals: {
-    jquery: 'window.jQuery'
+    jquery: {
+      commonjs: 'jquery',
+      commonjs2: 'jquery',
+      amd: 'jquery',
+      root: 'window.jQuery'
+    }
   },
   plugins: [
     new CleanPlugin(['dist/*']),
