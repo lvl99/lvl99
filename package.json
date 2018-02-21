@@ -1,6 +1,6 @@
 {
   "name": "lvl99",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Nothing to see here, just another frontend framework",
   "private": false,
   "main": "dist/lvl99.js",
