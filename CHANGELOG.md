@@ -1,3 +1,8 @@
+### 1.4.5
+
+* Configured webpack to build with library settings
+
+
 ### 1.4.4
 
 * Added [minified version](dist/lvl99.min.js) of [`lvl99.js`](dist/lvl99.js).
