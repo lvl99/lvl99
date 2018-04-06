@@ -1,6 +1,6 @@
 # LVL99
 
-[![GitHub package version: v1.4.5](https://img.shields.io/badge/release-v1.4.4-blue.svg)](https://github.com/lvl99/lvl99/tree/1.4.5)
+[![GitHub package version: v1.4.6](https://img.shields.io/badge/release-v1.4.6-blue.svg)](https://github.com/lvl99/lvl99/tree/1.4.6)
 [![Package dependencies by David](https://img.shields.io/david/lvl99/lvl99.svg)](https://david-dm.org/lvl99/lvl99.svg)
 [![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
 [![Tested with Jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
@@ -198,7 +198,7 @@ You can also require/import single files if you don't want the whole LESS framew
 * Complete the README
 * Write more unit tests
 * Write more documentation throughout source
-* Create minified version of [`dist/lvl99.js`](dist/lvl99.js)
+* ~Create minified version of [`dist/lvl99.js`](dist/lvl99.js)~
 
 
 ## Contribute
