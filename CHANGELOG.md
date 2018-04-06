@@ -1,6 +1,7 @@
 ### 1.4.5
 
-* Configured webpack to build with library settings
+* Configured webpack to build with library settings.
+* Added extra note about transpiling ES6 within your own project.
 
 
 ### 1.4.4

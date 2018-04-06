@@ -1,6 +1,6 @@
 # LVL99
 
-[![GitHub package version: v1.4.4](https://img.shields.io/badge/release-v1.4.4-blue.svg)](https://github.com/lvl99/lvl99/tree/1.4.4)
+[![GitHub package version: v1.4.5](https://img.shields.io/badge/release-v1.4.4-blue.svg)](https://github.com/lvl99/lvl99/tree/1.4.5)
 [![Package dependencies by David](https://img.shields.io/david/lvl99/lvl99.svg)](https://david-dm.org/lvl99/lvl99.svg)
 [![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
 [![Tested with Jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
@@ -47,6 +47,10 @@ You can also import single files if you don't want the whole JS framework:
 ```
 
 > ***Note:*** ES6 files have the `.es6` extension to enable you to target these files using a transpiler like Babel.
+
+> ***Note:*** I've had some issues with transpiling from a `node_modules` folder. Ensure to put
+> `/node_modules\/lvl99\/es6\//` in your `babel-loader` module rules and also include the `babel-plugin-add-module-exports`
+> to your project and within your `.babelrc`.
 
 > ***Note:*** The ES6 files use the `import`/`export` method for modules, not `require` (CommonJS). Use the ES5 files
 > if you want to use CommonJS like functionality.

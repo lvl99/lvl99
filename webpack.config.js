@@ -4,9 +4,9 @@
 const path = require('path')
 const webpack = require('webpack')
 const CleanPlugin = require('clean-webpack-plugin')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
+  mode: 'development',
   entry: {
     lvl99: './es6/index.es6'
   },
@@ -36,22 +36,10 @@ module.exports = {
     ]
   },
   externals: {
-    jquery: {
-      commonjs: 'jquery',
-      commonjs2: 'jquery',
-      amd: 'jquery',
-      root: 'window.jQuery'
-    }
+    jquery: 'jQuery'
   },
   plugins: [
-    new CleanPlugin(['dist/*']),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"',
-      '$': 'jquery'
-    })//,
-    // new UglifyJSPlugin({}, {
-    //   comments: false
-    // })
+    new CleanPlugin(['dist/*'])
   ],
   stats: {
     errorDetails: true,

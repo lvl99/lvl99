@@ -7,7 +7,7 @@
   "module": "es6/index.es6",
   "scripts": {
     "test": "jest --no-cache",
-    "build": "npm run test && gulp build:development"
+    "build": "gulp build"
   },
   "keywords": [
     "jaff",
@@ -36,9 +36,10 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
+    "ajv": "^6.4.0",
     "babel-core": "^6.26.0",
     "babel-jest": "^22.0.3",
-    "babel-loader": "^7.1.2",
+    "babel-loader": "^7.1.4",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "babel-preset-env": "^1.6.1",
@@ -65,10 +66,10 @@
     "lazypipe": "^1.0.1",
     "lodash.escaperegexp": "^4.1.2",
     "run-sequence": "^2.2.0",
-    "uglifyjs-webpack-plugin": "^1.1.4",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^2.0.0",
-    "webpack": "^3.10.0",
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13",
     "webpack-merge": "^4.1.1",
     "webpack-stream": "^4.0.0"
   },
@@ -85,14 +86,9 @@
                 ]
               },
               "modules": "umd",
-              "useBuiltIns": true,
-              "debug": true
+              "useBuiltIns": true
             }
           ]
-        ],
-        "plugins": [
-          "add-module-exports",
-          "transform-es2015-modules-umd"
         ]
       },
       "test": {
